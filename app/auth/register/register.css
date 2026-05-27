@@ -1,98 +1,116 @@
-/* PAGE */
+/* ── PAGE ── */
 .register-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 80px 20px;
   position: relative;
   overflow: hidden;
+  background: #faf8f7;
 }
 
-/* FOND VIOLET ANIMÉ */
+/* ── FOND — orbes floutés palette brand ── */
 .register-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   z-index: 0;
+  pointer-events: none;
 }
 
 .register-bg span {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
   border-radius: 50%;
-  animation: bubble 20s infinite ease-in-out;
+  filter: blur(60px);
 }
 
-.register-bg span:nth-child(1) { top: 10%; left: 15%; width: 50px; height: 50px; animation-delay: 0s; }
-.register-bg span:nth-child(2) { top: 70%; left: 10%; animation-delay: 3s; }
-.register-bg span:nth-child(3) { top: 30%; left: 70%; width: 60px; height: 60px; animation-delay: 1s; }
-.register-bg span:nth-child(4) { top: 60%; left: 80%; animation-delay: 5s; }
-.register-bg span:nth-child(5) { top: 40%; left: 40%; width: 45px; height: 45px; animation-delay: 2s; }
-.register-bg span:nth-child(6) { top: 80%; left: 60%; animation-delay: 4s; }
-
-@keyframes bubble {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-  50% { transform: translateY(-120px) translateX(80px); opacity: 0.6; }
+.register-bg span:nth-child(1) {
+  width: 600px;
+  height: 600px;
+  background: #C95D5D;
+  top: -15%;
+  left: -10%;
+  opacity: 0.22;
+  animation: orb-drift-a 44s ease-in-out infinite;
 }
 
-/* WRAPPER */
-.register-wrapper {
+.register-bg span:nth-child(2) {
+  width: 500px;
+  height: 500px;
+  background: #870003;
+  bottom: -18%;
+  right: -8%;
+  opacity: 0.18;
+  animation: orb-drift-b 52s ease-in-out infinite;
+}
+
+.register-bg span:nth-child(3) {
+  width: 340px;
+  height: 340px;
+  background: #C95D5D;
+  top: 45%;
+  left: 50%;
+  opacity: 0.12;
+  animation: orb-drift-c 38s ease-in-out infinite;
+}
+
+.register-bg span:nth-child(4) {
+  width: 260px;
+  height: 260px;
+  background: #1a1a1a;
+  top: 18%;
+  right: 16%;
+  opacity: 0.06;
+  animation: orb-drift-b 60s ease-in-out infinite reverse;
+}
+
+@keyframes orb-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(50px, -70px) scale(1.06); }
+  70%       { transform: translate(-35px, 45px) scale(0.96); }
+}
+
+@keyframes orb-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  35%       { transform: translate(-60px, 50px) scale(1.04); }
+  65%       { transform: translate(40px, -55px) scale(0.97); }
+}
+
+@keyframes orb-drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(-45px, -60px) scale(1.08); }
+}
+
+/* ── CARD ── */
+.register-card {
   position: relative;
   z-index: 10;
   width: 100%;
   max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-/* HEADER */
-.register-header {
-  text-align: center;
-}
-
-.register-logo {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.register-logo svg {
-  width: 36px;
-  height: 36px;
-  color: white;
-}
-
-.register-header h1 {
-  font-size: 2rem;
-  font-weight: 900;
-  color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  margin: 0;
-}
-
-/* CARD */
-.register-card {
-  width: 100%;
-  background: #fff;
+  background: #ffffff;
   border-radius: 10px;
   padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 20px 50px rgba(201, 93, 93, 0.08);
 }
 
-/* CHAMPS */
+/* ── TITRE CARTE ── */
+.register-card-header {
+  padding-bottom: 4px;
+}
+
+.register-card-header h1 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+/* ── INPUTS ── */
 .register-inputs {
   display: flex;
   flex-direction: column;
@@ -109,6 +127,7 @@
   font-size: 14px;
   font-weight: 600;
   color: #111;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .register-input-wrap {
@@ -121,9 +140,13 @@
   gap: 10px;
   background: #fff;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.register-input-wrap:focus-within { border-color: #667eea; }
+.register-input-wrap:focus-within {
+  border-color: #C95D5D;
+  box-shadow: 0 0 0 3px rgba(201, 93, 93, 0.1);
+}
 
 .register-input-wrap span {
   font-size: 14px;
@@ -138,6 +161,7 @@
   font-size: 13px;
   color: #111;
   background: transparent;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .register-input-wrap input::placeholder { color: #aaa; }
@@ -152,7 +176,7 @@
   flex-shrink: 0;
 }
 
-/* FORCE MOT DE PASSE */
+/* ── FORCE MOT DE PASSE ── */
 .register-strength {
   display: flex;
   align-items: center;
@@ -171,16 +195,17 @@
 .register-strength-bar div {
   height: 100%;
   border-radius: 4px;
-  transition: width 0.3s, background 0.3s;
+  transition: width 0.3s ease, background 0.3s ease;
 }
 
 .register-strength span {
   font-size: 12px;
   font-weight: 600;
   flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* CGU */
+/* ── CGU ── */
 .register-terms {
   display: flex;
   align-items: flex-start;
@@ -188,39 +213,50 @@
   font-size: 13px;
   color: #111;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.register-terms input { margin-top: 2px; flex-shrink: 0; }
-.register-terms a { color: #667eea; text-decoration: none; }
+.register-terms input { margin-top: 2px; flex-shrink: 0; accent-color: #C95D5D; }
 
-/* MESSAGE */
+.register-terms a {
+  color: #C95D5D;
+  text-decoration: none;
+}
+
+.register-terms a:hover { text-decoration: underline; }
+
+/* ── MESSAGE ── */
 .register-message {
   font-size: 13px;
   margin: 0 !important;
   padding: 0 !important;
   text-align: left !important;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.register-message.error { color: #e53935; }
+.register-message.error { color: #c0392b; }
 .register-message.success { color: #10b981; }
 
-/* BOUTON */
+/* ── BOUTON ── */
 .register-btn {
   width: 100%;
   height: 50px;
-  background: #111;
+  background: #1a1a1a;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.03em;
+  transition: background 0.2s ease;
 }
 
-.register-btn:hover { background: #333; }
+.register-btn:hover { background: #C95D5D; }
 .register-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* DIVIDER */
+/* ── DIVIDER ── */
 .register-divider {
   display: flex;
   align-items: center;
@@ -239,9 +275,10 @@
   white-space: nowrap;
   margin: 0 !important;
   padding: 0 !important;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* SOCIAL */
+/* ── SOCIAL ── */
 .register-social {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -257,11 +294,16 @@
   font-weight: 500;
   color: #111;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.register-social button:hover { background: #f5f5f5; }
+.register-social button:hover {
+  border-color: #C95D5D;
+  background: #fdf5f5;
+}
 
-/* FOOTER */
+/* ── FOOTER ── */
 .register-footer {
   display: flex;
   justify-content: space-between;
@@ -275,16 +317,20 @@
   margin: 0 !important;
   padding: 0 !important;
   text-align: left !important;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .register-footer a {
   font-size: 13px;
-  color: #667eea;
+  color: #C95D5D;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* RESPONSIVE */
+.register-footer a:hover { text-decoration: underline; }
+
+/* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .register-card { padding: 24px; }
   .register-social { grid-template-columns: 1fr; }

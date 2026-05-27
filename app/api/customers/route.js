@@ -13,10 +13,11 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || "";
     const status = searchParams.get("status") || "";
-    const sort = searchParams.get("sort") || "createdAt";
-    const order = searchParams.get("order") || "desc";
-    const page = parseInt(searchParams.get("page")) || 1;
-    const limit = parseInt(searchParams.get("limit")) || 20;
+    const vip    = searchParams.get("vip") || "";
+    const sort   = searchParams.get("sort") || "createdAt";
+    const order  = searchParams.get("order") || "desc";
+    const page   = parseInt(searchParams.get("page")) || 1;
+    const limit  = parseInt(searchParams.get("limit")) || 20;
 
     let query = {};
 
@@ -31,6 +32,10 @@ export async function GET(req) {
 
     if (status) {
       query.status = status;
+    }
+
+    if (vip === "true") {
+      query.totalSpent = { $gte: 50000 };
     }
 
     const total = await Customer.countDocuments(query);

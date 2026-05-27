@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import mongoose from "mongoose";
 import { sendEmail } from "@/app/lib/mailer";
+import { getOrderStatusUpdateEmailTemplate } from "@/app/lib/emailTemplates";
 
 // ✅ GET - Récupérer les détails d'une commande
 
@@ -110,42 +111,15 @@ export async function PATCH(req, { params }) {
       cancelled: "Votre commande a été annulée. Contactez-nous pour plus d'informations.",
     };
 
-    const clientEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="background: ${statusInfo.color}; color: white; padding: 20px; text-align: center;">
-          ${statusInfo.icon} Mise à jour de votre commande
-        </h1>
-        
-        <div style="padding: 20px; border: 1px solid #e5e7eb;">
-          <p>Bonjour <strong>${order.customer?.firstname || "Client"}</strong>,</p>
-          
-          <p>${statusMessages[status]}</p>
-          
-          <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
-            <p style="margin: 0; color: #6b7280;">Commande #${orderNumber}</p>
-            <h2 style="margin: 10px 0; color: ${statusInfo.color};">
-              ${statusInfo.icon} ${statusInfo.label}
-            </h2>
-          </div>
-          
-          <h3>📋 Récapitulatif</h3>
-          <p><strong>📍 Adresse de livraison :</strong><br/>${order.customer?.address}, ${order.customer?.city}</p>
-          <p><strong>💰 Total :</strong> ${order.total?.toLocaleString()} Ar</p>
-          
-          <hr style="margin: 20px 0;" />
-          
-          <p style="color: #6b7280; font-size: 14px;">
-            Si vous avez des questions, n'hésitez pas à nous contacter.
-          </p>
-          
-          <p>Merci de votre confiance !</p>
-        </div>
-        
-        <p style="text-align: center; color: #9ca3af; font-size: 12px; margin-top: 20px;">
-          Cet email a été envoyé automatiquement, merci de ne pas y répondre.
-        </p>
-      </div>
-    `;
+    const clientEmailHtml = getOrderStatusUpdateEmailTemplate({
+      firstname: order.customer?.firstname || "Client",
+      orderNumber,
+      statusInfo,
+      statusMessage: statusMessages[status],
+      address: order.customer?.address || "",
+      city: order.customer?.city || "",
+      total: order.total,
+    });
 
     if (order.customer?.email) {
       await sendEmail({

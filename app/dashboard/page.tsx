@@ -5,8 +5,16 @@ import { connectDB } from "@/app/lib/db";
 import Order from "@/app/models/Order";
 import User from "@/app/models/User";
 import Link from "next/link";
-import Image from "next/image";
-import "./dashboard.css";
+
+const STATUS_CONFIG: Record<string, { label: string; badgeClass: string }> = {
+  pending:    { label: "En attente",     badgeClass: "db-badge db-badge-pending"    },
+  confirmed:  { label: "Confirmée",      badgeClass: "db-badge db-badge-confirmed"  },
+  processing: { label: "En préparation", badgeClass: "db-badge db-badge-processing" },
+  paid:       { label: "Payée",          badgeClass: "db-badge db-badge-paid"       },
+  shipped:    { label: "Expédiée",       badgeClass: "db-badge db-badge-shipped"    },
+  delivered:  { label: "Livrée",        badgeClass: "db-badge db-badge-delivered"  },
+  cancelled:  { label: "Annulée",       badgeClass: "db-badge db-badge-cancelled"  },
+};
 
 export default async function DashboardOverview() {
   const session = await getServerSession(authOptions);
@@ -14,153 +22,124 @@ export default async function DashboardOverview() {
 
   await connectDB();
 
-  // Commandes de l'utilisateur
   const allOrders = await Order.find({ "customer.email": session.user.email })
     .sort({ createdAt: -1 })
     .lean();
 
-  // Profil utilisateur (pour les adresses)
-  const user = await User.findOne({ email: session.user.email }).lean();
-  const addresses = user?.addresses || [];
+  const user = await User.findOne({ email: session.user.email }).lean() as any;
+  const address = user?.address || null;
 
-  const statusLabels = {
-    pending:    "En attente",
-    confirmed:  "Confirmée",
-    processing: "En préparation",
-    paid:       "Payée",
-    shipped:    "Expédiée",
-    delivered:  "Livré",
-    cancelled:  "Annulé",
-  };
+  // KPIs
+  const totalOrders = allOrders.length;
+  const totalSpent = allOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const pendingCount = allOrders.filter(
+    (o) => !["delivered", "cancelled"].includes(o.status)
+  ).length;
+
+  // 3 dernières commandes pour le résumé
+  const recentOrders = allOrders.slice(0, 3) as any[];
 
   return (
-    <div className="db-wrapper">
+    <div>
+      <h1 className="db-page-title">Vue d&apos;ensemble</h1>
 
-      {/* ── Titre ── */}
-      <h1 className="db-page-title">Dashboard</h1>
+      {/* ── KPIs ── */}
+      <div className="db-kpis">
+        <div className="db-kpi-card">
+          <span className="db-kpi-label">Commandes</span>
+          <span className="db-kpi-value">{totalOrders}</span>
+          <span className="db-kpi-sub">au total</span>
+        </div>
+        <div className="db-kpi-card">
+          <span className="db-kpi-label">Total dépensé</span>
+          <span className="db-kpi-value">{totalSpent.toLocaleString("fr-FR")} €</span>
+          <span className="db-kpi-sub">toutes commandes</span>
+        </div>
+        <div className="db-kpi-card">
+          <span className="db-kpi-label">En cours</span>
+          <span className="db-kpi-value">{pendingCount}</span>
+          <span className="db-kpi-sub">{pendingCount <= 1 ? "commande active" : "commandes actives"}</span>
+        </div>
+      </div>
 
-      {/* ── Profil ── */}
-      <div className="db-card">
-        <div className="db-profile-row">
+      <div className="db-wrapper">
 
-          {/* Nom */}
-          <div className="db-profile-field">
-            <span className="db-profile-field-value">{session.user.name}</span>
-            <Link href="/dashboard/profile" className="db-edit-icon" title="Modifier">✏️</Link>
+        {/* ── Résumé commandes ── */}
+        <div className="db-card db-summary-card">
+          <div className="db-summary-header">
+            <p className="db-section-title" style={{ margin: 0 }}>Dernières commandes</p>
+            {totalOrders > 0 && (
+              <Link href="/dashboard/orders" className="db-summary-link">Tout voir →</Link>
+            )}
           </div>
 
-          {/* Mail */}
-          <div className="db-profile-field">
-            <span className="db-profile-field-label">Mail :</span>
-            <span className="db-profile-field-value">{session.user.email}</span>
-            <Link href="/dashboard/profile" className="db-edit-icon" title="Modifier">✏️</Link>
-          </div>
-
-          {/* Tel */}
-          <div className="db-profile-field">
-            <span className="db-profile-field-label">Tel :</span>
-            <span className="db-profile-field-value">{user?.phone || "—"}</span>
-            <Link href="/dashboard/profile" className="db-edit-icon" title="Modifier">✏️</Link>
-          </div>
-
-          {/* Avatar */}
-          {session.user.image ? (
-            <Image
-              src={session.user.image}
-              alt={session.user.name}
-              width={48}
-              height={48}
-              className="db-profile-avatar"
-            />
+          {recentOrders.length === 0 ? (
+            <div className="db-summary-empty">
+              <p>Aucune commande pour le moment.</p>
+              <Link href="/boutique" className="db-add-address" style={{ marginTop: 12 }}>
+                Découvrir la boutique
+              </Link>
+            </div>
           ) : (
-            <div className="db-profile-avatar-placeholder">
-              {session.user.name?.[0]?.toUpperCase() || "?"}
-            </div>
-          )}
-
-        </div>
-      </div>
-
-      {/* ── Historique de commande ── */}
-      <div className="db-card">
-        <p className="db-section-title">Historique de commande</p>
-
-        {allOrders.length === 0 ? (
-          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
-            Aucune commande pour le moment.{" "}
-            <Link href="/boutique" style={{ color: "#c0616a" }}>Commencer mes achats</Link>
-          </p>
-        ) : (
-          <div className="db-table-wrap">
-            <table className="db-table">
-              <thead>
-                <tr>
-                  <th>Numéro</th>
-                  <th>Date</th>
-                  <th>Montant</th>
-                  <th>Quantité</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allOrders.map((order) => (
-                  <tr key={order._id}>
-                    <td className="db-order-num">
-                      #{order._id.toString().slice(-4).toUpperCase()}
-                    </td>
-                    <td>
+            <div className="db-recent-orders">
+              {recentOrders.map((order) => {
+                const status = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+                const articleCount = order.products?.reduce((s: number, i: any) => s + (i.quantity || 1), 0) || 0;
+                return (
+                  <div key={order._id} className="db-recent-order-row">
+                    <span className="db-order-num">
+                      #{order._id.toString().slice(-6).toUpperCase()}
+                    </span>
+                    <span className="db-recent-order-date">
                       {new Date(order.createdAt).toLocaleDateString("fr-FR")}
-                    </td>
-                    <td>{Number(order.total).toLocaleString()}€</td>
-                    <td>
-                      {order.items?.reduce((s, i) => s + (i.quantity || 1), 0) || 1}
-                    </td>
-                    <td className="db-status">
-                      {statusLabels[order.status] || order.status}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* ── Mes adresses ── */}
-      <div className="db-card">
-        <p className="db-section-title">Mes adresses</p>
-
-        <div className="db-addresses-grid">
-          {addresses.length === 0 && (
-            <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
-              Aucune adresse enregistrée.
-            </p>
-          )}
-
-          {addresses.map((addr, i) => (
-            <div className="db-address-block" key={i}>
-              <div className="db-address-label">
-                Adresse n°{i + 1}
-                <Link href={`/dashboard/addresses?edit=${i}`} className="db-edit-icon" title="Modifier">
-                  ✏️
+                    </span>
+                    <span className="db-recent-order-items">
+                      {articleCount} article{articleCount > 1 ? "s" : ""}
+                    </span>
+                    <span className={status.badgeClass}>{status.label}</span>
+                    <span className="db-recent-order-total">
+                      {Number(order.total).toLocaleString("fr-FR")} €
+                    </span>
+                  </div>
+                );
+              })}
+              {totalOrders > 3 && (
+                <Link href="/dashboard/orders" className="db-summary-more">
+                  + {totalOrders - 3} autres commandes
                 </Link>
-              </div>
-              <p className="db-address-text">
-                {addr.firstName} {addr.lastName}<br />
-                {addr.street}<br />
-                {addr.zip} {addr.city}, {addr.country}
-              </p>
+              )}
             </div>
-          ))}
-
-          {/* Bouton ajouter */}
-          <Link href="/dashboard/addresses?new=1" className="db-add-address">
-            <span style={{ fontSize: 18, lineHeight: 1 }}>+</span>
-            Ajouter une adresse
-          </Link>
+          )}
         </div>
-      </div>
 
+        {/* ── Résumé adresses ── */}
+        <div className="db-card db-summary-card">
+          <div className="db-summary-header">
+            <p className="db-section-title" style={{ margin: 0 }}>Mon adresse</p>
+            <Link href="/dashboard/addresses" className="db-summary-link">Gérer →</Link>
+          </div>
+
+          {!address?.street ? (
+            <div className="db-summary-empty">
+              <p>Aucune adresse enregistrée.</p>
+              <Link href="/dashboard/addresses" className="db-add-address" style={{ marginTop: 12 }}>
+                + Ajouter une adresse
+              </Link>
+            </div>
+          ) : (
+            <div className="db-summary-addresses">
+              <div className="db-summary-address-chip">
+                <span className="db-summary-address-label">Livraison</span>
+                <span className="db-summary-address-text">
+                  {address.street}, {address.postalCode} {address.city}
+                  {address.country ? `, ${address.country}` : ""}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   );
 }

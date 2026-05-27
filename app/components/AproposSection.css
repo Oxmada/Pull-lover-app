@@ -1,0 +1,217 @@
+/* =========================================
+   AproposSection — Option B
+   ========================================= */
+
+.apropos-section {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 100px 80px;
+    box-sizing: border-box;
+}
+
+.apropos-main-container {
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    margin: 0 auto;
+    background-color: #ffffff;
+    position: relative;
+    min-height: 560px;
+}
+
+/* ---- Fond coloré derrière l'image ---- */
+.apropos-product-presentation {
+    flex: 0 0 45%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.apropos-product-image {
+    width: 100%;
+    max-width: 420px;
+    height: auto !important;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+/* ---- Bloc texte ---- */
+.apropos-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 4rem;
+}
+
+.apropos-txt-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- Groupe label + titre — gap interne 10px ---- */
+.apropos-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ---- Eyebrow ---- */
+.apropos-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C95D5D;
+    margin: 0;
+}
+
+/* ---- Titre ---- */
+.apropos-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+/* ---- Description — 60px après le titre ---- */
+.apropos-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 1.75;
+    color: #444444;
+    margin: 0;
+    margin-top: 60px;
+    max-width: 480px;
+}
+
+/* ---- Chips matière — 20px après la description ---- */
+.apropos-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.apropos-chip {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    color: #6b7280;
+    background: #f9fafb;
+    border: 0.5px solid #e5e7eb;
+    padding: 5px 14px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+}
+
+/* ---- Bouton — 40px après les chips ---- */
+.apropos-btn {
+    display: inline-block;
+    width: fit-content;
+    padding: 9px 20px;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-top: 40px;
+}
+
+.apropos-btn:hover {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (min-width: 810px) and (max-width: 1200px) {
+    .apropos-section {
+        padding: 100px 64px;
+    }
+
+    .apropos-product-presentation {
+        flex: 0 0 40%;
+    }
+
+    .apropos-container {
+        padding: 0 2.5rem;
+    }
+
+    .apropos-title {
+        font-size: 36px;
+    }
+
+    .apropos-description {
+        font-size: 16px;
+        margin-top: 40px;
+    }
+
+    .apropos-chips {
+        margin-top: 16px;
+    }
+
+    .apropos-btn {
+        margin-top: 32px;
+    }
+}
+
+@media (max-width: 810px) {
+    .apropos-section {
+        padding: 60px 32px;
+    }
+
+    .apropos-main-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .apropos-product-presentation {
+        flex: none;
+        width: 100%;
+        min-height: 320px;
+    }
+
+    .apropos-product-image {
+        max-width: 280px;
+    }
+
+    .apropos-container {
+        padding: 0;
+    }
+
+    .apropos-description {
+        max-width: 100%;
+        font-size: 12px;
+        margin-top: 32px;
+    }
+
+    .apropos-chips {
+        margin-top: 16px;
+    }
+
+    .apropos-btn {
+        margin-top: 24px;
+    }
+
+    .apropos-title {
+        font-size: 24px;
+    }
+}

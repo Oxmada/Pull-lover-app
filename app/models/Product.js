@@ -42,6 +42,11 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    stocks: {
+      type: Map,
+      of: Number,
+      default: {},
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

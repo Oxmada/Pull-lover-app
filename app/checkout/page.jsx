@@ -7,7 +7,7 @@ import "./checkout.css";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cartItems, cartTotal } = useCart();
+  const { cartItems, cartTotal, clearCart } = useCart();
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -60,7 +60,7 @@ export default function CheckoutPage() {
         return;
       }
       alert("✅ Commande confirmée !");
-      localStorage.removeItem("cart");
+      clearCart();
       router.push("/");
     } catch (error) {
       console.error("CHECKOUT ERROR:", error);
@@ -72,6 +72,13 @@ export default function CheckoutPage() {
 
   return (
     <div className="checkout-page">
+
+      {/* FOND ANIMÉ */}
+      <div className="checkout-bg">
+        <span /><span /><span /><span />
+      </div>
+
+      <div className="checkout-inner">
 
       {/* BOUTON RETOUR */}
       <button className="checkout-back" onClick={() => router.back()}>
@@ -293,16 +300,10 @@ export default function CheckoutPage() {
               <span>Total</span>
               <span>{total} Ar</span>
             </div>
-            <button
-              className="checkout-pay-btn"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? "Envoi..." : "Procéder au paiement"}
-            </button>
           </div>
 
         </div>
+      </div>
       </div>
     </div>
   );

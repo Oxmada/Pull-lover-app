@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/db";
 import Order from "@/app/models/Order";
 import { sendEmail } from "@/app/lib/mailer";
+import { getOrderConfirmationEmailTemplate } from "@/app/lib/emailTemplates";
 
 export async function POST(req, { params }) {
   try {
@@ -34,67 +35,37 @@ export async function POST(req, { params }) {
 
     // Liste des produits formatée pour le HTML
     const productListHtml = products.map((item) => `
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
-            ${item.product?.name || "Produit"}
-          </td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">
-            ${item.quantity}
-          </td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">
-            ${item.product?.price ? Number(item.product.price).toLocaleString() + " Ar" : "-"}
-          </td>
-        </tr>
+      <tr style="border-bottom:1px solid #e2e8f0">
+        <td style="padding:12px 0;font-size:14px;color:#475569">${item.product?.name || "Produit"}</td>
+        <td style="padding:12px 0;font-size:14px;color:#475569;text-align:center">${item.quantity}</td>
+        <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600">${item.product?.price ? Number(item.product.price).toLocaleString("fr-FR") + " Ar" : "-"}</td>
+      </tr>
     `).join("");
 
-    // 3. TON TEMPLATE HTML (Celui de ton code d'origine)
-    const clientEmailHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head><meta charset="utf-8"></head>
-      <body style="margin: 0; padding: 0; background-color: #f3f4f6;">
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: white;">
-          <div style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 30px; text-align: center;">
-            <h1 style="margin: 0; font-size: 28px;">✅ Récapitulatif de Commande</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">Voici les détails de votre commande, ${customer.firstname} !</p>
-          </div>
-          <div style="padding: 30px;">
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: center;">
-              <p style="margin: 0; color: #166534; font-size: 14px;">NUMÉRO DE COMMANDE</p>
-              <p style="margin: 10px 0 0 0; font-size: 24px; font-weight: bold; color: #15803d;">#${orderNumber}</p>
-            </div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
-              <thead>
-                <tr style="background: #f9fafb;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Produit</th>
-                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qté</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Prix</th>
-                </tr>
-              </thead>
-              <tbody>${productListHtml}</tbody>
-            </table>
-            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <p><strong>Adresse :</strong> ${customer.address}, ${customer.city}</p>
-              <p><strong>Mode :</strong> ${deliveryLabels[delivery] || delivery}</p>
-              <p><strong>Paiement :</strong> ${paymentLabels[payment] || payment}</p>
-            </div>
-            <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-              <p style="margin: 0; font-size: 14px; opacity: 0.9;">TOTAL</p>
-              <p style="margin: 10px 0 0 0; font-size: 32px; font-weight: bold;">${Number(total).toLocaleString()} Ar</p>
-            </div>
-          </div>
-          <div style="background: #1f2937; color: white; padding: 30px; text-align: center;">
-            <p>© ${new Date().getFullYear()} Mon Site E-commerce</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const orderDate = order.createdAt
+      ? new Date(order.createdAt).toLocaleDateString("fr-FR", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric",
+        })
+      : new Date().toLocaleDateString("fr-FR", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric",
+        });
+
+    const clientEmailHtml = getOrderConfirmationEmailTemplate({
+      firstname: customer.firstname,
+      orderNumber,
+      orderDate,
+      productListHtml,
+      address: customer.address,
+      city: customer.city,
+      deliveryLabel: deliveryLabels[delivery] || delivery,
+      paymentLabel: paymentLabels[payment] || payment,
+      total,
+    });
 
     // 4. Envoi de l'email
     await sendEmail({
       to: customer.email,
-      subject: `🔄 Récapitulatif de votre commande #${orderNumber}`,
+      subject: `Récapitulatif de votre commande #${orderNumber} — Pull-Lover`,
       html: clientEmailHtml,
     });
 

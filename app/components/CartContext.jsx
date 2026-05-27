@@ -75,6 +75,9 @@ export function CartProvider({ children }) {
     );
   };
 
+  /* 🗑️ Vider le panier */
+  const clearCart = () => setCartItems([]);
+
   /* 💰 TOTAL AUTOMATIQUE */
   const cartTotal = cartItems.reduce((total, item) => {
     const price = Number(item.promoPrice ?? item.price);
@@ -89,6 +92,7 @@ export function CartProvider({ children }) {
         increaseQty,
         decreaseQty,
         removeFromCart,
+        clearCart,
         cartTotal,
       }}
     >

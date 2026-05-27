@@ -1,44 +1,84 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import ProductForm from "@/app/components/ProductForm";
+import "./products-admin.css";
+
+const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
 
 export default function ProductsManagement() {
-  const router = useRouter();
-  const [products, setProducts] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("createdAt");
-  const [order, setOrder] = useState("desc");
-  const [toast, setToast] = useState(null);
+  const [products, setProducts]             = useState([]);
+  const [categories, setCategories]         = useState([]);
+  const [stats, setStats]                   = useState(null);
+  const [pagination, setPagination]         = useState(null);
+  const [loading, setLoading]               = useState(true);
+  const [filter, setFilter]                 = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [search, setSearch]                 = useState("");
+  const [sort, setSort]                     = useState("createdAt");
+  const [order, setOrder]                   = useState("desc");
+  const [page, setPage]                     = useState(1);
+  const [toast, setToast]                   = useState(null);
+  const [exporting, setExporting]           = useState(false);
+  const [showForm, setShowForm]             = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [sortOpen, setSortOpen]             = useState(false);
+  const [confirmModal, setConfirmModal]     = useState(null);
+  const sortRef        = useRef(null);
+  const searchFirstRef = useRef(true);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
+  const askConfirm = (message, onConfirm) => setConfirmModal({ message, onConfirm });
+
+  useEffect(() => { fetchCategories(); }, []);
+
+  // Fetch immédiat sur tous les filtres sauf search
+  useEffect(() => { fetchProducts(); }, [filter, sort, order, categoryFilter, page]);
+
+  // Fetch avec debounce sur la recherche textuelle (skip premier rendu)
   useEffect(() => {
-    fetchProducts();
-  }, [filter, sort, order]);
+    if (searchFirstRef.current) { searchFirstRef.current = false; return; }
+    const t = setTimeout(fetchProducts, 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  useEffect(() => {
+    const close = (e) => {
+      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res  = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data.categories || data || []);
+    } catch (err) {
+      console.error("Erreur chargement catégories:", err);
+    }
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        filter,
-        sort,
-        order,
-        ...(search && { search }),
+        filter, sort, order, page,
+        ...(search         && { search }),
+        ...(categoryFilter && { category: categoryFilter }),
       });
-
-      const res = await fetch(`/api/admin/products?${params}`);
+      const res  = await fetch(`/api/admin/products?${params}`);
       const data = await res.json();
-
       if (data.success) {
         setProducts(data.products);
         setStats(data.stats);
+        setPagination(data.pagination);
       }
     } catch (error) {
       console.error("Erreur:", error);
@@ -47,300 +87,330 @@ export default function ProductsManagement() {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchProducts();
-  };
-
-  const handleStockUpdate = async (productId, newStock) => {
+  const handleToggleAvailable = async (product) => {
     try {
       const res = await fetch("/api/admin/products", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          productId,
-          updates: { stock: parseInt(newStock) },
+          productId: product._id,
+          updates: { isAvailable: !product.isAvailable },
         }),
       });
-
       const data = await res.json();
-
       if (data.success) {
         setProducts((prev) =>
-          prev.map((p) =>
-            p._id === productId ? { ...p, stock: parseInt(newStock) } : p
-          )
+          prev.map((p) => p._id === product._id ? { ...p, isAvailable: !p.isAvailable } : p)
         );
-        showToast("Stock mis à jour ✓");
       } else {
         showToast("Erreur lors de la mise à jour", "error");
       }
-    } catch (error) {
-      console.error("Erreur:", error);
+    } catch {
       showToast("Erreur lors de la mise à jour", "error");
     }
   };
 
-  const handleDelete = async (productId, productName) => {
-    if (!confirm(`Supprimer "${productName}" ?`)) return;
-
-    try {
-      const res = await fetch(`/api/admin/products?id=${productId}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setProducts((prev) => prev.filter((p) => p._id !== productId));
-        showToast("Produit supprimé ✓");
-      } else {
+  const handleDelete = (productId, productName) => {
+    askConfirm(`Supprimer "${productName}" définitivement ?`, async () => {
+      try {
+        const res  = await fetch(`/api/admin/products?id=${productId}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+          setProducts((prev) => prev.filter((p) => p._id !== productId));
+          showToast("Produit supprimé");
+        } else {
+          showToast("Erreur lors de la suppression", "error");
+        }
+      } catch {
         showToast("Erreur lors de la suppression", "error");
       }
+    });
+  };
+
+  const handleEdit = (product) => { setEditingProduct(product); setShowForm(true); };
+  const closeForm  = ()        => { setShowForm(false); setEditingProduct(null); };
+
+  const handleSave = async (productData) => {
+    try {
+      const method = editingProduct ? "PUT" : "POST";
+      const res    = await fetch("/api/products", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Erreur serveur");
+      await fetchProducts();
+      closeForm();
+      showToast(editingProduct ? "Produit modifié" : "Produit ajouté");
     } catch (error) {
-      console.error("Erreur:", error);
-      showToast("Erreur lors de la suppression", "error");
+      showToast("Erreur : " + error.message, "error");
     }
   };
 
-  return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "24px" }}>
+  const exportCSV = async () => {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({
+        filter, sort, order, export: "true",
+        ...(search         && { search }),
+        ...(categoryFilter && { category: categoryFilter }),
+      });
+      const res  = await fetch(`/api/admin/products?${params}`);
+      const data = await res.json();
+      if (!data.success) return;
 
-      {/* 🔔 TOAST */}
+      const headers = [
+        "Nom", "Marque", "Catégorie", "Prix (Ar)", "Prix promo (Ar)",
+        "XS", "S", "M", "L", "XL", "Stock total", "Visible", "Ajouté le",
+      ];
+      const rows = data.products.map(p => [
+        p.name,
+        p.brand || "",
+        p.category?.name || "",
+        p.price,
+        p.promoPrice || "",
+        p.stocks?.XS ?? 0, p.stocks?.S ?? 0, p.stocks?.M ?? 0,
+        p.stocks?.L ?? 0, p.stocks?.XL ?? 0,
+        p.stock ?? 0,
+        p.isAvailable !== false ? "Oui" : "Non",
+        new Date(p.createdAt).toLocaleDateString("fr-FR"),
+      ].join(";"));
+
+      const csv  = [headers.join(";"), ...rows].join("\n");
+      const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `produits_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const setFilterAndReset = (val) => { setFilter(val); setPage(1); };
+  const setCatAndReset    = (val) => { setCategoryFilter(val); setPage(1); };
+  const setSortAndReset   = (val) => { setSort(val); setPage(1); setSortOpen(false); };
+
+  const FILTERS = [
+    { label: "Tous",         value: "all" },
+    { label: "Stock faible", value: "low" },
+    { label: "Rupture",      value: "out" },
+  ];
+
+  const SORT_OPTIONS = [
+    { label: "Date création", value: "createdAt" },
+    { label: "Nom",           value: "name"      },
+    { label: "Prix",          value: "price"     },
+    { label: "Stock",         value: "stock"     },
+  ];
+
+  return (
+    <div className="ap-page">
+
+      {/* Toast */}
       {toast && (
-        <div style={{
-          position: "fixed", top: "24px", right: "24px", zIndex: 9999,
-          padding: "14px 24px",
-          background: toast.type === "error" ? "#dc2626" : "#16a34a",
-          color: "#fff", borderRadius: "8px",
-          boxShadow: "0 4px 12px rgba(0,0,0,.2)",
-          fontWeight: "500", fontSize: "14px",
-          animation: "slideIn 0.3s ease",
-        }}>
+        <div className={`ap-toast ${toast.type === "error" ? "ap-toast-error" : "ap-toast-success"}`}>
           {toast.message}
         </div>
       )}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-        <h1 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "24px" }}>Gestion des Produits</h1>
-        <button
-          onClick={() => router.push("/products/add")}
-          style={{
-            padding: "10px 20px",
-            background: "#0070f3",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
-          ➕ Ajouter un produit
-        </button>
-      </div>
 
-      {/* STATS */}
-      {stats && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
-          <StatCard title="Total produits" value={stats.total} color="#0088FE" />
-          <StatCard title="Rupture de stock" value={stats.outOfStock} color="#FF8042" />
-          <StatCard title="Stock faible" value={stats.lowStock} color="#FFBB28" />
+      {/* Modale de confirmation */}
+      {confirmModal && (
+        <div className="ap-confirm-overlay" onClick={() => setConfirmModal(null)}>
+          <div className="ap-confirm-dialog" onClick={(e) => e.stopPropagation()}>
+            <p className="ap-confirm-msg">{confirmModal.message}</p>
+            <div className="ap-confirm-actions">
+              <button className="ap-confirm-cancel" onClick={() => setConfirmModal(null)}>
+                Annuler
+              </button>
+              <button
+                className="ap-confirm-ok"
+                onClick={() => { confirmModal.onConfirm(); setConfirmModal(null); }}
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* FILTRES ET RECHERCHE */}
-      <div style={{ background: "#fff", padding: "20px", borderRadius: "10px", marginBottom: "20px", boxShadow: "0 2px 8px rgba(0,0,0,.1)" }}>
-        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
-          {/* RECHERCHE */}
-          <form onSubmit={handleSearch} style={{ flex: "1", minWidth: "250px", display: "flex", gap: "8px" }}>
-            <input
-              type="text"
-              placeholder="Rechercher un produit..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{
-                flex: 1,
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "6px",
-                fontSize: "14px",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                padding: "10px 20px",
-                background: "#0070f3",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-              }}
-            >
-              🔍
-            </button>
-          </form>
-
-          {/* FILTRES */}
-          <div style={{ display: "flex", gap: "8px" }}>
-            {[
-              { label: "Tous", value: "all" },
-              { label: "Rupture", value: "out" },
-              { label: "Stock faible", value: "low" },
-            ].map((f) => (
-              <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
-                style={{
-                  padding: "8px 16px",
-                  background: filter === f.value ? "#0070f3" : "#fff",
-                  color: filter === f.value ? "#fff" : "#333",
-                  border: "1px solid #ddd",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  fontWeight: filter === f.value ? "600" : "400",
-                }}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          {/* TRI */}
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            style={{
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              fontSize: "14px",
-            }}
-          >
-            <option value="createdAt">Date création</option>
-            <option value="name">Nom</option>
-            <option value="price">Prix</option>
-            <option value="stock">Stock</option>
-          </select>
-
-          <button
-            onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-            style={{
-              padding: "10px",
-              background: "#fff",
-              border: "1px solid #ddd",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            {order === "asc" ? "↑" : "↓"}
-          </button>
-        </div>
+      {/* Topbar */}
+      <div className="ap-topbar">
+        <Link href="/admin/dashboard" className="ap-back-btn">← Dashboard</Link>
+        <h1 className="ap-topbar-title">Produits &amp; Stock</h1>
+        <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
+          {exporting ? "Export…" : "↓ Export CSV"}
+        </button>
+        <button className="ap-btn-add" onClick={() => { setEditingProduct(null); setShowForm(true); }}>
+          + Ajouter un produit
+        </button>
       </div>
 
-      {/* TABLEAU PRODUITS */}
-      <div style={{ background: "#fff", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,.1)", overflowX: "auto" }}>
+      {/* Toolbar */}
+      <div className="ap-toolbar">
+
+        {/* Recherche temps réel */}
+        <input
+          type="text"
+          placeholder="Rechercher un produit…"
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
+          className="ap-search-input"
+        />
+
+        <div className="ap-divider" />
+
+        {/* Filtre catégorie */}
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCatAndReset(e.target.value)}
+          className="ap-category-select"
+        >
+          <option value="">Toutes catégories</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>{c.name}</option>
+          ))}
+        </select>
+
+        <div className="ap-divider" />
+
+        {/* Filtres stock */}
+        <div className="ap-filters">
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setFilterAndReset(f.value)}
+              className={`ap-filter-btn ${filter === f.value ? "active" : ""}`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="ap-divider" />
+
+        {/* Tri */}
+        <div className="ap-sort-wrap" ref={sortRef}>
+          <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
+            {SORT_OPTIONS.find((o) => o.value === sort)?.label}
+            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>▼</span>
+          </button>
+          {sortOpen && (
+            <ul className="ap-sort-dropdown">
+              {SORT_OPTIONS.map((o) => (
+                <li
+                  key={o.value}
+                  className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
+                  onClick={() => setSortAndReset(o.value)}
+                >
+                  {o.label}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <button onClick={() => setOrder(order === "asc" ? "desc" : "asc")} className="ap-sort-btn">
+          {order === "asc" ? "↑" : "↓"}
+        </button>
+
+        {/* Stats inline */}
+        {stats && (
+          <>
+            <div className="ap-divider" />
+            <div className="ap-stats-inline">
+              <div className="ap-stat-chip">
+                <span className="ap-stat-chip-value">{stats.total}</span>
+                <span className="ap-stat-chip-label">Total</span>
+              </div>
+              <div className="ap-stat-sep" />
+              <div className="ap-stat-chip warn">
+                <span className="ap-stat-chip-value">{stats.lowStock}</span>
+                <span className="ap-stat-chip-label">Faible</span>
+              </div>
+              <div className="ap-stat-sep" />
+              <div className="ap-stat-chip danger">
+                <span className="ap-stat-chip-value">{stats.outOfStock}</span>
+                <span className="ap-stat-chip-label">Rupture</span>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="ap-table-wrap">
         {loading ? (
-          <div style={{ padding: "40px", textAlign: "center" }}>⏳ Chargement...</div>
+          <div className="ap-state"><span className="ap-state-icon">⏳</span>Chargement…</div>
         ) : products.length === 0 ? (
-          <div style={{ padding: "40px", textAlign: "center" }}>Aucun produit trouvé</div>
+          <div className="ap-state"><span className="ap-state-icon">📭</span>Aucun produit trouvé</div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table className="ap-table">
             <thead>
-              <tr style={{ borderBottom: "2px solid #eee", background: "#f9fafb" }}>
-                <th style={tableHeaderStyle}>Image</th>
-                <th style={tableHeaderStyle}>Nom</th>
-                <th style={tableHeaderStyle}>Catégorie</th>
-                <th style={tableHeaderStyle}>Prix</th>
-                <th style={tableHeaderStyle}>Stock</th>
-                <th style={tableHeaderStyle}>Statut</th>
-                <th style={tableHeaderStyle}>Actions</th>
+              <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Stock par taille</th>
+                <th>Statut</th>
+                <th>Visible</th>
+                <th>Ajouté le</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product._id} style={{ borderBottom: "1px solid #f5f5f5" }}>
-                  <td style={tableCellStyle}>
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "6px" }}
-                      />
-                    ) : (
-                      <div style={{ width: "50px", height: "50px", background: "#e5e7eb", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        📦
-                      </div>
-                    )}
-                  </td>
-                  <td style={tableCellStyle}>
-                    <strong>{product.name}</strong>
-                  </td>
-                  <td style={tableCellStyle}>
-                    {product.category?.name || "—"}
-                  </td>
-                  <td style={tableCellStyle}>
-                    {product.promoPrice ? (
+                <tr key={product._id}>
+                  <td>
+                    <div className="ap-product-cell">
+                      {product.image
+                        ? <img src={product.image} alt={product.name} className="ap-product-img" />
+                        : <div className="ap-product-no-img">👕</div>
+                      }
                       <div>
-                        <span style={{ textDecoration: "line-through", color: "#999", marginRight: "8px" }}>
-                          {product.price.toLocaleString()} Ar
-                        </span>
-                        <strong style={{ color: "#0070f3" }}>{product.promoPrice.toLocaleString()} Ar</strong>
+                        <span className="ap-product-name">{product.name}</span>
+                        {product.brand && <span className="ap-product-brand">{product.brand}</span>}
                       </div>
+                    </div>
+                  </td>
+                  <td>{product.category?.name || <span style={{ color: "#a8a29e" }}>—</span>}</td>
+                  <td>
+                    {product.promoPrice ? (
+                      <>
+                        <span className="ap-price-original">{product.price.toLocaleString()} Ar</span>
+                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} Ar</span>
+                      </>
                     ) : (
-                      <strong>{product.price.toLocaleString()} Ar</strong>
+                      <span className="ap-price">{product.price.toLocaleString()} Ar</span>
                     )}
                   </td>
-                  <td style={tableCellStyle}>
-                    <input
-                      type="number"
-                      defaultValue={product.stock}
-                      onBlur={(e) => {
-                        if (e.target.value !== product.stock.toString()) {
-                          handleStockUpdate(product._id, e.target.value);
-                        }
-                      }}
-                      style={{
-                        width: "70px",
-                        padding: "6px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        textAlign: "center",
-                      }}
-                    />
+                  <td><StockBySize stocks={product.stocks} /></td>
+                  <td><StockBadge stock={product.stock} /></td>
+                  <td>
+                    <button
+                      className={`ap-toggle ${product.isAvailable !== false ? "on" : "off"}`}
+                      onClick={() => handleToggleAvailable(product)}
+                      title={product.isAvailable !== false ? "Visible — cliquer pour masquer" : "Masqué — cliquer pour afficher"}
+                    >
+                      <span className="ap-toggle-thumb" />
+                    </button>
                   </td>
-                  <td style={tableCellStyle}>
-                    <StockBadge stock={product.stock} />
-                  </td>
-                  <td style={tableCellStyle}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <button
-                        onClick={() => router.push(`/products/edit/${product._id}`)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#0070f3",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                        }}
+                  <td><CreatedAt date={product.createdAt} /></td>
+                  <td>
+                    <div className="ap-actions">
+                      <Link
+                        href={`/products/${product._id}`}
+                        target="_blank"
+                        className="ap-btn-view"
+                        title="Voir la fiche produit"
                       >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product._id, product.name)}
-                        style={{
-                          padding: "6px 12px",
-                          background: "#dc2626",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                        }}
-                      >
-                        🗑️
-                      </button>
+                        ↗
+                      </Link>
+                      <button className="ap-btn-edit" onClick={() => handleEdit(product)}>Modifier</button>
+                      <button className="ap-btn-delete" onClick={() => handleDelete(product._id, product.name)}>Supprimer</button>
                     </div>
                   </td>
                 </tr>
@@ -349,67 +419,85 @@ export default function ProductsManagement() {
           </table>
         )}
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.pages > 1 && (
+        <div className="ap-pagination">
+          <button
+            className="ap-page-btn"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            ← Précédent
+          </button>
+          <span className="ap-page-info">
+            Page {pagination.page} / {pagination.pages}
+            <span className="ap-page-total"> — {pagination.total} produits</span>
+          </span>
+          <button
+            className="ap-page-btn"
+            onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
+            disabled={page === pagination.pages}
+          >
+            Suivant →
+          </button>
+        </div>
+      )}
+
+      {/* Modal formulaire */}
+      {showForm && (
+        <div
+          className="ap-modal-overlay"
+          onClick={(e) => { if (e.target === e.currentTarget) closeForm(); }}
+        >
+          <div className="ap-modal">
+            <div className="ap-modal-header">
+              <h2 className="ap-modal-title">
+                {editingProduct ? "Modifier le produit" : "Ajouter un produit"}
+              </h2>
+              <button className="ap-modal-close" onClick={closeForm}>✕</button>
+            </div>
+            <div className="ap-modal-body">
+              <ProductForm
+                categories={categories}
+                editingProduct={editingProduct}
+                onSave={handleSave}
+                onCancel={closeForm}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function StatCard({ title, value, color }) {
+function StockBySize({ stocks }) {
+  const stockMap = stocks || {};
   return (
-    <div
-      style={{
-        background: "#fff",
-        padding: "16px",
-        borderRadius: "10px",
-        boxShadow: "0 2px 8px rgba(0,0,0,.1)",
-        borderLeft: `4px solid ${color}`,
-      }}
-    >
-      <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "8px" }}>{title}</p>
-      <h3 style={{ fontSize: "26px", fontWeight: "bold" }}>{value}</h3>
+    <div className="ap-stocks-by-size">
+      {ALL_SIZES.map((size) => {
+        const qty = stockMap[size] ?? 0;
+        return (
+          <span key={size} className={`ap-size-chip ${qty === 0 ? "empty" : ""}`}>
+            <span className="ap-size-label">{size}</span>
+            <span className="ap-size-qty">{qty}</span>
+          </span>
+        );
+      })}
     </div>
   );
 }
 
 function StockBadge({ stock }) {
-  let color, text;
-
-  if (stock === 0) {
-    color = { bg: "#fee2e2", text: "#991b1b" };
-    text = "Rupture";
-  } else if (stock < 5) {
-    color = { bg: "#fef3c7", text: "#92400e" };
-    text = "Stock faible";
-  } else {
-    color = { bg: "#d1fae5", text: "#065f46" };
-    text = "Disponible";
-  }
-
-  return (
-    <span
-      style={{
-        padding: "4px 12px",
-        background: color.bg,
-        color: color.text,
-        borderRadius: "12px",
-        fontSize: "12px",
-        fontWeight: "500",
-        display: "inline-block",
-      }}
-    >
-      {text}
-    </span>
-  );
+  if (stock === 0) return <span className="ap-badge ap-badge-out">Rupture</span>;
+  if (stock < 5)   return <span className="ap-badge ap-badge-low">Stock faible</span>;
+  return <span className="ap-badge ap-badge-ok">Disponible</span>;
 }
 
-const tableHeaderStyle = {
-  padding: "12px",
-  textAlign: "left",
-  fontSize: "13px",
-  fontWeight: "600",
-  color: "#6b7280",
-};
-
-const tableCellStyle = {
-  padding: "12px",
-  fontSize: "14px",
-};
+function CreatedAt({ date }) {
+  if (!date) return <span style={{ color: "#a8a29e" }}>—</span>;
+  const d   = new Date(date);
+  const day = d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+  return <span className="ap-date">{day}</span>;
+}

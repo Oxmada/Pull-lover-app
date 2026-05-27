@@ -1,0 +1,217 @@
+/* =============================================
+   Contact — Page contact Desktop + Mobile
+   ============================================= */
+
+.contact {
+    width: 100%;
+    padding: 160px 0;
+    min-height: calc(100vh - 120px);
+}
+
+.contact__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+}
+
+/* ── Formulaire ── */
+
+.contact__form-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact__heading {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.contact__subtext {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.875rem;
+    color: #666666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contact__label {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.contact__input,
+.contact__textarea {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact__input::placeholder,
+.contact__textarea::placeholder {
+    color: #aaaaaa;
+}
+
+.contact__input:focus,
+.contact__textarea:focus {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+.contact__textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Bouton Envoyer — style fidèle à la maquette : outline */
+.contact__btn {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 10px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.contact__btn:hover:not(:disabled) {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.contact__btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Feedback */
+.contact__feedback {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.contact__feedback--success {
+    background-color: #eafaf1;
+    color: #1e8449;
+    border: 1px solid #a9dfbf;
+}
+
+.contact__feedback--error {
+    background-color: #fdf2f2;
+    color: #c0392b;
+    border: 1px solid #f5c6c6;
+}
+
+/* ── Image ── */
+
+.contact__map-side {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #d9d9d9;
+    align-self: stretch;
+    /* s'étire sur toute la hauteur de la ligne */
+}
+
+.contact__map {
+    width: 100%;
+    height: 521px;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* =============================================
+   Responsive — Tablet (810px – 1200px)
+   ============================================= */
+
+@media (min-width: 810px) and (max-width: 1200px) {
+    .contact {
+        padding: 64px 0;
+    }
+
+    .contact__container {
+        padding: 0 32px;
+        gap: 40px;
+    }
+
+    .contact__form-side {
+        gap: 60px;
+    }
+
+    .contact__heading {
+        font-size: 2.25rem;
+    }
+}
+
+/* =============================================
+   Responsive — Mobile (≤ 810px)
+   ============================================= */
+
+@media (max-width: 810px) {
+    .contact {
+        padding: 48px 0;
+    }
+
+    .contact__container {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+        gap: 40px;
+    }
+
+    .contact__form-side {
+        gap: 40px;
+    }
+
+    .contact__heading {
+        font-size: 1.5rem;
+    }
+
+    .contact__map-side {
+        min-height: 280px;
+    }
+
+    .contact__map {
+        min-height: 280px;
+    }
+}

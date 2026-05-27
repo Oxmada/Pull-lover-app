@@ -1,0 +1,540 @@
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Pinyon+Script&display=swap');
+
+/* --- SECTION HERO PRINCIPALE & FOND --- */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #C95D5D 0%, #870003 100%);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 80px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://res.cloudinary.com/dewstflqp/image/upload/v1778087992/pull-lover_background_floral_abstrait_texture_mail_v0soa3.png');
+  background-size: cover;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- HEADER & NAVIGATION --- */
+.navbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 3rem;
+  background: transparent;
+  width: 100%;
+}
+
+/* --- LOGO --- */
+.logo {
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.logo-combined {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.logo-icon-wrapper {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.navbar-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
+.navbar-text-img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
+/* --- LIENS DE NAVIGATION --- */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #fff;
+}
+
+.admin-link {
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+}
+
+/* --- ICONES ET PANIER --- */
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.nav-icons a,
+.logout-icon,
+.search-icon-header {
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.nav-icons a:hover,
+.logout-icon:hover,
+.search-icon-header:hover {
+  transform: translateY(-2px);
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #fff;
+  color: #c0281a;
+  font-size: 0.6rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- STRUCTURE CONTENU HERO (FLEX) --- */
+.hero-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding-left: 64px;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+.hero-content-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 2rem;
+}
+
+.hero-content-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-top: 4rem;
+  padding-right: 6rem;
+  flex: 1;
+}
+
+/* --- BANDEAU D'INFORMATION (BADGE GLASS) --- */
+.hero-badge {
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.hero-badge:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #fff;
+}
+
+.badge-icon {
+  color: #fff;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  margin-left: 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.badge-close:hover {
+  opacity: 1;
+}
+
+.badge-close path {
+  stroke: #000;
+}
+
+/* --- TITRES ET TEXTES --- */
+.hero-title .bold {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 128px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  color: #fff;
+  text-transform: none;
+}
+
+.hero-title .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 128px;
+  font-weight: 10;
+  line-height: 0.5;
+  color: #fff;
+  display: inline-block;
+}
+
+.hero-sub {
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2.2rem;
+  max-width: 420px;
+}
+
+/* --- BOUTON CTA --- */
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.85rem 2rem;
+  border-radius: 40px;
+  text-decoration: none;
+  width: fit-content;
+  transition: background 0.3s, transform 0.2s, border-color 0.3s;
+}
+
+.hero-cta:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* --- RÉSEAUX SOCIAUX VERTICAUX --- */
+.social-vertical {
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.social-vertical a {
+  color: #fff;
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+
+.social-vertical a:hover {
+  transform: scale(1.1);
+}
+
+.social-line {
+  width: 1px;
+  height: 60px;
+  background: #fff;
+}
+
+.follow-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* --- FOOTER HERO --- */
+.made-with-love {
+  position: absolute;
+  bottom: 2rem;
+  right: 3rem;
+  z-index: 6;
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+/* --- BURGER MENU STYLES --- */
+.burger-menu {
+  display: none;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  padding: 4px;
+}
+
+.burger-icons {
+  display: none;
+}
+
+/* --- RESPONSIVE TABLETTE & MOBILE (< 1200px) --- */
+@media (max-width: 1200px) {
+  .navbar {
+    padding: 0.8rem 1.5rem;
+  }
+
+  .burger-menu {
+    display: flex;
+    order: 3;
+    color: #fff;
+  }
+
+  .nav-icons {
+    display: none;
+  }
+
+  .burger-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    height: 100vh;
+    background: #870003;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: 0.4s ease-in-out;
+    z-index: 90;
+    display: flex;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .hero-container {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    text-align: left;
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-section {
+    padding-bottom: 0px;
+  }
+
+  .hero-content-left {
+    align-items: flex-start;
+    padding-bottom: 4rem;
+    max-width: 100%;
+  }
+
+  .hero-title .bold,
+  .hero-title .script {
+    font-size: 90px;
+  }
+
+  .hero-content-right {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 2rem;
+    padding-right: 0;
+    flex: none;
+    width: 100%;
+  }
+
+  .social-vertical {
+    right: 1rem;
+    gap: 0.8rem;
+    display: none;
+  }
+
+  .social-line {
+    height: 40px;
+  }
+
+  .made-with-love {
+    right: 1.5rem;
+    bottom: 1rem;
+  }
+}
+
+/* --- AJUSTEMENTS SPECIFIQUES MOBILE (< 810px) --- */
+@media (max-width: 810px) {
+
+  /* 1. Menu Burger Pleine Page (Style Tablette) */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #870003;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    /* Gap standard tablette */
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links.active {
+    transform: translateX(0);
+  }
+
+  /* 2. Typographie épurée (Pas de gras excessif) */
+  .nav-links a {
+    font-size: 1.2rem;
+    /* Taille plus proche du desktop/tablette */
+    font-weight: 500;
+    /* Poids standard pour éviter l'effet "gras" */
+    font-family: 'Montserrat', sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  /* Ajout d'un espace spécifique pour le lien Contact avant la barre */
+  .nav-links a:last-of-type {
+    margin-bottom: 1.5rem;
+  }
+
+  /* 3. Barre de séparation et icônes (Style épuré image 10) */
+  .burger-icons {
+    display: flex;
+    position: relative;
+    /* On le remet dans le flux pour l'espace */
+    width: 80%;
+    justify-content: center;
+    gap: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    /* Barre plus fine */
+  }
+
+  .burger-icons svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+  }
+
+  /* 4. Bouton Burger */
+  .burger-menu {
+    display: flex;
+  }
+
+  /* Burger → croix quand menu ouvert : sort du flux pour passer au-dessus du menu */
+  .burger-menu--open {
+    position: fixed;
+    top: 14px; /* centre vertical du navbar (~60px) */
+    right: 1.5rem;
+    z-index: 2001;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1.5px solid #e7e5e4;
+    background: #fafaf9;
+    color: #78716c;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .burger-menu--open:hover {
+    background: #0f172a;
+    color: #fff;
+    border-color: #0f172a;
+  }
+
+  /* 5. Notification (Hug content) */
+  .hero-badge {
+    width: fit-content;
+    margin: 0 auto;
+    font-size: 0.75rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  /* 6. Nettoyage */
+  .social-vertical,
+  .made-with-love,
+  .follow-label,
+  .nav-icons {
+    display: none;
+  }
+}

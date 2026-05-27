@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import Sidebar from "./components/Sidebar";
 import "./dashboard.css";
 
 export default async function DashboardLayout({ children }) {
@@ -11,8 +12,11 @@ export default async function DashboardLayout({ children }) {
   if (session.user.role === "admin") redirect("/admin");
 
   return (
-    <main className="db-layout">
-      {children}
-    </main>
+    <div className="db-layout">
+      <Sidebar user={session.user} />
+      <main className="db-main">
+        {children}
+      </main>
+    </div>
   );
 }

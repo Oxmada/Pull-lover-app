@@ -1,70 +1,58 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCart } from "../components/CartContext";
+import { useFavorites } from "../components/FavoritesContext";
 import "./boutique.css";
+
+const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
 
 export default function BoutiquePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // 🔎 Paramètres URL
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
   const sort = searchParams.get("sort") || "";
-  const view = searchParams.get("view") || "grid";
 
-  // 📦 States
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(search);
-  
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 12;
+  const productsPerPage = 9;
 
-  // Filtres avancés
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
 
   const { addToCart } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
-  /* ======================
-     DEBOUNCE SEARCH
-  ====================== */
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== search) {
         updateURL({ search: searchInput, page: 1 });
       }
-    }, 500); // Attendre 500ms après la dernière frappe
-
+    }, 500);
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  /* ======================
-     FETCH PRODUITS
-  ====================== */
   useEffect(() => {
     async function fetchProducts() {
       try {
         setLoading(true);
         setError("");
-
         const query = new URLSearchParams();
         if (search) query.append("search", search);
         if (category) query.append("category", category);
         if (sort) query.append("sort", sort);
-
         const res = await fetch(`/api/products?${query.toString()}`);
         if (!res.ok) throw new Error("Erreur chargement produits");
-
         const data = await res.json();
         setProducts(data.products || []);
       } catch (err) {
@@ -74,14 +62,10 @@ export default function BoutiquePage() {
         setLoading(false);
       }
     }
-
     fetchProducts();
-    setCurrentPage(1); // Reset page quand filtres changent
+    setCurrentPage(1);
   }, [search, category, sort]);
 
-  /* ======================
-     FETCH CATEGORIES
-  ====================== */
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -92,69 +76,38 @@ export default function BoutiquePage() {
         console.error("Erreur chargement catégories");
       }
     }
-
     fetchCategories();
   }, []);
 
-  /* ======================
-     FILTRAGE & TRI
-  ====================== */
   const filteredProducts = products.filter((product) => {
-    // Filtrage par prix
     if (priceMin && product.price < parseFloat(priceMin)) return false;
     if (priceMax && product.price > parseFloat(priceMax)) return false;
     return true;
   });
 
-  // Tri
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sort) {
-      case "price-asc":
-        return (a.promoPrice || a.price) - (b.promoPrice || b.price);
-      case "price-desc":
-        return (b.promoPrice || b.price) - (a.promoPrice || a.price);
-      case "name-asc":
-        return a.name.localeCompare(b.name);
-      case "name-desc":
-        return b.name.localeCompare(a.name);
-      case "newest":
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      default:
-        return 0;
+      case "price-asc": return (a.promoPrice || a.price) - (b.promoPrice || b.price);
+      case "price-desc": return (b.promoPrice || b.price) - (a.promoPrice || a.price);
+      case "name-asc": return a.name.localeCompare(b.name);
+      case "name-desc": return b.name.localeCompare(a.name);
+      case "newest": return new Date(b.createdAt) - new Date(a.createdAt);
+      default: return 0;
     }
   });
 
-  // Pagination
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
-  /* ======================
-     HELPERS
-  ====================== */
   const updateURL = (params) => {
     const newParams = new URLSearchParams(searchParams);
     Object.entries(params).forEach(([key, value]) => {
-      if (value) {
-        newParams.set(key, value);
-      } else {
-        newParams.delete(key);
-      }
+      if (value) newParams.set(key, value);
+      else newParams.delete(key);
     });
     router.push(`/boutique?${newParams.toString()}`);
-  };
-
-  const handleCategoryChange = (e) => {
-    updateURL({ category: e.target.value, page: 1 });
-  };
-
-  const handleSortChange = (e) => {
-    updateURL({ sort: e.target.value, page: 1 });
-  };
-
-  const handleViewChange = (newView) => {
-    updateURL({ view: newView });
   };
 
   const resetFilters = () => {
@@ -164,283 +117,182 @@ export default function BoutiquePage() {
     router.push("/boutique");
   };
 
-  const isNewProduct = (createdAt) => {
-    if (!createdAt) return false;
-    const productDate = new Date(createdAt);
-    const now = new Date();
-    const daysDiff = (now - productDate) / (1000 * 60 * 60 * 24);
-    return daysDiff <= 30; // Nouveau si moins de 30 jours
-  };
-
-  /* ======================
-     RENDER
-  ====================== */
   return (
     <div className="boutique-container">
-      {/* HEADER */}
-      <div className="boutique-header">
-        <h1 className="title">🛍️ Boutique</h1>
-        <p className="subtitle">
-          {sortedProducts.length} produit{sortedProducts.length > 1 ? "s" : ""} disponible{sortedProducts.length > 1 ? "s" : ""}
-        </p>
-      </div>
 
-      {/* FILTRES PRINCIPAUX */}
-      <div className="filters">
-        <div className="filter-group">
-          <label>🔍 Rechercher</label>
+      {/* BARRE FILTRES */}
+      <div className="filters-bar">
+        <div className="search-wrapper">
+          <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+          </svg>
           <input
             type="text"
-            placeholder="Nom du produit..."
+            placeholder="Rechercher..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
+            className="search-input"
           />
         </div>
 
-        <div className="filter-group">
-          <label>📂 Catégorie</label>
-          <select value={category} onChange={handleCategoryChange}>
-            <option value="">Toutes</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="filter-group">
-          <label>↕️ Trier par</label>
-          <select value={sort} onChange={handleSortChange}>
-            <option value="">Par défaut</option>
-            <option value="price-asc">Prix croissant</option>
-            <option value="price-desc">Prix décroissant</option>
-            <option value="name-asc">Nom A-Z</option>
-            <option value="name-desc">Nom Z-A</option>
-            <option value="newest">Nouveautés</option>
-          </select>
-        </div>
-
-        <button 
-          className="btn-filters" 
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          {showFilters ? "➖" : "➕"} Filtres avancés
-        </button>
-      </div>
-
-      {/* FILTRES AVANCÉS */}
-      {showFilters && (
-        <div className="advanced-filters">
-          <div className="filter-group">
-            <label>💰 Prix minimum (Ar)</label>
-            <input
-              type="number"
-              placeholder="0"
-              value={priceMin}
-              onChange={(e) => setPriceMin(e.target.value)}
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>💰 Prix maximum (Ar)</label>
-            <input
-              type="number"
-              placeholder="1000000"
-              value={priceMax}
-              onChange={(e) => setPriceMax(e.target.value)}
-            />
-          </div>
-
-          <button className="btn-reset" onClick={resetFilters}>
-            🔄 Réinitialiser
-          </button>
-        </div>
-      )}
-
-      {/* TOOLBAR */}
-      <div className="toolbar">
-        <div className="view-toggle">
-          <button
-            className={view === "grid" ? "active" : ""}
-            onClick={() => handleViewChange("grid")}
-            title="Vue grille"
-          >
-            ⊞
-          </button>
-          <button
-            className={view === "list" ? "active" : ""}
-            onClick={() => handleViewChange("list")}
-            title="Vue liste"
-          >
-            ☰
-          </button>
-        </div>
-
-        <div className="results-count">
-          Affichage {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, sortedProducts.length)} sur {sortedProducts.length}
+        <div className="filters-right">
+          {GENDER_FILTERS.map((label) => {
+            const cat = categories.find(
+              (c) => c.name.toLowerCase() === label.toLowerCase()
+            );
+            const isActive = cat ? category === cat._id : false;
+            return (
+              <button
+                key={label}
+                className={`gender-btn${isActive ? " active" : ""}`}
+                onClick={() => {
+                  if (!cat) return;
+                  updateURL({ category: isActive ? "" : cat._id, page: 1 });
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* ÉTATS */}
+      {/* SKELETON */}
       {loading && (
-        <div className="loading-skeleton">
-          {[...Array(6)].map((_, i) => (
+        <div className="products-grid">
+          {[...Array(9)].map((_, i) => (
             <div key={i} className="skeleton-card">
-              <div className="skeleton-image"></div>
-              <div className="skeleton-text"></div>
-              <div className="skeleton-text short"></div>
+              <div className="skeleton-image" />
+              <div className="skeleton-line" />
+              <div className="skeleton-line short" />
             </div>
           ))}
         </div>
       )}
 
-      {error && <div className="error-message">❌ {error}</div>}
+      {error && <div className="error-state">❌ {error}</div>}
 
       {!loading && sortedProducts.length === 0 && (
         <div className="empty-state">
-          <p>😔 Aucun produit trouvé</p>
-          <button className="btn-reset" onClick={resetFilters}>
-            Réinitialiser les filtres
-          </button>
+          <p>Aucun produit trouvé</p>
+          <button className="reset-btn" onClick={resetFilters}>Réinitialiser</button>
         </div>
       )}
 
-      {/* GRID/LIST PRODUITS */}
+      {/* GRILLE PRODUITS */}
       {!loading && currentProducts.length > 0 && (
-        <div className={`products-container ${view}`}>
-          {currentProducts.map((product) => (
-            <div className="card" key={product._id}>
-              {/* BADGES */}
-              <div className="badges">
-                {product.promoPrice && (
-                  <span className="badge badge-promo">
-                    -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                  </span>
-                )}
-                {isNewProduct(product.createdAt) && (
-                  <span className="badge badge-new">Nouveau</span>
-                )}
-                {product.stock === 0 && (
-                  <span className="badge badge-stock">Rupture</span>
-                )}
-                {product.stock > 0 && product.stock < 5 && (
-                  <span className="badge badge-low">Stock faible</span>
-                )}
-              </div>
+        <div className="products-grid">
+          {currentProducts.map((product) => {
+            // Compte le nombre de couleurs disponibles si le champ existe
+            const colorCount = product.colors?.length ?? null;
 
-              <div className="image-wrapper">
-                <Image
-                  src={product.image || "/no-image.png"}
-                  alt={product.name}
-                  width={300}
-                  height={220}
-                  className="product-image"
-                />
-              </div>
+            return (
+              <div className="product-card" key={product._id}>
 
-              <div className="card-content">
-                <h3>{product.name}</h3>
-
-                {product.description && view === "list" && (
-                  <p className="description">{product.description.slice(0, 100)}...</p>
-                )}
-
-                {/* PRIX */}
-                <div className="price">
-                  {product.promoPrice ? (
-                    <>
-                      <span className="promo-price">{product.promoPrice.toLocaleString()} Ar</span>
-                      <span className="old-price">{product.price.toLocaleString()} Ar</span>
-                    </>
-                  ) : (
-                    <span className="normal-price">{product.price.toLocaleString()} Ar</span>
-                  )}
-                </div>
-
-                {/* STOCK INFO */}
-                {product.stock > 0 && product.stock < 10 && (
-                  <p className="stock-info">⚠️ Plus que {product.stock} en stock</p>
-                )}
-
-                {/* ACTIONS */}
-                <div className="card-actions">
+                {/* IMAGE + BADGES + WISHLIST — tous dans le même bloc relatif */}
+                <div className="product-image-outer">
+                  {/* WISHLIST */}
                   <button
-                    className="btn add-cart"
-                    disabled={!product.isAvailable || product.stock === 0}
-                    onClick={() =>
-                      addToCart({
-                        _id: product._id,
-                        name: product.name,
-                        price: product.promoPrice ?? product.price,
-                        image: product.image,
-                        quantity: 1,
-                        stock: product.stock,
-                      })
-                    }
+                    className={`wishlist-btn ${isFavorite(product._id) ? "active" : ""}`}
+                    onClick={() => toggleFavorite(product)}
+                    aria-label="Ajouter aux favoris"
                   >
-                    {product.stock === 0 ? "Rupture de stock" : "🛒 Ajouter"}
+                    <svg viewBox="0 0 24 24" fill={isFavorite(product._id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
                   </button>
 
-                  <Link
-                    href={`/products/${product._id}`}
-                    className="btn secondary"
-                  >
-                    Voir détails
+                  {/* Badge promo — haut gauche */}
+                  {product.promoPrice && (
+                    <span className="badge-promo">
+                      -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
+                    </span>
+                  )}
+
+                  {/* IMAGE */}
+                  <Link href={`/products/${product._id}`} className="product-image-link">
+                    <div className={`product-image-wrap ${product.stock === 0 ? "out-of-stock" : ""}`}>
+                      <Image
+                        src={product.image || "/no-image.png"}
+                        alt={product.name}
+                        width={400}
+                        height={480}
+                        className="product-img"
+                      />
+                      {product.stock === 0 && (
+                        <div className="stock-overlay">Rupture de stock</div>
+                      )}
+                    </div>
                   </Link>
+
+
                 </div>
+
+                {/* INFOS — centrées comme dans la maquette */}
+                <div className="product-info">
+                  <Link href={`/products/${product._id}`} className="product-name">
+                    {product.name}
+                  </Link>
+
+                  <div className="product-price">
+                    {product.promoPrice ? (
+                      <>
+                        <span className="price-promo">{product.promoPrice.toLocaleString()} Ar</span>
+                        <span className="price-old">{product.price.toLocaleString()} Ar</span>
+                      </>
+                    ) : (
+                      <span className="price-normal">{product.price.toLocaleString()} Ar</span>
+                    )}
+                  </div>
+
+                  {/* Couleurs disponibles — seulement si le champ existe et > 0 */}
+                  {colorCount !== null && colorCount > 0 && (
+                    <p className="product-colors">
+                      {colorCount} couleur{colorCount > 1 ? "s" : ""}
+                    </p>
+                  )}
+
+                  {/* Bouton panier — apparaît au hover */}
+                  <div className="product-bottom">
+                    <button
+                      className="add-to-cart-btn"
+                      disabled={!product.isAvailable || product.stock === 0}
+                      onClick={() =>
+                        addToCart({
+                          _id: product._id,
+                          name: product.name,
+                          price: product.promoPrice ?? product.price,
+                          image: product.image,
+                          quantity: 1,
+                          stock: product.stock,
+                        })
+                      }
+                    >
+                      Ajouter au panier
+                    </button>
+                  </div>
+                </div>
+
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {/* PAGINATION */}
+      {/* VOIR PLUS / PAGINATION */}
       {!loading && totalPages > 1 && (
         <div className="pagination">
-          <button
-            className="btn-page"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            ← Précédent
-          </button>
-
-          <div className="page-numbers">
-            {[...Array(totalPages)].map((_, index) => {
-              const pageNum = index + 1;
-              // Afficher seulement quelques pages autour de la page actuelle
-              if (
-                pageNum === 1 ||
-                pageNum === totalPages ||
-                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-              ) {
-                return (
-                  <button
-                    key={pageNum}
-                    className={`btn-page ${currentPage === pageNum ? "active" : ""}`}
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              } else if (
-                pageNum === currentPage - 2 ||
-                pageNum === currentPage + 2
-              ) {
-                return <span key={pageNum}>...</span>;
-              }
-              return null;
-            })}
-          </div>
-
-          <button
-            className="btn-page"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Suivant →
-          </button>
+          {currentPage < totalPages && (
+            <button
+              className="voir-plus-btn"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              Voir plus
+            </button>
+          )}
+          <p className="pagination-info">
+            {Math.min(indexOfLastProduct, sortedProducts.length)} / {sortedProducts.length} produits
+          </p>
         </div>
       )}
     </div>

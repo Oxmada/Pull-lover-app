@@ -1,0 +1,165 @@
+/* ProcessSection.css */
+
+.process-section {
+    width: 100%;
+    background: #faf9f7;
+}
+
+.process-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 100px 80px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+}
+
+/* ── En-tête centré ── */
+.process-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.process-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C95D5D;
+    margin: 0;
+}
+
+.process-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.process-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.75;
+    margin: 0;
+    max-width: 580px;
+}
+
+/* ── Grille 4 colonnes ── */
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* ── Carte ── */
+.process-card {
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.process-card:hover {
+    border-color: #C95D5D;
+    box-shadow: 0 8px 32px rgba(201, 93, 93, 0.08);
+}
+
+/* Haut de carte : numéro + icône */
+.process-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.process-step-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #C95D5D;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.process-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.process-card-icon svg {
+    width: 44px;
+    height: 44px;
+    color: #1a1a1a;
+}
+
+/* Corps */
+.process-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.process-card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.process-card-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* ── Responsive ── */
+@media (min-width: 810px) and (max-width: 1200px) {
+    .process-inner {
+        padding: 100px 64px;
+        gap: 48px;
+    }
+
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .process-title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 810px) {
+    .process-inner {
+        padding: 60px 32px;
+        gap: 32px;
+    }
+
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .process-title {
+        font-size: 24px;
+    }
+
+    .process-subtitle {
+        font-size: 0.85rem;
+    }
+}

@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/app/lib/db";
 import Order from "@/app/models/Order";
 import { sendEmail } from "@/app/lib/mailer";
+import { getOrderConfirmationEmailTemplate, getAdminNewOrderEmailTemplate } from "@/app/lib/emailTemplates";
 import Customer from "@/app/models/Customer";
 
 export async function POST(req) {
@@ -151,210 +152,44 @@ if (existingCustomer) {
     const productListHtml = cartItems
       .map(
         (item) => `
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
-            ${item.name || "Produit"}
-          </td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: center;">
-            ${item.quantity}
-          </td>
-          <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">
-            ${item.price ? Number(item.price).toLocaleString() + " Ar" : "-"}
-          </td>
+        <tr style="border-bottom:1px solid #e2e8f0">
+          <td style="padding:12px 0;font-size:14px;color:#475569">${item.name || "Produit"}</td>
+          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:center">${item.quantity}</td>
+          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600">${item.price ? Number(item.price).toLocaleString("fr-FR") + " Ar" : "-"}</td>
         </tr>
       `
       )
       .join("");
 
     /* ======================
-       📧 EMAIL À L'ADMIN
+       📧 TEMPLATES EMAIL
     ====================== */
-    const adminEmailHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body style="margin: 0; padding: 0; background-color: #f3f4f6;">
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: white;">
-          
-          <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 30px; text-align: center;">
-            <h1 style="margin: 0; font-size: 24px;">🛒 Nouvelle Commande !</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Commande #${orderNumber}</p>
-          </div>
-          
-          <div style="padding: 30px;">
-            
-            <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin-bottom: 25px;">
-              <p style="margin: 0; color: #1e40af;">
-                <strong>📅 Date :</strong> ${orderDate}
-              </p>
-            </div>
-            
-            <h2 style="color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
-              👤 Informations Client
-            </h2>
-            <table style="width: 100%; margin-bottom: 25px;">
-              <tr>
-                <td style="padding: 8px 0; color: #6b7280;">Nom complet</td>
-                <td style="padding: 8px 0; font-weight: bold;">${firstname} ${lastname}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: #6b7280;">Email</td>
-                <td style="padding: 8px 0;">
-                  <a href="mailto:${email}" style="color: #3b82f6;">${email}</a>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: #6b7280;">Téléphone</td>
-                <td style="padding: 8px 0;">${phone || "Non renseigné"}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: #6b7280;">Adresse</td>
-                <td style="padding: 8px 0;">${address}, ${city}</td>
-              </tr>
-            </table>
-            
-            <h2 style="color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
-              📦 Produits Commandés
-            </h2>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
-              <thead>
-                <tr style="background: #f9fafb;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Produit</th>
-                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qté</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Prix</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${productListHtml}
-              </tbody>
-            </table>
-            
-            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <p style="margin: 0 0 10px 0;">
-                <strong>💳 Paiement :</strong> ${paymentLabels[payment] || payment}
-              </p>
-              <p style="margin: 0;">
-                <strong>🚚 Livraison :</strong> ${deliveryLabels[delivery] || delivery}
-              </p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-              <p style="margin: 0; font-size: 14px; opacity: 0.9;">TOTAL À PAYER</p>
-              <p style="margin: 10px 0 0 0; font-size: 32px; font-weight: bold;">
-                ${Number(total).toLocaleString()} Ar
-              </p>
-            </div>
-            
-          </div>
-          
-          <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0; color: #6b7280; font-size: 14px;">
-              Connectez-vous au <a href="#" style="color: #3b82f6;">dashboard admin</a> pour gérer cette commande.
-            </p>
-          </div>
-          
-        </div>
-      </body>
-      </html>
-    `;
+    const adminEmailHtml = getAdminNewOrderEmailTemplate({
+      firstname,
+      lastname,
+      email,
+      phone,
+      orderNumber,
+      orderDate,
+      productListHtml,
+      address,
+      city,
+      deliveryLabel: deliveryLabels[delivery] || delivery,
+      paymentLabel: paymentLabels[payment] || payment,
+      total,
+    });
 
-    /* ======================
-       📧 EMAIL AU CLIENT
-    ====================== */
-    const clientEmailHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body style="margin: 0; padding: 0; background-color: #f3f4f6;">
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: white;">
-          
-          <div style="background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 30px; text-align: center;">
-            <h1 style="margin: 0; font-size: 28px;">✅ Commande Confirmée !</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">
-              Merci pour votre achat, ${firstname} !
-            </p>
-          </div>
-          
-          <div style="padding: 30px;">
-            
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: center;">
-              <p style="margin: 0; color: #166534; font-size: 14px;">NUMÉRO DE COMMANDE</p>
-              <p style="margin: 10px 0 0 0; font-size: 24px; font-weight: bold; color: #15803d; letter-spacing: 2px;">
-                #${orderNumber}
-              </p>
-            </div>
-            
-            <p style="color: #4b5563; line-height: 1.6;">
-              Nous avons bien reçu votre commande et elle est en cours de traitement. 
-              Vous recevrez un email dès que le statut de votre commande sera mis à jour.
-            </p>
-            
-            <h2 style="color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; margin-top: 30px;">
-              📋 Récapitulatif de votre commande
-            </h2>
-            
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
-              <thead>
-                <tr style="background: #f9fafb;">
-                  <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Produit</th>
-                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qté</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Prix</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${productListHtml}
-              </tbody>
-            </table>
-            
-            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <h3 style="margin: 0 0 15px 0; color: #1f2937;">📍 Détails de livraison</h3>
-              <p style="margin: 0 0 8px 0; color: #4b5563;">
-                <strong>Adresse :</strong> ${address}, ${city}
-              </p>
-              <p style="margin: 0 0 8px 0; color: #4b5563;">
-                <strong>Mode :</strong> ${deliveryLabels[delivery] || delivery}
-              </p>
-              <p style="margin: 0; color: #4b5563;">
-                <strong>Paiement :</strong> ${paymentLabels[payment] || payment}
-              </p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-              <p style="margin: 0; font-size: 14px; opacity: 0.9;">TOTAL</p>
-              <p style="margin: 10px 0 0 0; font-size: 32px; font-weight: bold;">
-                ${Number(total).toLocaleString()} Ar
-              </p>
-            </div>
-            
-            <div style="margin-top: 30px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <h3 style="margin: 0 0 10px 0; color: #1f2937;">❓ Une question ?</h3>
-              <p style="margin: 0; color: #6b7280; font-size: 14px;">
-                Répondez directement à cet email ou contactez-nous au 
-                <strong>${phone ? phone : "notre service client"}</strong>
-              </p>
-            </div>
-            
-          </div>
-          
-          <div style="background: #1f2937; color: white; padding: 30px; text-align: center;">
-            <p style="margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">
-              Merci de votre confiance ! 🙏
-            </p>
-            <p style="margin: 0; opacity: 0.7; font-size: 14px;">
-              © ${new Date().getFullYear()} Mon Site E-commerce - Tous droits réservés
-            </p>
-          </div>
-          
-        </div>
-      </body>
-      </html>
-    `;
+    const clientEmailHtml = getOrderConfirmationEmailTemplate({
+      firstname,
+      orderNumber,
+      orderDate,
+      productListHtml,
+      address,
+      city,
+      deliveryLabel: deliveryLabels[delivery] || delivery,
+      paymentLabel: paymentLabels[payment] || payment,
+      total,
+    });
 
     /* ======================
        📧 ENVOI DES EMAILS

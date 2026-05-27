@@ -1,0 +1,179 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useCart } from "./CartContext";
+import { useFavorites } from "./FavoritesContext";
+import { useSession, signOut } from "next-auth/react";
+import "./Header.css";
+
+// ── Icons ──────────────────────────────────────────────────────────
+
+const HeartIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+);
+
+const BagIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+);
+
+const UserIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
+);
+
+const BurgerIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+);
+
+// ── Data ───────────────────────────────────────────────────────────
+
+const navLinks = [
+    { label: "Accueil", href: "/" },
+    { label: "Nos mailles", href: "/boutique" },
+    { label: "Notre marque", href: "/NotreMarque" },
+    { label: "Contact", href: "/contact" },
+];
+
+// ── Component ──────────────────────────────────────────────────────
+
+export default function Header() {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const userMenuRef = useRef(null);
+
+    const { cartItems } = useCart();
+    const { favorites } = useFavorites();
+    const { data: session } = useSession();
+    const isAdmin = session?.user?.role === "admin";
+    const cartCount = cartItems?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
+    const favCount = favorites?.length || 0;
+
+    const close = () => setMenuOpen(false);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+                setUserMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <header className="h-wrapper">
+            {/* Bandeau */}
+            <div className="h-bandeau">Nouvel arrivage le 20/06/2026 à 19H</div>
+
+            {/* Navbar */}
+            <nav className="h-navbar">
+                <Link href="/" className="h-logo">
+                    <span className="h-logo-bold">Pull</span>
+                    <span className="h-logo-script">Lover</span>
+                </Link>
+
+                {/* Nav links */}
+                <ul className={`h-nav-list ${menuOpen ? "h-nav-list--open" : ""}`}>
+                    {navLinks.map((link) => (
+                        <li key={link.href}>
+                            <Link href={link.href} className="h-nav-link" onClick={close}>
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
+                    {isAdmin && (
+                        <li>
+                            <Link href="/admin/dashboard" className="h-nav-link h-nav-link--admin" onClick={close}>
+                                Dashboard
+                            </Link>
+                        </li>
+                    )}
+
+                    {/* Icônes dans le menu mobile */}
+                    <li className="h-nav-icons-mobile">
+                        <Link href="/favoris" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Favoris">
+                            <HeartIcon />
+                            {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
+                        </Link>
+                        <Link href="/cart" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Panier">
+                            <BagIcon />
+                            {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
+                        </Link>
+                        {!session ? (
+                            <Link href="/auth/login" className="h-icon-btn" onClick={close} aria-label="Connexion">
+                                <UserIcon />
+                            </Link>
+                        ) : (
+                            <button className="h-icon-btn" onClick={() => { signOut({ callbackUrl: "/" }); close(); }} aria-label="Déconnexion">
+                                <UserIcon />
+                            </button>
+                        )}
+                    </li>
+                </ul>
+
+                {/* Icônes desktop */}
+                <div className="h-icons">
+                    <Link href="/favoris" className="h-icon-btn h-cart-btn" aria-label="Favoris">
+                        <HeartIcon />
+                        {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
+                    </Link>
+                    <Link href="/cart" className="h-icon-btn h-cart-btn" aria-label="Panier">
+                        <BagIcon />
+                        {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
+                    </Link>
+                    {!session ? (
+                        <Link href="/auth/login" className="h-icon-btn" aria-label="Connexion">
+                            <UserIcon />
+                        </Link>
+                    ) : (
+                        <div className="h-user-menu" ref={userMenuRef}>
+                            <button
+                                className="h-icon-btn"
+                                onClick={() => setUserMenuOpen((prev) => !prev)}
+                                aria-label="Mon compte"
+                            >
+                                <UserIcon />
+                            </button>
+                            {userMenuOpen && (
+                                <div className="h-user-dropdown">
+                                    <p className="h-user-name">{session.user?.name || session.user?.email}</p>
+                                    <div className="h-user-divider" />
+                                    <button
+                                        className="h-user-signout"
+                                        onClick={() => { setUserMenuOpen(false); signOut({ callbackUrl: "/" }); }}
+                                    >
+                                        Se déconnecter
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* Burger / Close */}
+                <button
+                    className={`h-burger${menuOpen ? " h-burger--open" : ""}`}
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label={menuOpen ? "Fermer" : "Menu"}
+                >
+                    {menuOpen ? "✕" : <BurgerIcon />}
+                </button>
+            </nav>
+
+            {menuOpen && <div className="h-overlay" onClick={close} />}
+        </header>
+    );
+}

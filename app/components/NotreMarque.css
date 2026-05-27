@@ -1,0 +1,146 @@
+.notre-marque {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 160px 80px 160px 80px;
+}
+
+.notre-marque__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+/* ---- Contenu texte ---- */
+
+.notre-marque__content {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.notre-marque__heading {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.notre-marque__rich-text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.notre-marque__rich-text p {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: #333333;
+    margin: 0;
+}
+
+/* ---- Bloc vidéo ---- */
+
+.notre-marque__video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #c4c4c4;
+    /* placeholder gris comme dans Figma */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.notre-marque__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Bouton play centré */
+.notre-marque__play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.notre-marque__play-btn:hover {
+    opacity: 0.85;
+}
+
+.notre-marque__play-btn svg circle {
+    transition: fill 0.2s ease;
+}
+
+.notre-marque__play-btn:hover svg circle {
+    fill: rgba(0, 0, 0, 0.6);
+}
+
+/* =============================================
+   Responsive — Tablet (≤ 1024px)
+   ============================================= */
+
+@media (min-width: 810px) and (max-width: 1200px) {
+    .notre-marque {
+        padding: 100px 64px 100px 64px;
+    }
+
+    .notre-marque__container {
+        gap: 40px;
+    }
+
+    .notre-marque__content {
+        gap: 60px;
+    }
+
+    .notre-marque__heading {
+        font-size: 2.25rem;
+    }
+
+    .notre-marque__rich-text p {
+        font-size: 1rem;
+    }
+}
+
+/* =============================================
+   Responsive — Mobile (390px – 810px)
+   ============================================= */
+
+@media (max-width: 810px) {
+    .notre-marque {
+        padding: 64px 43px 64px 32px;
+    }
+
+    .notre-marque__container {
+        gap: 32px;
+    }
+
+    .notre-marque__content {
+        gap: 40px;
+    }
+
+    .notre-marque__heading {
+        font-size: 1.5rem;
+    }
+
+    .notre-marque__rich-text p {
+        font-size: 0.75rem;
+    }
+
+    .notre-marque__play-btn svg {
+        width: 44px;
+        height: 44px;
+    }
+}

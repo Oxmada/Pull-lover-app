@@ -1,0 +1,297 @@
+/* Header.css — Pull-lover */
+
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Montserrat:wght@600;700&display=swap');
+
+/* ── Wrapper ── */
+.h-wrapper {
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* ── Bandeau ── */
+.h-bandeau {
+    width: 100%;
+    background: #C95D5D;
+    color: #fff;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 10px 0;
+}
+
+/* ── Navbar ── */
+.h-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    height: 88px;
+    background: #fff;
+}
+
+/* ── Logo ── */
+.h-logo {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.h-logo-bold {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -1px;
+}
+
+.h-logo-script {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 2.2rem;
+    color: #0f172a;
+    line-height: 1;
+}
+
+/* ── Nav links ── */
+.h-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.h-nav-link {
+    color: #0f172a;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: opacity 0.2s;
+}
+
+.h-nav-link:hover {
+    opacity: 0.55;
+}
+
+/* ── Icônes droite ── */
+.h-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.h-icon-btn {
+    color: #0f172a;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.h-icon-btn:hover {
+    opacity: 0.55;
+    transform: translateY(-1px);
+}
+
+/* ── Badge panier ── */
+.h-cart-btn {
+    position: relative;
+}
+
+.h-cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 50%;
+    background: #C95D5D;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* ── Burger ── */
+.h-burger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0f172a;
+    padding: 4px;
+}
+
+/* ── Overlay mobile ── */
+.h-overlay {
+    display: none;
+}
+
+/* ── Responsive ── */
+@media (min-width: 810px) and (max-width: 1200px) {
+    .h-navbar {
+        padding: 0 1.5rem;
+    }
+}
+
+/* Icônes dans le menu burger mobile — masquées sur desktop */
+.h-nav-icons-mobile {
+    display: none;
+}
+
+@media (max-width: 810px) {
+    .h-burger {
+        display: flex;
+        align-items: center;
+    }
+
+    .h-icons {
+        display: none;
+    }
+
+    .h-nav-list {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+        background: #fff;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        transition: right 0.35s ease;
+        z-index: 105;
+    }
+
+    .h-nav-list--open {
+        right: 0;
+    }
+
+    .h-nav-link {
+        font-size: 1.2rem;
+    }
+
+    /* Burger → croix quand menu ouvert : sort du flux pour passer au-dessus du menu */
+    .h-burger--open {
+        position: fixed;
+        top: 69px; /* bandeau (~41px) + centre navbar (88px / 2) - moitié bouton (16px) */
+        right: 3rem;
+        z-index: 110;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1.5px solid #e7e5e4;
+        background: #fafaf9;
+        color: #78716c;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .h-burger--open:hover {
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
+    }
+
+    .h-nav-icons-mobile {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        width: 100%;
+        justify-content: center;
+    }
+
+    .h-overlay {
+        display: none;
+    }
+}
+
+/* ── Dropdown user ── */
+.h-user-menu {
+    position: relative;
+}
+
+.h-user-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    min-width: 180px;
+    z-index: 200;
+    animation: h-dropdown-in 0.15s ease;
+}
+
+@keyframes h-dropdown-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.h-user-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 2px 0;
+    padding: 2px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.h-user-divider {
+    border: none;
+    border-top: 1px solid #F3F4F6;
+    margin: 10px 0;
+}
+
+.h-user-signout {
+    width: 100%;
+    padding: 8px 4px;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e53935;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.h-user-signout:hover {
+    background: #fef2f2;
+}
+
+/* Lien Dashboard admin */
+.h-nav-link--admin {
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}

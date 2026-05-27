@@ -10,7 +10,7 @@ export default function VerifyEmailPage() {
   const router = useRouter();
   const token = searchParams.get("token");
 
-  const [status, setStatus] = useState("loading"); // loading | success | error
+  const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -28,12 +28,12 @@ export default function VerifyEmailPage() {
         if (res.ok) {
           setStatus("success");
           setMessage(data.message);
-          setTimeout(() => router.push("/login"), 3000);
+          setTimeout(() => router.push("/auth/login"), 3000);
         } else {
           setStatus("error");
           setMessage(data.message);
         }
-      } catch (error) {
+      } catch {
         setStatus("error");
         setMessage("Erreur lors de la vérification");
       }
@@ -43,35 +43,42 @@ export default function VerifyEmailPage() {
   }, [token, router]);
 
   return (
-    <div className="verify-container">
+    <div className="verify-page">
+
+      <div className="verify-bg">
+        <span /><span /><span /><span />
+      </div>
+
       <div className="verify-card">
+
         {status === "loading" && (
           <>
-            <div className="spinner"></div>
-            <h1>Vérification en cours...</h1>
-            <p>Veuillez patienter</p>
+            <div className="verify-spinner" />
+            <h1>Vérification en cours…</h1>
+            <p>Veuillez patienter quelques instants.</p>
           </>
         )}
 
         {status === "success" && (
           <>
-            <div className="icon success">✅</div>
+            <div className="verify-icon success">✓</div>
             <h1>Email vérifié !</h1>
             <p>{message}</p>
-            <p>Redirection automatique vers la connexion...</p>
+            <p>Vous allez être redirigé vers la connexion…</p>
           </>
         )}
 
         {status === "error" && (
           <>
-            <div className="icon error">❌</div>
-            <h1>Erreur</h1>
+            <div className="verify-icon error">✕</div>
+            <h1>Vérification échouée</h1>
             <p>{message}</p>
-            <Link href="/register" className="verify-btn">
-              Retour à l'inscription
+            <Link href="/auth/register" className="verify-btn">
+              Retour à l&apos;inscription
             </Link>
           </>
         )}
+
       </div>
     </div>
   );

@@ -1,0 +1,387 @@
+/* =========================================
+   NotreCollectionSection — max-width 1440px
+   ========================================= */
+
+.ncs-section {
+    width: 100%;
+    background: #ffffff;
+}
+
+.ncs-wrapper {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 100px 80px;
+    box-sizing: border-box;
+}
+
+/* ── En-tête ── */
+.ncs-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 60px;
+}
+
+.ncs-header-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ncs-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C95D5D;
+    margin: 0;
+}
+
+.ncs-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.15;
+}
+
+/* ── Grille ── */
+.ncs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+/* ── Card ── */
+.ncs-card {
+    position: relative;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Image outer */
+.ncs-card-image-outer {
+    position: relative;
+    width: 100%;
+}
+
+/* Wishlist */
+.ncs-wishlist-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.25);
+    padding: 0;
+    transition: color 0.2s, transform 0.15s;
+}
+
+.ncs-wishlist-btn:hover {
+    color: #c0392b;
+    transform: scale(1.1);
+}
+
+.ncs-wishlist-btn.active {
+    color: #c0392b;
+}
+
+/* Badge "Nouveau" */
+.ncs-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 10;
+    background: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+/* Badge promo */
+.ncs-badge-promo {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 10;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: #c0392b;
+    color: #ffffff;
+    border-radius: 10px;
+}
+
+/* Image */
+.ncs-card-image-link {
+    display: block;
+    text-decoration: none;
+}
+
+.ncs-card-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #f0f0f0;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.ncs-card-img-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.5s ease;
+}
+
+.ncs-card:hover .ncs-card-img-photo {
+    transform: scale(1.04);
+}
+
+.ncs-card-image-wrap.out-of-stock .ncs-card-img-photo {
+    opacity: 0.5;
+}
+
+.ncs-stock-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Infos */
+.ncs-card-info {
+    padding: 0.9rem 0.25rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.2rem;
+}
+
+.ncs-card-name {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 500;
+    color: #1a1a1a;
+    text-decoration: none;
+    line-height: 1.4;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ncs-card-name:hover {
+    text-decoration: underline;
+}
+
+.ncs-card-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+}
+
+.ncs-price-current {
+    color: #1a1a1a;
+}
+
+.ncs-price-promo {
+    color: #c0392b;
+}
+
+.ncs-price-old {
+    font-size: 0.8rem;
+    color: #aaaaaa;
+    text-decoration: line-through;
+}
+
+.ncs-card-colors {
+    font-size: 0.78rem;
+    color: #6b7280;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Bouton panier — révélé au hover */
+.ncs-card-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.6rem;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.ncs-card:hover .ncs-card-bottom {
+    max-height: 50px;
+    opacity: 1;
+}
+
+.ncs-add-to-cart {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #1a1a1a;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-size: 0.78rem;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+    border-radius: 10px;
+}
+
+.ncs-add-to-cart:hover:not(:disabled) {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+.ncs-add-to-cart:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ── Bouton "Voir tous les produits" ── */
+.ncs-btn-all {
+    display: inline-block;
+    padding: 9px 20px;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ncs-btn-all:hover {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* ── Skeleton ── */
+.ncs-skeleton {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+}
+
+.ncs-skeleton-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: ncs-shimmer 1.4s infinite;
+}
+
+.ncs-skeleton-text {
+    height: 14px;
+    margin: 16px 20px 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: ncs-shimmer 1.4s infinite;
+}
+
+.ncs-skeleton-text--short {
+    width: 50%;
+    margin-top: 0;
+}
+
+@keyframes ncs-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ── Responsive ── */
+@media (min-width: 810px) and (max-width: 1200px) {
+    .ncs-wrapper {
+        padding: 100px 64px;
+    }
+
+    .ncs-header {
+        margin-bottom: 40px;
+    }
+
+    .ncs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ncs-title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 810px) {
+    .ncs-wrapper {
+        padding: 60px 32px;
+    }
+
+    .ncs-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .ncs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ncs-title {
+        font-size: 24px;
+    }
+}

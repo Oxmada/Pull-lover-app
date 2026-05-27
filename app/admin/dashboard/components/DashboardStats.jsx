@@ -2,402 +2,323 @@
 
 import { useEffect, useState } from "react";
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  PieChart,
-  Pie,
-  Cell,
+  BarChart, Bar, LineChart, Line,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  PieChart, Pie, Cell,
 } from "recharts";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+const PIE_COLORS = ["#C95D5D", "#0f172a", "#78716c", "#c4b5a5", "#e7e5e4"];
 
 const STATUS_LABELS = {
-  pending: "En attente",
-  confirmed: "Confirmée",
+  pending:    "En attente",
+  confirmed:  "Confirmée",
   processing: "En traitement",
-  paid: "Payée",
-  shipped: "Expédiée",
-  delivered: "Livrée",
-  cancelled: "Annulée",
+  paid:       "Payée",
+  shipped:    "Expédiée",
+  delivered:  "Livrée",
+  cancelled:  "Annulée",
+};
+
+const font = "var(--font-montserrat), 'Montserrat', sans-serif";
+
+const N = {
+  border:      "#e9e9e7",
+  borderLight: "#f0f0ee",
+  bg:          "#ffffff",
+  bgMuted:     "#f7f7f5",
+  text:        "#1a1a1a",
+  muted:       "#9b9b9b",
+  radius:      "8px",
+};
+
+const thStyle = {
+  padding: "7px 16px",
+  textAlign: "left",
+  fontSize: "10px",
+  fontWeight: "600",
+  textTransform: "uppercase",
+  letterSpacing: "0.07em",
+  color: N.muted,
+  fontFamily: font,
+  borderBottom: `1px solid ${N.border}`,
+  background: N.bgMuted,
+  whiteSpace: "nowrap",
+};
+
+const tdStyle = {
+  padding: "9px 16px",
+  fontSize: "13px",
+  color: N.text,
+  fontFamily: font,
+  fontWeight: "500",
 };
 
 export default function DashboardStats() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(false);
-  const [period, setPeriod] = useState("7"); // 1, 7, 30, 365
+  const [data, setData]     = useState(null);
+  const [error, setError]   = useState(false);
+  const [period, setPeriod] = useState("7");
 
   useEffect(() => {
+    setData(null);
     fetch(`/api/admin/stats?period=${period}`)
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("API ERROR:", text);
-          throw new Error("Erreur API");
-        }
-        return res.json();
-      })
-      .then((json) => setData(json))
+      .then(async (res) => { if (!res.ok) throw new Error(); return res.json(); })
+      .then(setData)
       .catch(() => setError(true));
   }, [period]);
 
-  if (error) {
-    return (
-      <div style={{ padding: "20px", background: "#fee", borderRadius: "8px", color: "#c00" }}>
-        ❌ Erreur lors du chargement des statistiques
-      </div>
-    );
-  }
+  if (error) return (
+    <div style={{ padding: "11px 14px", background: "#fff8f8", border: "1px solid #ffd4d4", borderRadius: N.radius, color: "#b91c1c", fontSize: "13px", fontFamily: font }}>
+      Erreur lors du chargement des statistiques
+    </div>
+  );
 
-  if (!data) {
-    return (
-      <div style={{ padding: "40px", textAlign: "center", fontSize: "18px" }}>
-        ⏳ Chargement des statistiques...
-      </div>
-    );
-  }
+  if (!data) return (
+    <div style={{ padding: "48px 0", textAlign: "center", color: N.muted, fontSize: "13px", fontFamily: font }}>
+      Chargement…
+    </div>
+  );
 
-  const { stats, chartData, salesEvolution, topProducts, recentOrders, statusDistribution } = data;
+  const { stats, salesEvolution, topProducts, topCustomers, recentOrders, paymentDistribution } = data;
+  const growth = stats.revenueGrowth !== null ? parseFloat(stats.revenueGrowth) : null;
 
   return (
-    <div style={{ display: "grid", gap: "24px" }}>
-      {/* 🎛️ SÉLECTEUR DE PÉRIODE */}
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          justifyContent: "flex-end",
-          flexWrap: "wrap",
-        }}
-      >
-        {[
-          { label: "Aujourd'hui", value: "1" },
-          { label: "7 jours", value: "7" },
-          { label: "30 jours", value: "30" },
-          { label: "Année", value: "365" },
-        ].map((p) => (
-          <button
-            key={p.value}
-            onClick={() => setPeriod(p.value)}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "1px solid #ddd",
-              background: period === p.value ? "#0070f3" : "#fff",
-              color: period === p.value ? "#fff" : "#333",
-              cursor: "pointer",
-              fontWeight: period === p.value ? "600" : "400",
-              transition: "all 0.2s",
-            }}
-          >
-            {p.label}
-          </button>
-        ))}
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontFamily: font }}>
+
+      {/* ── Sélecteur de période ── */}
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ display: "inline-flex", gap: "2px", background: N.bgMuted, borderRadius: "6px", padding: "3px", border: `1px solid ${N.border}` }}>
+          {[
+            { label: "Auj.",  value: "1"   },
+            { label: "7 j.",  value: "7"   },
+            { label: "30 j.", value: "30"  },
+            { label: "Année", value: "365" },
+          ].map((p) => (
+            <button key={p.value} onClick={() => setPeriod(p.value)} style={{
+              padding: "5px 14px", borderRadius: "4px", border: "none",
+              background: period === p.value ? N.bg    : "transparent",
+              color:      period === p.value ? N.text  : N.muted,
+              fontWeight: period === p.value ? "600"   : "400",
+              boxShadow:  period === p.value ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+              cursor: "pointer", fontSize: "12px", fontFamily: font,
+              transition: "all 0.15s", whiteSpace: "nowrap",
+            }}>
+              {p.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* 🔢 CARTES KPIs */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "16px",
-        }}
-      >
-        <StatCard
-          title="Clients"
-          value={stats.customersCount}
-          subtitle={`+${stats.newCustomers} nouveaux`}
-          icon="👥"
-          color="#0088FE"
+      {/* ── KPI Row 1 — métriques principales ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
+        <KPICell border small label="Clients"    value={stats.customersCount ?? 0}   sub={`+${stats.newCustomers ?? 0} nouveaux`} />
+        <KPICell border small label="Commandes"  value={stats.ordersCount ?? 0}       sub={`${stats.periodOrders ?? 0} / période`} />
+        <KPICell border small label="CA période" value={`${parseFloat(stats.periodRevenue || 0).toLocaleString("fr-FR")} Ar`}
+          sub={growth !== null
+            ? <TrendChip value={growth} />
+            : `Total : ${parseFloat(stats.totalRevenue || 0).toLocaleString("fr-FR")} Ar`}
         />
-        <StatCard
-          title="Commandes"
-          value={stats.ordersCount}
-          subtitle={`${stats.periodOrders} sur la période`}
-          icon="📦"
-          color="#00C49F"
-        />
-        <StatCard
-          title="Chiffre d'affaires"
-          value={`${parseFloat(stats.totalRevenue).toLocaleString("fr-FR")} Ar`}
-          subtitle={`${parseFloat(stats.periodRevenue).toLocaleString("fr-FR")} Ar sur la période`}
-          icon="💰"
-          color="#FFBB28"
-        />
-        <StatCard
-          title="Panier moyen"
-          value={`${parseFloat(stats.averageBasket).toLocaleString("fr-FR")} Ar`}
-          subtitle={`Aujourd'hui: ${stats.todayOrders} cmd`}
-          icon="🛒"
-          color="#FF8042"
-        />
+        <KPICell small label="Panier moyen" value={`${parseFloat(stats.averageBasket || 0).toLocaleString("fr-FR")} Ar`} sub={`Aujourd'hui : ${stats.todayOrders ?? 0} cmd`} />
       </div>
 
-      {/* ⚠️ ALERTES */}
-      {(stats.lowStockProducts > 0 || stats.pendingOrders > 0) && (
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-            flexWrap: "wrap",
-          }}
-        >
-          {stats.lowStockProducts > 0 && (
-            <Alert
-              type="warning"
-              message={`⚠️ ${stats.lowStockProducts} produit(s) en rupture de stock`}
-            />
-          )}
-          {stats.pendingOrders > 0 && (
-            <Alert
-              type="info"
-              message={`📋 ${stats.pendingOrders} commande(s) en attente`}
-            />
-          )}
+      {/* ── KPI Row 2 — métriques secondaires ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
+        <KPICell border small label="Taux d'annulation" value={`${stats.cancellationRate ?? 0}%`}    sub={`${stats.cancelledOrders ?? 0} cmd annulées`} />
+        <KPICell border small label="Fidélisation"       value={`${stats.loyaltyRate ?? 0}%`}          sub={`${stats.returningCustomers ?? 0} clients récurrents`} />
+        <KPICell border small label="Clients dormants"   value={stats.dormantCustomers ?? 0}            sub="sans achat depuis 30 j" />
+        <KPICell       small label="Valeur du stock"    value={`${(stats.stockValue ?? 0).toLocaleString("fr-FR")} Ar`} sub="stock × prix catalogue" />
+      </div>
+
+      {/* ── Alertes ── */}
+      {(stats.lowStockProducts > 0 || stats.pendingOrders > 0 || stats.neverSoldProducts > 0) && (
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          {stats.lowStockProducts  > 0 && <Alert type="warning" message={`${stats.lowStockProducts} produit(s) en stock faible`} />}
+          {stats.pendingOrders     > 0 && <Alert type="info"    message={`${stats.pendingOrders} commande(s) en attente`} />}
+          {stats.neverSoldProducts > 0 && <Alert type="neutral" message={`${stats.neverSoldProducts} produit(s) jamais vendus`} />}
         </div>
       )}
 
-      {/* 📊 GRAPHIQUES */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-          gap: "20px",
-        }}
-      >
-        {/* ÉVOLUTION DES VENTES */}
-        <ChartCard title="📈 Évolution des ventes">
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={salesEvolution}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" fontSize={12} />
-              <YAxis fontSize={12} />
-              <Tooltip
-                contentStyle={{
-                  background: "#fff",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#0070f3"
-                strokeWidth={2}
-                name="CA (€)"
-              />
-              <Line
-                type="monotone"
-                dataKey="orders"
-                stroke="#00C49F"
-                strokeWidth={2}
-                name="Commandes"
-              />
+      {/* ── Graphiques : évolution + modes de paiement ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "12px" }}>
+        <MiniCard label="Évolution des ventes">
+          <ResponsiveContainer width="100%" height={170}>
+            <LineChart data={salesEvolution} margin={{ top: 4, right: 4, bottom: 0, left: -22 }}>
+              <CartesianGrid strokeDasharray="2 4" stroke={N.borderLight} vertical={false} />
+              <XAxis dataKey="date" fontSize={10} tick={{ fill: N.muted, fontFamily: font }} tickLine={false} axisLine={false} />
+              <YAxis fontSize={10} tick={{ fill: N.muted, fontFamily: font }} tickLine={false} axisLine={false} />
+              <Tooltip contentStyle={{ background: N.bg, border: `1px solid ${N.border}`, borderRadius: "6px", fontSize: "11px", fontFamily: font, boxShadow: "none" }} />
+              <Line type="monotone" dataKey="revenue" stroke="#C95D5D" strokeWidth={1.5} name="CA (Ar)"    dot={false} />
+              <Line type="monotone" dataKey="orders"  stroke="#0f172a"  strokeWidth={1.5} name="Commandes" dot={false} />
             </LineChart>
           </ResponsiveContainer>
-        </ChartCard>
+        </MiniCard>
 
-        {/* RÉPARTITION PAR STATUT */}
-        <ChartCard title="📊 Commandes par statut">
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={statusDistribution}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={(entry) => `${STATUS_LABELS[entry.name]} (${entry.value})`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {statusDistribution.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        <MiniCard label="Modes de paiement">
+          {paymentDistribution.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={120}>
+                <PieChart>
+                  <Pie data={paymentDistribution} cx="50%" cy="50%" outerRadius={48} innerRadius={24} dataKey="value" paddingAngle={2} nameKey="label">
+                    {paymentDistribution.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ background: N.bg, border: `1px solid ${N.border}`, borderRadius: "6px", fontSize: "11px", fontFamily: font, boxShadow: "none" }}
+                    formatter={(v, _, props) => [v, props.payload.label || props.payload.name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginTop: "8px" }}>
+                {paymentDistribution.map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "11px", fontFamily: font }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: PIE_COLORS[i % PIE_COLORS.length], flexShrink: 0 }} />
+                      <span style={{ color: N.text }}>{item.label}</span>
+                    </div>
+                    <span style={{ color: N.muted, fontWeight: "600" }}>{item.value}</span>
+                  </div>
                 ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
+              </div>
+            </>
+          ) : (
+            <div style={{ padding: "32px 0", textAlign: "center", color: N.muted, fontSize: "12px" }}>Aucune donnée</div>
+          )}
+        </MiniCard>
       </div>
 
-      {/* 🏆 TOP PRODUITS */}
-      <ChartCard title="🏆 Top 5 produits les plus vendus">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={topProducts} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis dataKey="name" type="category" width={150} fontSize={12} />
-            <Tooltip />
-            <Bar dataKey="quantity" fill="#0070f3" radius={[0, 6, 6, 0]} />
+      {/* ── Top 5 produits ── */}
+      <MiniCard label="Top 5 produits">
+        <ResponsiveContainer width="100%" height={150}>
+          <BarChart data={topProducts} layout="vertical" margin={{ top: 0, right: 8, bottom: 0, left: 0 }}>
+            <XAxis type="number" fontSize={10} tick={{ fill: N.muted, fontFamily: font }} tickLine={false} axisLine={false} />
+            <YAxis dataKey="name" type="category" width={130} tick={{ fill: N.text, fontSize: 11, fontFamily: font }} tickLine={false} axisLine={false} />
+            <Tooltip contentStyle={{ background: N.bg, border: `1px solid ${N.border}`, borderRadius: "6px", fontSize: "11px", fontFamily: font, boxShadow: "none" }} />
+            <Bar dataKey="quantity" fill="#C95D5D" radius={[0, 4, 4, 0]} maxBarSize={10} />
           </BarChart>
         </ResponsiveContainer>
-      </ChartCard>
+      </MiniCard>
 
-      {/* 📋 DERNIÈRES COMMANDES */}
-      <div
-        style={{
-          background: "#fff",
-          padding: "20px",
-          borderRadius: "10px",
-          boxShadow: "0 2px 8px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2 style={{ marginBottom: "16px", fontSize: "18px" }}>📋 Dernières commandes</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-            }}
-          >
+      {/* ── Dernières commandes + Top clients ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: "12px" }}>
+
+        <TableCard label="Dernières commandes">
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr style={{ borderBottom: "2px solid #eee" }}>
-                <th style={tableHeaderStyle}>Client</th>
-                <th style={tableHeaderStyle}>Montant</th>
-                <th style={tableHeaderStyle}>Statut</th>
-                <th style={tableHeaderStyle}>Date</th>
-              </tr>
+              <tr>{["Client", "Montant", "Statut", "Date"].map(h => <th key={h} style={thStyle}>{h}</th>)}</tr>
             </thead>
             <tbody>
-              {recentOrders.map((order, index) => (
-                <tr key={order._id || index} style={{ borderBottom: "1px solid #f5f5f5" }}>
-                  <td style={tableCellStyle}>
-                    {order.customer.firstname} {order.customer.lastname}
-                  </td>
-                  <td style={tableCellStyle}>
-                    <strong>{parseFloat(order.total).toLocaleString("fr-FR")} Ar</strong>
-                  </td>
-                  <td style={tableCellStyle}>
-                    <StatusBadge status={order.status} />
-                  </td>
-                  <td style={tableCellStyle}>
-                    {new Date(order.createdAt).toLocaleDateString("fr-FR")}
-                  </td>
+              {recentOrders.map((order, i) => (
+                <tr key={order._id || i} style={{ borderTop: `1px solid ${N.borderLight}` }}>
+                  <td style={tdStyle}>{order.customer.firstname} {order.customer.lastname}</td>
+                  <td style={{ ...tdStyle, fontWeight: "600", whiteSpace: "nowrap" }}>{parseFloat(order.total).toLocaleString("fr-FR")} Ar</td>
+                  <td style={tdStyle}><StatusBadge status={order.status} /></td>
+                  <td style={{ ...tdStyle, color: N.muted, fontSize: "11px", whiteSpace: "nowrap" }}>{new Date(order.createdAt).toLocaleDateString("fr-FR")}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </TableCard>
+
+        <TableCard label="Top 5 clients">
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>{["Client", "Cmd", "Total dépensé"].map(h => <th key={h} style={thStyle}>{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {topCustomers.length === 0 ? (
+                <tr><td colSpan={3} style={{ ...tdStyle, color: N.muted, textAlign: "center", padding: "20px" }}>Aucune donnée</td></tr>
+              ) : topCustomers.map((c, i) => (
+                <tr key={i} style={{ borderTop: `1px solid ${N.borderLight}` }}>
+                  <td style={tdStyle}>{c.firstname} {c.lastname}</td>
+                  <td style={{ ...tdStyle, color: N.muted, textAlign: "center" }}>{c.totalOrders}</td>
+                  <td style={{ ...tdStyle, fontWeight: "600", whiteSpace: "nowrap" }}>{parseFloat(c.totalSpent).toLocaleString("fr-FR")} Ar</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </TableCard>
+
       </div>
     </div>
   );
 }
 
-/* 🎨 COMPOSANTS */
+/* ── Sous-composants ── */
 
-function StatCard({ title, value, subtitle, icon, color }) {
+function KPICell({ label, value, sub, border, small }) {
   return (
-    <div
-      style={{
-        background: "#fff",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0 2px 8px rgba(0,0,0,.1)",
-        borderLeft: `4px solid ${color}`,
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
-          <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "8px" }}>{title}</p>
-          <h3 style={{ fontSize: "28px", fontWeight: "bold", margin: "0" }}>{value}</h3>
-          {subtitle && (
-            <p style={{ color: "#9ca3af", fontSize: "12px", marginTop: "6px" }}>{subtitle}</p>
-          )}
-        </div>
-        <span style={{ fontSize: "32px" }}>{icon}</span>
+    <div style={{ padding: small ? "13px 18px" : "18px 22px", borderRight: border ? `1px solid ${N.border}` : "none" }}>
+      <div style={{ fontSize: "10px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.09em", color: N.muted, marginBottom: "7px", fontFamily: font }}>
+        {label}
+      </div>
+      <div style={{ fontSize: small ? "19px" : "24px", fontWeight: "700", color: N.text, lineHeight: 1.1, marginBottom: "4px", fontFamily: font }}>
+        {value}
+      </div>
+      <div style={{ fontSize: "11px", color: N.muted, fontFamily: font }}>
+        {sub}
       </div>
     </div>
   );
 }
 
-function ChartCard({ title, children }) {
+function TrendChip({ value }) {
+  const up = value >= 0;
   return (
-    <div
-      style={{
-        background: "#fff",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0 2px 8px rgba(0,0,0,.1)",
-      }}
-    >
-      <h2 style={{ marginBottom: "16px", fontSize: "18px" }}>{title}</h2>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", padding: "1px 6px", background: up ? "#f0fdf4" : "#fff5f5", color: up ? "#166534" : "#b91c1c", borderRadius: "4px", fontSize: "11px", fontWeight: "600", fontFamily: font }}>
+      {up ? "↑" : "↓"} {Math.abs(value)}% <span style={{ fontWeight: "400", color: up ? "#4ade8077" : "#f87171aa" }}>vs préc.</span>
+    </span>
+  );
+}
+
+function MiniCard({ label, children }) {
+  return (
+    <div style={{ background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, padding: "14px 18px" }}>
+      <div style={{ fontSize: "10px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.09em", color: N.muted, marginBottom: "12px", fontFamily: font }}>
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function TableCard({ label, children }) {
+  return (
+    <div style={{ background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
+      <div style={{ padding: "9px 16px", borderBottom: `1px solid ${N.border}`, background: N.bgMuted }}>
+        <span style={{ fontSize: "10px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.09em", color: N.muted, fontFamily: font }}>
+          {label}
+        </span>
+      </div>
       {children}
     </div>
   );
 }
 
 function Alert({ type, message }) {
-  const colors = {
-    warning: { bg: "#fef3c7", border: "#f59e0b", text: "#92400e" },
-    info: { bg: "#dbeafe", border: "#3b82f6", text: "#1e40af" },
-  };
-
-  const color = colors[type];
-
+  const s = {
+    warning: { bg: "#fffbf0", border: "#eddcb0", text: "#7c5200", dot: "#f59e0b" },
+    info:    { bg: "#f5f8ff", border: "#c4d4f0", text: "#1e3a5f", dot: "#3b82f6" },
+    neutral: { bg: N.bgMuted, border: N.border,   text: N.muted,   dot: "#c4b5a5" },
+  }[type] || {};
   return (
-    <div
-      style={{
-        padding: "12px 16px",
-        background: color.bg,
-        border: `1px solid ${color.border}`,
-        borderRadius: "8px",
-        color: color.text,
-        fontSize: "14px",
-        flex: 1,
-        minWidth: "250px",
-      }}
-    >
+    <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px", background: s.bg, border: `1px solid ${s.border}`, borderRadius: "6px", color: s.text, fontSize: "12px", fontWeight: "500", fontFamily: font, flex: 1 }}>
+      <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: s.dot, flexShrink: 0 }} />
       {message}
     </div>
   );
 }
 
 function StatusBadge({ status }) {
-  const statusColors = {
-    pending: { bg: "#fef3c7", text: "#92400e" },
-    confirmed: { bg: "#dbeafe", text: "#1e40af" },
-    processing: { bg: "#e0e7ff", text: "#3730a3" },
-    paid: { bg: "#d1fae5", text: "#065f46" },
-    shipped: { bg: "#cffafe", text: "#155e75" },
-    delivered: { bg: "#d1fae5", text: "#065f46" },
-    cancelled: { bg: "#fee2e2", text: "#991b1b" },
-  };
-
-  const color = statusColors[status] || { bg: "#f3f4f6", text: "#374151" };
-
+  const c = {
+    pending:    { bg: "#fffbf0", text: "#7c5200" },
+    confirmed:  { bg: "#f5f8ff", text: "#1e3a5f" },
+    processing: { bg: "#f5f3ff", text: "#5b21b6" },
+    paid:       { bg: "#f0fdf4", text: "#166534" },
+    shipped:    { bg: "#ecfeff", text: "#155e75" },
+    delivered:  { bg: "#f0fdf4", text: "#166534" },
+    cancelled:  { bg: "#fff5f5", text: "#b91c1c" },
+  }[status] || { bg: N.bgMuted, text: N.muted };
   return (
-    <span
-      style={{
-        padding: "4px 12px",
-        background: color.bg,
-        color: color.text,
-        borderRadius: "12px",
-        fontSize: "12px",
-        fontWeight: "500",
-        display: "inline-block",
-      }}
-    >
+    <span style={{ padding: "2px 8px", background: c.bg, color: c.text, borderRadius: "4px", fontSize: "11px", fontWeight: "600", fontFamily: font, display: "inline-block", letterSpacing: "0.02em" }}>
       {STATUS_LABELS[status] || status}
     </span>
   );
 }
-
-const tableHeaderStyle = {
-  padding: "12px",
-  textAlign: "left",
-  fontSize: "13px",
-  fontWeight: "600",
-  color: "#6b7280",
-};
-
-const tableCellStyle = {
-  padding: "12px",
-  fontSize: "14px",
-};

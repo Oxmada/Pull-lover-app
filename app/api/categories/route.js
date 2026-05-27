@@ -3,61 +3,75 @@ import { connectDB } from "@/app/lib/db";
 import Category from "@/app/models/Category";
 import { getToken } from "next-auth/jwt";
 
-export async function GET(req) {
+async function requireAdmin(req) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!token || token.role !== "admin")
+    return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
+  return null;
+}
+
+export async function GET() {
   try {
     await connectDB();
-
     const categories = await Category.find().sort({ createdAt: -1 });
     return NextResponse.json(categories);
-  } catch (err) {
-    console.error("GET categories error:", err);
-    return NextResponse.json(
-      { message: "Erreur serveur" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }
 }
 
 export async function POST(req) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
   try {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
-
-    // 🔒 ADMIN ONLY
-    if (!token || token.role !== "admin") {
-      return NextResponse.json(
-        { message: "Non autorisé" },
-        { status: 401 }
-      );
-    }
-
     await connectDB();
-
     const { name } = await req.json();
-    if (!name) {
-      return NextResponse.json(
-        { message: "Nom requis" },
-        { status: 400 }
-      );
-    }
-
-    const exists = await Category.findOne({ name });
-    if (exists) {
-      return NextResponse.json(
-        { message: "Catégorie existe déjà" },
-        { status: 400 }
-      );
-    }
-
-    const category = await Category.create({ name });
+    if (!name?.trim())
+      return NextResponse.json({ message: "Nom requis" }, { status: 400 });
+    const exists = await Category.findOne({ name: name.trim() });
+    if (exists)
+      return NextResponse.json({ message: "Catégorie déjà existante" }, { status: 400 });
+    const category = await Category.create({ name: name.trim() });
     return NextResponse.json(category, { status: 201 });
-  } catch (err) {
-    console.error("POST category error:", err);
-    return NextResponse.json(
-      { message: "Erreur serveur" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+  try {
+    await connectDB();
+    const { id, name } = await req.json();
+    if (!id || !name?.trim())
+      return NextResponse.json({ message: "id et nom requis" }, { status: 400 });
+    const exists = await Category.findOne({ name: name.trim(), _id: { $ne: id } });
+    if (exists)
+      return NextResponse.json({ message: "Nom déjà utilisé" }, { status: 400 });
+    const updated = await Category.findByIdAndUpdate(id, { name: name.trim() }, { new: true });
+    if (!updated)
+      return NextResponse.json({ message: "Catégorie introuvable" }, { status: 404 });
+    return NextResponse.json(updated);
+  } catch {
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id)
+      return NextResponse.json({ message: "id requis" }, { status: 400 });
+    const deleted = await Category.findByIdAndDelete(id);
+    if (!deleted)
+      return NextResponse.json({ message: "Catégorie introuvable" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }
 }

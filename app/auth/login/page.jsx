@@ -28,9 +28,8 @@ export default function LoginPage() {
   return (
     <div className="login-page">
 
-      {/* FOND ANIMÉ */}
       <div className="login-bg">
-        <span /><span /><span /><span /><span /><span />
+        <span /><span /><span /><span />
       </div>
 
       {/* CARD */}

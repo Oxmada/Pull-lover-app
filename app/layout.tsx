@@ -1,7 +1,14 @@
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import { Montserrat } from 'next/font/google';
+import HeaderWrapper from "./components/HeaderWrapper";
 import Footer from "./components/Footer";
 import Providers from "./components/Providers";
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-montserrat',
+});
 
 export const metadata = {
   title: "MyShop",
@@ -10,11 +17,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr">
-      <body>
+    <html lang="fr" className={montserrat.variable}>
+      <body className={montserrat.className}>
         <Providers>
-          <Navbar />
-          <main>{children}</main>
+          <HeaderWrapper />
+          <main style={{ background: "transparent" }}>
+            {children}
+          </main>
           <Footer />
         </Providers>
       </body>

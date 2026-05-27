@@ -8,14 +8,19 @@ export default function ProductForm({
   editingProduct,
   onCancel,
 }) {
+  const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
+
+  const initStocksBySize = () => {
+    const existing = editingProduct?.stocks || {};
+    return Object.fromEntries(ALL_SIZES.map((s) => [s, existing[s] ?? 0]));
+  };
+
   const [name, setName] = useState(editingProduct?.name || "");
   const [brand, setBrand] = useState(editingProduct?.brand || "");
-  const [size, setSize] = useState(editingProduct?.size || "");
-  const [condition, setCondition] = useState(editingProduct?.condition || "");
+  const [stocksBySize, setStocksBySize] = useState(initStocksBySize);
   const [description, setDescription] = useState(editingProduct?.description || "");
   const [price, setPrice] = useState(editingProduct?.price || "");
   const [promoPrice, setPromoPrice] = useState(editingProduct?.promoPrice || "");
-  const [stock, setStock] = useState(editingProduct?.stock || "");
   const [category, setCategory] = useState(editingProduct?.category?._id || "");
 
   const [uploadedUrls, setUploadedUrls] = useState(
@@ -95,15 +100,22 @@ export default function ProductForm({
 
     try {
       // ✅ Objet JSON simple
+      const stocks = Object.fromEntries(
+        ALL_SIZES.map((s) => [s, Number(stocksBySize[s] || 0)])
+      );
+      const stock = Object.values(stocks).reduce((sum, v) => sum + v, 0);
+      const sizes = ALL_SIZES.filter((s) => stocks[s] > 0);
+
       const body = {
         name,
         brand,
-        size,
-        condition,
+        sizes,
+        size: sizes[0] || "",
+        stocks,
+        stock,
         description,
         price: Number(price),
         promoPrice: promoPrice ? Number(promoPrice) : null,
-        stock: Number(stock),
         category: category || null,
         images: uploadedUrls,
         image: uploadedUrls[0] || "",
@@ -125,74 +137,97 @@ export default function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="product-form">
-      <input
-        placeholder="Nom du produit"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
+      <div className="form-field">
+        <label className="form-label">Nom du produit <span className="form-required">*</span></label>
+        <input
+          placeholder="Ex : Pull oversize camel"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
 
-      <input
-        placeholder="Marque (ex: Pull & Bear)"
-        value={brand}
-        onChange={(e) => setBrand(e.target.value)}
-      />
+      <div className="form-field">
+        <label className="form-label">Marque</label>
+        <input
+          placeholder="Ex : Pull & Bear"
+          value={brand}
+          onChange={(e) => setBrand(e.target.value)}
+        />
+      </div>
 
-      <select value={size} onChange={(e) => setSize(e.target.value)}>
-        <option value="">-- Taille --</option>
-        <option value="XS">XS</option>
-        <option value="S">S</option>
-        <option value="M">M</option>
-        <option value="L">L</option>
-        <option value="XL">XL</option>
-      </select>
+      <div className="stocks-field">
+        <label className="stocks-label">Stock par taille</label>
+        <div className="stocks-grid">
+          {ALL_SIZES.map((s) => (
+            <div key={s} className="stock-size-item">
+              <span className="stock-size-label">{s}</span>
+              <input
+                type="number"
+                min={0}
+                value={stocksBySize[s]}
+                onChange={(e) =>
+                  setStocksBySize((prev) => ({
+                    ...prev,
+                    [s]: Math.max(0, parseInt(e.target.value) || 0),
+                  }))
+                }
+              />
+            </div>
+          ))}
+        </div>
+        <p className="stock-total">
+          Total :{" "}
+          <strong>
+            {ALL_SIZES.reduce((sum, s) => sum + Number(stocksBySize[s] || 0), 0)}
+          </strong>{" "}
+          article(s)
+        </p>
+      </div>
 
-      <select value={condition} onChange={(e) => setCondition(e.target.value)}>
-        <option value="">-- État --</option>
-        <option value="Neuf">Neuf</option>
-        <option value="Très bon état">Très bon état</option>
-        <option value="Bon état">Bon état</option>
-        <option value="Correct">Correct</option>
-      </select>
+      <div className="form-field">
+        <label className="form-label">Description</label>
+        <textarea
+          placeholder="Décrivez le produit…"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+        />
+      </div>
 
-      <textarea
-        placeholder="Description du produit"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        rows={3}
-      />
+      <div className="form-row">
+        <div className="form-field">
+          <label className="form-label">Prix <span className="form-required">*</span></label>
+          <input
+            type="number"
+            placeholder="Ex : 45000"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-field">
+          <label className="form-label">Prix promo</label>
+          <input
+            type="number"
+            placeholder="Optionnel"
+            value={promoPrice}
+            onChange={(e) => setPromoPrice(e.target.value)}
+          />
+        </div>
+      </div>
 
-      <input
-        type="number"
-        placeholder="Prix"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-        required
-      />
-
-      <input
-        type="number"
-        placeholder="Prix promo (optionnel)"
-        value={promoPrice}
-        onChange={(e) => setPromoPrice(e.target.value)}
-      />
-
-      <input
-        type="number"
-        placeholder="Stock"
-        value={stock}
-        onChange={(e) => setStock(e.target.value)}
-        required
-      />
-
-      <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option value="">-- Choisir catégorie --</option>
-        {categories.map((c) => (
-          <option key={c._id} value={c._id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
+      <div className="form-field">
+        <label className="form-label">Catégorie</label>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">-- Choisir --</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Upload images */}
       <div className="image-upload-section">
@@ -205,7 +240,7 @@ export default function ProductForm({
           disabled={uploading}
         />
         {uploading && (
-          <p style={{ color: "#0070f3", marginTop: "8px" }}>
+          <p style={{ color: "#C95D5D", marginTop: "8px", fontSize: "13px", fontWeight: "500" }}>
             ⏳ Upload en cours...
           </p>
         )}

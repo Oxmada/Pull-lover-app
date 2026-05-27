@@ -2,177 +2,209 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/db";
-import Order from "@/app/models/Order";
+import Order    from "@/app/models/Order";
 import Customer from "@/app/models/Customer";
-import Product from "@/app/models/Product";
+import Product  from "@/app/models/Product";
 
 export async function GET(request) {
   try {
     await connectDB();
 
-    // 📅 Récupérer le paramètre de période (default: 7 jours)
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get("period") || "7"; // 1, 7, 30, 365
-
+    const period  = searchParams.get("period") || "7";
     const daysAgo = parseInt(period);
+
     const periodStart = new Date();
     periodStart.setDate(periodStart.getDate() - daysAgo);
     periodStart.setHours(0, 0, 0, 0);
 
-    /* 👥 Clients */
-    const customersCount = await Customer.countDocuments();
-    
-    // Nouveaux clients sur la période
-    const newCustomers = await Customer.countDocuments({
-      createdAt: { $gte: periodStart },
-    });
-
-    /* 📦 Commandes */
-    const ordersCount = await Order.countDocuments();
-
-    // Commandes sur la période
-    const periodOrders = await Order.countDocuments({
-      createdAt: { $gte: periodStart },
-    });
-
-    /* 💰 Chiffre d'affaires TOTAL */
-    const revenueAgg = await Order.aggregate([
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$total" },
-        },
-      },
-    ]);
-    const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
-
-    /* 💰 CA sur la période */
-    const periodRevenueAgg = await Order.aggregate([
-      { $match: { createdAt: { $gte: periodStart } } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$total" },
-        },
-      },
-    ]);
-    const periodRevenue = periodRevenueAgg.length > 0 ? periodRevenueAgg[0].total : 0;
-
-    /* 🛒 Panier moyen */
-    const averageBasket = ordersCount > 0 ? (totalRevenue / ordersCount).toFixed(2) : 0;
-
-    /* 📅 Commandes aujourd'hui */
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const todayOrders = await Order.countDocuments({
-      createdAt: { $gte: today },
-    });
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    /* 📊 Évolution des ventes (7 derniers jours) */
-    const salesEvolution = [];
-    for (let i = daysAgo - 1; i >= 0; i--) {
-      const dayStart = new Date();
-      dayStart.setDate(dayStart.getDate() - i);
-      dayStart.setHours(0, 0, 0, 0);
+    // Période précédente (pour trend CA)
+    const prevPeriodStart = new Date(periodStart);
+    prevPeriodStart.setDate(prevPeriodStart.getDate() - daysAgo);
 
-      const dayEnd = new Date(dayStart);
-      dayEnd.setHours(23, 59, 59, 999);
+    // ── Toutes les requêtes indépendantes en parallèle ──
+    const [
+      customersCount,
+      newCustomers,
+      ordersCount,
+      periodOrdersCount,
+      todayOrders,
+      cancelledOrders,
+      pendingOrders,
+      returningCustomers,
+      dormantCustomers,
+      lowStockProducts,
 
-      const dayRevenue = await Order.aggregate([
-        {
-          $match: {
-            createdAt: { $gte: dayStart, $lte: dayEnd },
-          },
-        },
+      totalRevenueAgg,
+      periodRevenueAgg,
+      prevPeriodRevenueAgg,
+      stockValueAgg,
+
+      salesEvolutionAgg,
+      topProductsAgg,
+      ordersByStatusAgg,
+      paymentAgg,
+      soldProductsAgg,
+      topCustomersAgg,
+      recentOrders,
+    ] = await Promise.all([
+      // Counts clients
+      Customer.countDocuments(),
+      Customer.countDocuments({ createdAt: { $gte: periodStart } }),
+
+      // Counts commandes
+      Order.countDocuments(),
+      Order.countDocuments({ createdAt: { $gte: periodStart } }),
+      Order.countDocuments({ createdAt: { $gte: today } }),
+      Order.countDocuments({ status: "cancelled" }),
+      Order.countDocuments({ status: "pending" }),
+
+      // Clients
+      Customer.countDocuments({ totalOrders: { $gt: 1 } }),
+      Customer.countDocuments({ lastOrderAt: { $ne: null, $lt: thirtyDaysAgo }, status: "active" }),
+
+      // Stock
+      Product.countDocuments({ stock: { $lt: 5 }, isAvailable: true }),
+
+      // Revenus
+      Order.aggregate([{ $group: { _id: null, total: { $sum: "$total" } } }]),
+      Order.aggregate([
+        { $match: { createdAt: { $gte: periodStart } } },
+        { $group: { _id: null, total: { $sum: "$total" } } },
+      ]),
+      Order.aggregate([
+        { $match: { createdAt: { $gte: prevPeriodStart, $lt: periodStart } } },
+        { $group: { _id: null, total: { $sum: "$total" } } },
+      ]),
+      Product.aggregate([
+        { $match: { isAvailable: true } },
+        { $group: { _id: null, total: { $sum: { $multiply: ["$stock", "$price"] } } } },
+      ]),
+
+      // Évolution ventes — 1 seule agrégation (au lieu d'une boucle)
+      Order.aggregate([
+        { $match: { createdAt: { $gte: periodStart } } },
         {
           $group: {
-            _id: null,
-            total: { $sum: "$total" },
+            _id: {
+              y: { $year: "$createdAt" },
+              m: { $month: "$createdAt" },
+              d: { $dayOfMonth: "$createdAt" },
+            },
+            revenue: { $sum: "$total" },
+            orders:  { $sum: 1 },
           },
         },
-      ]);
+        { $sort: { "_id.y": 1, "_id.m": 1, "_id.d": 1 } },
+      ]),
 
-      const dayOrders = await Order.countDocuments({
-        createdAt: { $gte: dayStart, $lte: dayEnd },
-      });
+      // Top produits
+      Order.aggregate([
+        { $unwind: "$products" },
+        { $group: { _id: "$products.product", totalQuantity: { $sum: "$products.quantity" } } },
+        { $sort: { totalQuantity: -1 } },
+        { $limit: 5 },
+        { $lookup: { from: "products", localField: "_id", foreignField: "_id", as: "p" } },
+        { $unwind: "$p" },
+        { $project: { name: "$p.name", quantity: "$totalQuantity" } },
+      ]),
 
+      // Distributions
+      Order.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+      Order.aggregate([
+        { $group: { _id: { $ifNull: ["$payment", "cash"] }, count: { $sum: 1 } } },
+      ]),
+
+      // Produits vendus (pour "jamais vendus")
+      Order.aggregate([
+        { $unwind: "$products" },
+        { $group: { _id: "$products.product" } },
+      ]),
+
+      // Top clients calculé depuis les commandes (fiable même si Customer.totalSpent non mis à jour)
+      Order.aggregate([
+        {
+          $group: {
+            _id: "$customer.email",
+            firstname:   { $first: "$customer.firstname" },
+            lastname:    { $first: "$customer.lastname" },
+            totalSpent:  { $sum: "$total" },
+            totalOrders: { $sum: 1 },
+          },
+        },
+        { $sort: { totalSpent: -1 } },
+        { $limit: 5 },
+        { $project: { _id: 0, firstname: 1, lastname: 1, totalSpent: 1, totalOrders: 1 } },
+      ]),
+
+      Order.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select("customer.firstname customer.lastname total status createdAt")
+        .lean(),
+    ]);
+
+    // ── Requête dépendante : produits jamais vendus ──
+    const soldIds = soldProductsAgg.map((item) => item._id);
+    const neverSoldProducts = await Product.countDocuments({
+      _id: { $nin: soldIds },
+      isAvailable: true,
+      stock: { $gt: 0 },
+    });
+
+    // ── Calculs dérivés ──
+    const totalRevenue      = totalRevenueAgg[0]?.total      || 0;
+    const periodRevenue     = periodRevenueAgg[0]?.total     || 0;
+    const prevPeriodRevenue = prevPeriodRevenueAgg[0]?.total || 0;
+    const stockValue        = Number(stockValueAgg[0]?.total)  || 0;
+    const averageBasket     = ordersCount > 0 ? (totalRevenue / ordersCount).toFixed(2) : 0;
+    const cancellationRate  = ordersCount > 0 ? ((cancelledOrders / ordersCount) * 100).toFixed(1) : 0;
+    const loyaltyRate       = customersCount > 0 ? ((returningCustomers / customersCount) * 100).toFixed(1) : 0;
+    const revenueGrowth     = prevPeriodRevenue > 0
+      ? (((periodRevenue - prevPeriodRevenue) / prevPeriodRevenue) * 100).toFixed(1)
+      : null;
+
+    // ── Évolution : remplir les jours sans commandes ──
+    const evoMap = {};
+    salesEvolutionAgg.forEach(({ _id, revenue, orders }) => {
+      const key = `${_id.y}-${String(_id.m).padStart(2, "0")}-${String(_id.d).padStart(2, "0")}`;
+      evoMap[key] = { revenue, orders };
+    });
+    const salesEvolution = [];
+    for (let i = daysAgo - 1; i >= 0; i--) {
+      const day = new Date();
+      day.setDate(day.getDate() - i);
+      const key = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
       salesEvolution.push({
-        date: dayStart.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
-        revenue: dayRevenue.length > 0 ? dayRevenue[0].total : 0,
-        orders: dayOrders,
+        date:    day.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+        revenue: evoMap[key]?.revenue || 0,
+        orders:  evoMap[key]?.orders  || 0,
       });
     }
 
-    /* 🏆 Top 5 produits les plus vendus */
-    const topProducts = await Order.aggregate([
-      { $unwind: "$products" },
-      {
-        $group: {
-          _id: "$products.product",
-          totalQuantity: { $sum: "$products.quantity" },
-        },
-      },
-      { $sort: { totalQuantity: -1 } },
-      { $limit: 5 },
-      {
-        $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "_id",
-          as: "productDetails",
-        },
-      },
-      { $unwind: "$productDetails" },
-      {
-        $project: {
-          name: "$productDetails.name",
-          quantity: "$totalQuantity",
-          image: "$productDetails.image",
-        },
-      },
-    ]);
+    // ── Distributions formatées ──
+    const PAYMENT_LABELS = {
+      cash:          "Espèces",
+      mobile_money:  "Mobile Money",
+      card:          "Carte",
+      bank_transfer: "Virement",
+    };
 
-    /* 📋 5 dernières commandes */
-    const recentOrders = await Order.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .select("customer.firstname customer.lastname total status createdAt")
-      .lean();
-
-    /* ⚠️ Alertes */
-    // Produits en rupture de stock
-    const lowStockProducts = await Product.countDocuments({
-      stock: { $lt: 5 },
-      isAvailable: true,
-    });
-
-    // Commandes en attente
-    const pendingOrders = await Order.countDocuments({
-      status: "pending",
-    });
-
-    /* 📊 Répartition des commandes par statut */
-    const ordersByStatus = await Order.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-
-    const statusDistribution = ordersByStatus.map((item) => ({
-      name: item._id,
-      value: item.count,
+    const statusDistribution = ordersByStatusAgg.map((item) => ({
+      name: item._id, value: item.count,
     }));
 
-    /* 📊 Données pour graphique principal */
-    const chartData = [
-      { name: "Clients", value: customersCount },
-      { name: "Commandes", value: ordersCount },
-      { name: "CA (€)", value: Math.round(totalRevenue) },
-    ];
+    const paymentDistribution = paymentAgg.map((item) => ({
+      name:  item._id || "cash",
+      label: PAYMENT_LABELS[item._id] || item._id || "Espèces",
+      value: item.count,
+    }));
 
     return NextResponse.json({
       success: true,
@@ -180,28 +212,34 @@ export async function GET(request) {
         customersCount,
         newCustomers,
         ordersCount,
-        periodOrders,
-        totalRevenue: totalRevenue.toFixed(2),
-        periodRevenue: periodRevenue.toFixed(2),
+        periodOrders:     periodOrdersCount,
+        totalRevenue:     totalRevenue.toFixed(2),
+        periodRevenue:    periodRevenue.toFixed(2),
+        prevPeriodRevenue: prevPeriodRevenue.toFixed(2),
+        revenueGrowth,
         averageBasket,
         todayOrders,
         lowStockProducts,
         pendingOrders,
+        cancelledOrders,
+        cancellationRate,
+        returningCustomers,
+        loyaltyRate,
+        dormantCustomers,
+        stockValue:       Math.round(stockValue),
+        neverSoldProducts,
       },
       salesEvolution,
-      topProducts,
+      topProducts:        topProductsAgg,
+      topCustomers:       topCustomersAgg,
       recentOrders,
       statusDistribution,
-      chartData,
+      paymentDistribution,
     });
   } catch (error) {
     console.error("STATS ERROR:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Erreur stats",
-        error: error.message,
-      },
+      { success: false, message: "Erreur stats", error: error.message },
       { status: 500 }
     );
   }

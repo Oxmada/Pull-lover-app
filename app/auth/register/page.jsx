@@ -74,25 +74,15 @@ export default function RegisterPage() {
   return (
     <div className="register-page">
 
-      {/* FOND ANIMÉ */}
       <div className="register-bg">
-        <span /><span /><span /><span /><span /><span />
+        <span /><span /><span /><span />
       </div>
 
-      <div className="register-wrapper">
+      <div className="register-card">
 
-        {/* HEADER */}
-        <div className="register-header">
-          <div className="register-logo">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
-          </div>
-          <h1>Créer un compte 🎉</h1>
+        <div className="register-card-header">
+          <h1>Créer un compte</h1>
         </div>
-
-        {/* CARD */}
-        <div className="register-card">
 
           {/* CHAMPS */}
           <div className="register-inputs">
@@ -172,7 +162,6 @@ export default function RegisterPage() {
             <Link href="/auth/login">Se connecter</Link>
           </div>
 
-        </div>
       </div>
     </div>
   );

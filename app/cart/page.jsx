@@ -18,6 +18,12 @@ export default function CartPage() {
 
   return (
     <div className="cart-page">
+
+      {/* Fond orbes animés */}
+      <div className="cart-bg">
+        <span /><span /><span /><span />
+      </div>
+
       {cartItems.length === 0 ? (
         <div className="cart-empty">
           <p>Votre panier est vide.</p>
@@ -28,7 +34,7 @@ export default function CartPage() {
 
           {/* COLONNE GAUCHE */}
           <div className="cart-left">
-            <h2 className="cart-title">🛒 Mon panier</h2>
+            <h2 className="cart-title">Mon panier</h2>
 
             <ul className="cart-list">
               {cartItems.map((item) => (
@@ -54,7 +60,7 @@ export default function CartPage() {
                   <div className="cart-item-right">
                     <span className="cart-item-price">{item.promoPrice ?? item.price} Ar</span>
                     <button className="cart-remove" onClick={() => removeFromCart(item._id)}>
-                      🗑 Remove
+                      Supprimer
                     </button>
                   </div>
 
@@ -66,11 +72,11 @@ export default function CartPage() {
           {/* COLONNE DROITE */}
           <div className="cart-right">
             <div className="cart-promo">
-              <h3 className="cart-section-title">🏷 Code promo</h3>
+              <h3 className="cart-section-title">Code promo</h3>
               <div className="promo-input-row">
                 <input
                   type="text"
-                  placeholder="Entre ton code promo"
+                  placeholder="Entrez votre code"
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
                 />
@@ -79,9 +85,9 @@ export default function CartPage() {
             </div>
 
             <div className="cart-summary">
-              <h3 className="cart-section-title">Résumé de la commande</h3>
+              <h3 className="cart-section-title">Résumé</h3>
               <div className="summary-row">
-                <span>Sous-total ({totalQty})</span>
+                <span>Sous-total ({totalQty} article{totalQty > 1 ? "s" : ""})</span>
                 <span>{cartTotal} Ar</span>
               </div>
               <div className="summary-row">

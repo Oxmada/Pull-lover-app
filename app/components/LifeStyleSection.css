@@ -1,0 +1,117 @@
+.lifestyle-section {
+    width: 100%;
+    background: #fff;
+    padding: 100px 0 60px 0;
+}
+
+.lifestyle-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 80px;
+}
+
+/* Bandeau sombre */
+.lifestyle-band {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 480px;
+    background: #c95d5d;
+}
+
+/* Texte à gauche */
+.lifestyle-band-text {
+    padding: 60px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 60px;
+}
+
+.lifestyle-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.lifestyle-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.75;
+    margin: 0;
+}
+
+/* Image à droite */
+.lifestyle-band-img {
+    height: 100%;
+    overflow: hidden;
+}
+
+.lifestyle-band-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+/* Responsive */
+@media (min-width: 810px) and (max-width: 1200px) {
+    .lifestyle-section {
+        padding: 100px 0 40px 0;
+    }
+
+    .lifestyle-inner {
+        padding: 0 64px;
+    }
+
+    .lifestyle-band {
+        grid-template-columns: 1fr 320px;
+        height: 400px;
+    }
+
+    .lifestyle-band-text {
+        padding: 40px 36px;
+        gap: 40px;
+    }
+
+    .lifestyle-title {
+        font-size: 36px;
+    }
+
+    .lifestyle-subtitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 810px) {
+    .lifestyle-section {
+        padding: 60px 0 20px 0;
+    }
+
+    .lifestyle-inner {
+        padding: 0 32px;
+    }
+
+    .lifestyle-band {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 280px;
+        height: auto;
+    }
+
+    .lifestyle-band-text {
+        padding: 36px 28px;
+        gap: 20px;
+    }
+
+    .lifestyle-title {
+        font-size: 24px;
+    }
+
+    .lifestyle-subtitle {
+        font-size: 12px;
+    }
+}

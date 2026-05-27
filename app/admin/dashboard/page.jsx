@@ -18,35 +18,25 @@ export default async function AdminDashboard() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>
-        Dashboard Admin
-      </h1>
-
-      {/* 🔗 NAVIGATION EN HAUT */}
-      <div className={styles.grid} style={{ marginBottom: "40px" }}>
-        <a href="/admin/inventory" className={styles.card}>
-          📦 Inventaire & Stock
-        </a>
-
-        <a href="/admin/products" className={styles.card}>
-          🛒 Gestion Produits
-        </a>
-
-        <a href="/admin/categories" className={styles.card}>
-          📂 Gestion Catégories
-        </a>
-
-        <a href="/admin/customers" className={styles.card}>
-          👤 Utilisateurs
-        </a>
-
-        <a href="/admin/orders" className={styles.card}>
-          📦 Voir les commandes
-        </a>
-
+      <div className={styles.topbar}>
+        <h1 className={styles.title}>Dashboard Admin</h1>
       </div>
 
-      {/* 📊 STATS + GRAPH EN BAS */}
+      <div className={styles.grid}>
+        <a href="/admin/products" className={styles.card}>
+          Produits & Stock
+        </a>
+        <a href="/admin/categories" className={styles.card}>
+          Catégories
+        </a>
+        <a href="/admin/customers" className={styles.card}>
+          Utilisateurs
+        </a>
+        <a href="/admin/orders" className={styles.card}>
+          Commandes
+        </a>
+      </div>
+
       <DashboardStats />
     </div>
   );
