@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import "./recherche.css";
 
 
-export default function RecherchePage() {
+function RechercheContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
 
@@ -56,5 +56,13 @@ export default function RecherchePage() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function RecherchePage() {
+  return (
+    <Suspense fallback={<div style={{ padding: "40px 0" }}>Chargement...</div>}>
+      <RechercheContent />
+    </Suspense>
   );
 }
