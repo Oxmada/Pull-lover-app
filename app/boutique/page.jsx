@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import "./boutique.css";
 
 const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
 
-export default function BoutiquePage() {
+function BoutiqueContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -296,5 +296,13 @@ export default function BoutiquePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BoutiquePage() {
+  return (
+    <Suspense>
+      <BoutiqueContent />
+    </Suspense>
   );
 }
