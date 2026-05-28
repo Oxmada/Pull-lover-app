@@ -1,3 +1,4 @@
+import React from "react";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
 import HeaderWrapper from "./components/HeaderWrapper";
@@ -15,7 +16,7 @@ export const metadata = {
   description: "Boutique en ligne",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={montserrat.variable}>
       <body className={montserrat.className}>

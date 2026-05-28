@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import type { AuthOptions } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { connectDB } from "@/app/lib/db";
@@ -25,8 +26,8 @@ const PAYMENT_LABELS: Record<string, string> = {
 };
 
 export default async function OrdersPage() {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/auth/login");
+  const session = await getServerSession(authOptions as AuthOptions);
+  if (!session?.user) redirect("/auth/login");
 
   await connectDB();
 
