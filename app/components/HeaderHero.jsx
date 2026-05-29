@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useCart } from "./CartContext";
 import "./HeaderHero.css";
@@ -12,17 +11,8 @@ export default function HeaderHero() {
   const { cartItems } = useCart();
   const cartCount = cartItems?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
   const [showBadge, setShowBadge] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    router.push(`/recherche?q=${encodeURIComponent(searchQuery)}`);
-    setSearchQuery("");
-  };
 
   const close = () => setIsMenuOpen(false);
 
@@ -154,7 +144,7 @@ export default function HeaderHero() {
           </Link>
         </div>
 
-        <div className="hero-content-right tablet-hide">
+        <div className="hero-content-right">
           {showBadge && (
             <div className="hero-badge">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="badge-icon">

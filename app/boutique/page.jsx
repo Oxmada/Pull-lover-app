@@ -70,8 +70,9 @@ function BoutiqueContent() {
     async function fetchCategories() {
       try {
         const res = await fetch("/api/categories");
+        if (!res.ok) return;
         const data = await res.json();
-        setCategories(data || []);
+        setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Erreur chargement catégories");
       }
@@ -237,11 +238,11 @@ function BoutiqueContent() {
                   <div className="product-price">
                     {product.promoPrice ? (
                       <>
-                        <span className="price-promo">{product.promoPrice.toLocaleString()} Ar</span>
-                        <span className="price-old">{product.price.toLocaleString()} Ar</span>
+                        <span className="price-promo">{product.promoPrice.toLocaleString()} €</span>
+                        <span className="price-old">{product.price.toLocaleString()} €</span>
                       </>
                     ) : (
-                      <span className="price-normal">{product.price.toLocaleString()} Ar</span>
+                      <span className="price-normal">{product.price.toLocaleString()} €</span>
                     )}
                   </div>
 

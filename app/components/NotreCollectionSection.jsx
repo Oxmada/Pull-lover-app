@@ -108,11 +108,11 @@ const NotreCollectionSection = () => {
                                         <div className="ncs-card-price">
                                             {product.promoPrice ? (
                                                 <>
-                                                    <span className="ncs-price-promo">{product.promoPrice.toLocaleString()} Ar</span>
-                                                    <span className="ncs-price-old">{product.price.toLocaleString()} Ar</span>
+                                                    <span className="ncs-price-promo">{product.promoPrice.toLocaleString()} €</span>
+                                                    <span className="ncs-price-old">{product.price.toLocaleString()} €</span>
                                                 </>
                                             ) : (
-                                                <span className="ncs-price-current">{product.price.toLocaleString()} Ar</span>
+                                                <span className="ncs-price-current">{product.price.toLocaleString()} €</span>
                                             )}
                                         </div>
 

@@ -257,10 +257,10 @@ export default function ProductsPage() {
                     <strong>{p.name}</strong>
                   </td>
                   <td>{p.brand || "—"}</td>
-                  <td className="price-cell">{p.price} Ar</td>
+                  <td className="price-cell">{p.price} €</td>
                   <td className="promo-cell">
                     {p.promoPrice ? (
-                      <span className="promo-badge">{p.promoPrice} Ar</span>
+                      <span className="promo-badge">{p.promoPrice} €</span>
                     ) : (
                       "—"
                     )}

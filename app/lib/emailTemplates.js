@@ -137,7 +137,7 @@ export function getOrderConfirmationEmailTemplate({
         <tfoot>
           <tr style="border-top:2px solid ${gray200}">
             <td colspan="2" style="padding:14px 0;font-size:14px;font-weight:700;color:${dark}">Total</td>
-            <td style="padding:14px 0;text-align:right;font-size:18px;font-weight:800;color:${coral}">${Number(total).toLocaleString("fr-FR")} Ar</td>
+            <td style="padding:14px 0;text-align:right;font-size:18px;font-weight:800;color:${coral}">${Number(total).toLocaleString("fr-FR")} €</td>
           </tr>
         </tfoot>
       </table>
@@ -211,7 +211,7 @@ export function getAdminNewOrderEmailTemplate({
         <tfoot>
           <tr style="border-top:2px solid ${gray200}">
             <td colspan="2" style="padding:14px 0;font-size:14px;font-weight:700;color:${dark}">Total</td>
-            <td style="padding:14px 0;text-align:right;font-size:20px;font-weight:800;color:${coral}">${Number(total).toLocaleString("fr-FR")} Ar</td>
+            <td style="padding:14px 0;text-align:right;font-size:20px;font-weight:800;color:${coral}">${Number(total).toLocaleString("fr-FR")} €</td>
           </tr>
         </tfoot>
       </table>
@@ -228,7 +228,7 @@ export function getAdminNewOrderEmailTemplate({
   `;
   return wrap(
     `Nouvelle commande #${orderNumber} — Admin`,
-    `Nouvelle commande de ${firstname} ${lastname} — Total : ${Number(total).toLocaleString("fr-FR")} Ar`,
+    `Nouvelle commande de ${firstname} ${lastname} — Total : ${Number(total).toLocaleString("fr-FR")} €`,
     body
   );
 }
@@ -274,7 +274,7 @@ export function getOrderStatusUpdateEmailTemplate({
             </td></tr>
             <tr><td>
               <p style="margin:0 0 3px;font-size:10px;font-weight:700;color:${gray400};letter-spacing:1px;text-transform:uppercase">Total</p>
-              <p style="margin:0;font-size:16px;font-weight:800;color:${dark}">${Number(total).toLocaleString("fr-FR")} Ar</p>
+              <p style="margin:0;font-size:16px;font-weight:800;color:${dark}">${Number(total).toLocaleString("fr-FR")} €</p>
             </td></tr>
           </table>
         </td></tr>

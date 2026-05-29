@@ -149,7 +149,7 @@ export default function UserOrdersClient({ orders }) {
                   ))}
                   <div style={styles.totalRow}>
                     <strong>Total :</strong>
-                    <span style={styles.total}>{order.total?.toLocaleString()} Ar</span>
+                    <span style={styles.total}>{order.total?.toLocaleString()} €</span>
                   </div>
                 </div>
               </div>

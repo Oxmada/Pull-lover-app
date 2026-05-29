@@ -155,7 +155,7 @@ if (existingCustomer) {
         <tr style="border-bottom:1px solid #e2e8f0">
           <td style="padding:12px 0;font-size:14px;color:#475569">${item.name || "Produit"}</td>
           <td style="padding:12px 0;font-size:14px;color:#475569;text-align:center">${item.quantity}</td>
-          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600">${item.price ? Number(item.price).toLocaleString("fr-FR") + " Ar" : "-"}</td>
+          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600">${item.price ? Number(item.price).toLocaleString("fr-FR") + " €" : "-"}</td>
         </tr>
       `
       )

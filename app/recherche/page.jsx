@@ -51,7 +51,7 @@ function RechercheContent() {
           >
             <img src={product.image} alt={product.name} />
             <h3>{product.name}</h3>
-            <p>{product.price} Ar</p>
+            <p>{product.price} €</p>
           </Link>
         ))}
       </div>

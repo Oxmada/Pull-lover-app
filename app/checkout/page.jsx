@@ -274,7 +274,7 @@ export default function CheckoutPage() {
                   <p>{item.description}</p>
                 </div>
                 <span className="checkout-item-price">
-                  {item.promoPrice ?? item.price} Ar
+                  {item.promoPrice ?? item.price} €
                 </span>
               </div>
             ))}
@@ -285,20 +285,20 @@ export default function CheckoutPage() {
             <h3 className="checkout-summary-title">Résumé de la commande</h3>
             <div className="checkout-summary-row">
               <span>Sous-total ({totalQty})</span>
-              <span>{cartTotal} Ar</span>
+              <span>{cartTotal} €</span>
             </div>
             <div className="checkout-summary-row">
               <span>TVA (20%)</span>
-              <span>{tva} Ar</span>
+              <span>{tva} €</span>
             </div>
             <div className="checkout-summary-row">
               <span>Livraison</span>
-              <span>{livraison} Ar</span>
+              <span>{livraison} €</span>
             </div>
             <div className="checkout-summary-divider" />
             <div className="checkout-summary-row checkout-summary-total">
               <span>Total</span>
-              <span>{total} Ar</span>
+              <span>{total} €</span>
             </div>
           </div>
 

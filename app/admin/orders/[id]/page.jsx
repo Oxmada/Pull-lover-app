@@ -149,7 +149,7 @@ export default function AdminOrderDetailPage() {
           </div>
           <div className="od-summary-row od-summary-total">
             <span className="od-summary-label">Total</span>
-            <span className="od-total-value">{(order.total || 0).toLocaleString()} Ar</span>
+            <span className="od-total-value">{(order.total || 0).toLocaleString()} €</span>
           </div>
         </div>
 

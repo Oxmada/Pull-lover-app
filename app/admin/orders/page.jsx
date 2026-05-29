@@ -150,7 +150,7 @@ export default function AdminOrdersPage() {
       const data = await res.json();
       if (!data.orders) return;
 
-      const headers = ["Prénom","Nom","Email","Téléphone","Adresse","Ville","Total (Ar)","Paiement","Statut","Date"];
+      const headers = ["Prénom","Nom","Email","Téléphone","Adresse","Ville","Total (€)","Paiement","Statut","Date"];
       const rows = data.orders.map(o => {
         const c = o.customer || {};
         return [
@@ -333,7 +333,7 @@ export default function AdminOrdersPage() {
                       </div>
                     </td>
                     <td>
-                      <span className="ao-total">{(o.total || 0).toLocaleString()} Ar</span>
+                      <span className="ao-total">{(o.total || 0).toLocaleString()} €</span>
                     </td>
                     <td>
                       <span className={`ao-payment ao-payment-${o.payment}`}>

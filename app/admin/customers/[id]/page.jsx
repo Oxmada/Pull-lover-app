@@ -316,7 +316,7 @@ export default function CustomerDetailPage() {
               <span className="acd-stat-lbl">Commandes</span>
             </div>
             <div className="acd-stat acd-stat--green">
-              <span className="acd-stat-val">{(customer.totalSpent || 0).toLocaleString()} Ar</span>
+              <span className="acd-stat-val">{(customer.totalSpent || 0).toLocaleString()} €</span>
               <span className="acd-stat-lbl">Total dépensé</span>
             </div>
             {customer.lastOrderAt && (
@@ -361,7 +361,7 @@ export default function CustomerDetailPage() {
                     <tr key={order._id}>
                       <td><span className="acd-order-id">#{order._id.slice(-8).toUpperCase()}</span></td>
                       <td>{new Date(order.createdAt).toLocaleDateString("fr-FR")}</td>
-                      <td><span className="acd-order-total">{(order.total || 0).toLocaleString()} Ar</span></td>
+                      <td><span className="acd-order-total">{(order.total || 0).toLocaleString()} €</span></td>
                       <td><span className={`acd-order-badge ${s.cls}`}>{s.label}</span></td>
                       <td>
                         <div className="acd-actions">

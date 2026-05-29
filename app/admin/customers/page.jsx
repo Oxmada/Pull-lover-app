@@ -102,7 +102,7 @@ export default function CustomersPage() {
 
       const headers = [
         "Prénom", "Nom", "Email", "Téléphone", "Ville",
-        "Commandes", "Total dépensé (Ar)", "Dernière commande", "Statut", "Inscrit le",
+        "Commandes", "Total dépensé (€)", "Dernière commande", "Statut", "Inscrit le",
       ];
       const rows = data.customers.map(c => [
         c.firstname, c.lastname, c.email, c.phone || "", c.city || "",
@@ -366,7 +366,7 @@ export default function CustomersPage() {
                     </td>
                     <td>
                       <span className="ac-total-spent">
-                        {(customer.totalSpent || 0).toLocaleString()} Ar
+                        {(customer.totalSpent || 0).toLocaleString()} €
                       </span>
                     </td>
                     <td>

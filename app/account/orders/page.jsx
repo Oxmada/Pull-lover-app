@@ -171,7 +171,7 @@ export default function UserOrdersPage() {
                   </div>
                   <div style={styles.detailRow}>
                     <span><strong>Total :</strong></span>
-                    <span style={styles.total}>{order.total?.toLocaleString()} Ar</span>
+                    <span style={styles.total}>{order.total?.toLocaleString()} €</span>
                   </div>
                 </div>
 

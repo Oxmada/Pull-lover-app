@@ -18,7 +18,7 @@ export default function Dashboard({ stats, chartData }) {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card
           title="Chiffre d'affaires"
-          value={`${stats.totalRevenue.toLocaleString()} Ar`}
+          value={`${stats.totalRevenue.toLocaleString()} €`}
         />
         <Card title="Commandes" value={stats.ordersCount} />
         <Card title="Clients" value={stats.customersCount} />

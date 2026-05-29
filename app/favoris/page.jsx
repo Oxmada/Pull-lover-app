@@ -89,11 +89,11 @@ export default function FavorisPage() {
                       <div className="fav-price">
                         {hasPromo ? (
                           <>
-                            <span className="fav-price-promo">{product.promoPrice.toLocaleString()} Ar</span>
-                            <span className="fav-price-old">{product.price.toLocaleString()} Ar</span>
+                            <span className="fav-price-promo">{product.promoPrice.toLocaleString()} €</span>
+                            <span className="fav-price-old">{product.price.toLocaleString()} €</span>
                           </>
                         ) : (
-                          <span className="fav-price-normal">{product.price.toLocaleString()} Ar</span>
+                          <span className="fav-price-normal">{product.price.toLocaleString()} €</span>
                         )}
                       </div>
 

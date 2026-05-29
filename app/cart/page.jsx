@@ -58,7 +58,7 @@ export default function CartPage() {
 
                   {/* PRIX + REMOVE */}
                   <div className="cart-item-right">
-                    <span className="cart-item-price">{item.promoPrice ?? item.price} Ar</span>
+                    <span className="cart-item-price">{item.promoPrice ?? item.price} €</span>
                     <button className="cart-remove" onClick={() => removeFromCart(item._id)}>
                       Supprimer
                     </button>
@@ -88,16 +88,16 @@ export default function CartPage() {
               <h3 className="cart-section-title">Résumé</h3>
               <div className="summary-row">
                 <span>Sous-total ({totalQty} article{totalQty > 1 ? "s" : ""})</span>
-                <span>{cartTotal} Ar</span>
+                <span>{cartTotal} €</span>
               </div>
               <div className="summary-row">
                 <span>TVA (20%)</span>
-                <span>{tva} Ar</span>
+                <span>{tva} €</span>
               </div>
               <div className="summary-divider" />
               <div className="summary-row summary-total">
                 <span>Total</span>
-                <span>{total} Ar</span>
+                <span>{total} €</span>
               </div>
               <button className="checkout-btn" onClick={() => router.push("/checkout")}>
                 Procéder au paiement

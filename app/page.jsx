@@ -62,8 +62,8 @@ export default function HomePage() {
                     <h3>{product.name}</h3>
                     {product.brand && <p className="product-brand">{product.brand}</p>}
                     <div className="product-price-pro">
-                      <span className="price-current">{product.promoPrice?.toLocaleString()} Ar</span>
-                      <span className="price-original">{product.price.toLocaleString()} Ar</span>
+                      <span className="price-current">{product.promoPrice?.toLocaleString()} €</span>
+                      <span className="price-original">{product.price.toLocaleString()} €</span>
                     </div>
                   </div>
                 </Link>

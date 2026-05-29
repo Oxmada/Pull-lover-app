@@ -161,7 +161,7 @@ export default function ProductsManagement() {
       if (!data.success) return;
 
       const headers = [
-        "Nom", "Marque", "Catégorie", "Prix (Ar)", "Prix promo (Ar)",
+        "Nom", "Marque", "Catégorie", "Prix (€)", "Prix promo (€)",
         "XS", "S", "M", "L", "XL", "Stock total", "Visible", "Ajouté le",
       ];
       const rows = data.products.map(p => [
@@ -380,11 +380,11 @@ export default function ProductsManagement() {
                   <td>
                     {product.promoPrice ? (
                       <>
-                        <span className="ap-price-original">{product.price.toLocaleString()} Ar</span>
-                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} Ar</span>
+                        <span className="ap-price-original">{product.price.toLocaleString()} €</span>
+                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} €</span>
                       </>
                     ) : (
-                      <span className="ap-price">{product.price.toLocaleString()} Ar</span>
+                      <span className="ap-price">{product.price.toLocaleString()} €</span>
                     )}
                   </td>
                   <td><StockBySize stocks={product.stocks} /></td>
