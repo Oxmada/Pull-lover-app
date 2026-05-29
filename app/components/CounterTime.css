@@ -105,6 +105,16 @@
     white-space: nowrap;
 }
 
+/* Lettres individuelles du titre */
+.ct-letter {
+    display: inline-block;
+    will-change: transform, opacity;
+}
+
+.ct-space {
+    display: inline;
+}
+
 .ct-desc {
     display: none;
 }
@@ -164,24 +174,14 @@
 }
 
 .ct-box--flip {
-    animation: ct-flip 0.3s ease;
+    animation: ct-flip 0.4s ease;
 }
 
 @keyframes ct-flip {
-    0% {
-        transform: scaleY(1);
-        opacity: 1;
-    }
-
-    45% {
-        transform: scaleY(0);
-        opacity: 0.3;
-    }
-
-    100% {
-        transform: scaleY(1);
-        opacity: 1;
-    }
+    0%  { transform: perspective(300px) rotateX(0deg);   opacity: 1;   }
+    40% { transform: perspective(300px) rotateX(-90deg); opacity: 0.2; }
+    60% { transform: perspective(300px) rotateX(90deg);  opacity: 0.2; }
+    100%{ transform: perspective(300px) rotateX(0deg);   opacity: 1;   }
 }
 
 .ct-label {
@@ -213,7 +213,7 @@
 .ct-progress-fill {
     height: 100%;
     background: #C95D5D;
-    transition: width 1s linear;
+    transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Tablet : 810px – 1200px ── */

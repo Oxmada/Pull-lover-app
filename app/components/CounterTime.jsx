@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./CounterTime.css";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ── Config ─────────────────────────────────────────────────────────
 const DROP_DATE = new Date("2026-06-20T19:00:00");
 const START_DATE = new Date("2026-05-13T00:00:00");
+const TITLE = "Nouveau drop en cours";
 
 // ── Données colonnes latérales ──────────────────────────────────────
 const STATS_LEFT = [
@@ -52,7 +57,9 @@ function useProgress() {
             const elapsed = Math.min(Date.now() - START_DATE, total);
             return Math.max(0, Math.min(100, (elapsed / total) * 100));
         };
-        setProgress(calc());
+        // Delay so the browser paints width:0 first, then transitions to the real value
+        const id = setTimeout(() => setProgress(calc()), 200);
+        return () => clearTimeout(id);
     }, []);
 
     return progress;
@@ -67,7 +74,7 @@ function DigitGroup({ value, label }) {
     useEffect(() => {
         if (prevRef.current !== str) {
             setFlip(true);
-            const t = setTimeout(() => { prevRef.current = str; setFlip(false); }, 300);
+            const t = setTimeout(() => { prevRef.current = str; setFlip(false); }, 400);
             return () => clearTimeout(t);
         }
     }, [str]);
@@ -103,9 +110,47 @@ export default function CounterTime() {
     const time = useCountdown(DROP_DATE);
     const progress = useProgress();
     const { days = 0, hours = 0, minutes = 0 } = time ?? {};
+    const sectionRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                defaults: { ease: "power3.out" },
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 80%",
+                },
+            });
+
+            // 1. Lettres du titre une par une
+            tl.from(".ct-letter", {
+                opacity: 0,
+                y: 40,
+                rotateX: -80,
+                stagger: 0.035,
+                duration: 0.55,
+                transformOrigin: "50% 0%",
+            })
+            // 2. Stats des deux colonnes (gauche depuis la gauche, droite depuis la droite)
+            .from(".ct-side-item", {
+                opacity: 0,
+                x: (i) => (i < 3 ? -30 : 30),
+                stagger: 0.1,
+                duration: 0.5,
+            }, "-=0.3")
+            // 3. Compteur + barre de progression
+            .from(".ct-counter-wrapper", {
+                opacity: 0,
+                y: 24,
+                duration: 0.5,
+            }, "-=0.2");
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
 
     return (
-        <section className="ct-section">
+        <section className="ct-section" ref={sectionRef}>
             <div className="ct-inner">
 
                 {/* Colonne gauche */}
@@ -113,7 +158,13 @@ export default function CounterTime() {
 
                 {/* Centre */}
                 <div className="ct-center">
-                    <h2 className="ct-title">Nouveau drop en cours</h2>
+                    <h2 className="ct-title">
+                        {TITLE.split("").map((char, i) =>
+                            char === " "
+                                ? <span key={i} className="ct-space">&nbsp;</span>
+                                : <span key={i} className="ct-letter">{char}</span>
+                        )}
+                    </h2>
                     <p className="ct-desc">
                         Lorem ipsum dolor sit amet consectetur adipiscing
                         elit at erat consectetur ultricies sapien facilisi

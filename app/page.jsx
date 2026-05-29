@@ -8,9 +8,12 @@ import AproposSection from "./components/AproposSection";
 import NotreCollectionSection from "./components/NotreCollectionSection";
 import ProcessSection from "./components/ProcessSection";
 import LifeStyleSection from "./components/LifeStyleSection";
+import { useScrollReveal } from "./hooks/useScrollReveal";
 
 export default function HomePage() {
   const [products, setProducts] = useState([]);
+  const promoRef = useScrollReveal(0.1);
+  const valuesRef = useScrollReveal(0.1);
 
   useEffect(() => {
     async function loadProducts() {
@@ -38,7 +41,7 @@ export default function HomePage() {
 
       {/* ── Promotions ── */}
       {promoProducts.length > 0 && (
-        <section className="promo-banner-pro">
+        <section className="promo-banner-pro reveal" ref={promoRef}>
           <div className="container-pro">
             <div className="promo-header-pro">
               <div>
@@ -57,6 +60,7 @@ export default function HomePage() {
                   )}
                   <div className="product-image-pro">
                     <img src={product.image || "/no-image.png"} alt={product.name} />
+                    <div className="product-overlay">Voir le produit →</div>
                   </div>
                   <div className="product-details-pro">
                     <h3>{product.name}</h3>
@@ -83,7 +87,7 @@ export default function HomePage() {
       <LifeStyleSection />
 
       {/* ── Valeurs + Newsletter ── */}
-      <section className="values-newsletter-section">
+      <section className="values-newsletter-section reveal" ref={valuesRef}>
         <div className="values-newsletter-inner">
 
           {/* Bandeau unique */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import "./AproposSection.css";
 
@@ -11,6 +12,24 @@ const CHIPS = [
 ];
 
 const AproposSection = () => {
+    const chipsRef = useRef(null);
+
+    useEffect(() => {
+        const el = chipsRef.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    el.classList.add("chips-active");
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.5 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <section className="apropos-section">
             <div className="apropos-main-container">
@@ -50,9 +69,15 @@ const AproposSection = () => {
                         </p>
 
                         {/* Chips — 20px après la description */}
-                        <div className="apropos-chips">
-                            {CHIPS.map((chip) => (
-                                <span className="apropos-chip" key={chip}>{chip}</span>
+                        <div className="apropos-chips" ref={chipsRef}>
+                            {CHIPS.map((chip, i) => (
+                                <span
+                                    className="apropos-chip"
+                                    key={chip}
+                                    style={{ animationDelay: `${i * 0.12}s` }}
+                                >
+                                    {chip}
+                                </span>
                             ))}
                         </div>
 

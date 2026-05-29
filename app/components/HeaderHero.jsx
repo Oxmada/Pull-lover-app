@@ -1,9 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useCart } from "./CartContext";
+import { gsap } from "gsap";
+import { SplitText } from "gsap/SplitText";
 import "./HeaderHero.css";
+
+gsap.registerPlugin(SplitText);
 
 export default function HeaderHero() {
   const { data: session } = useSession();
@@ -13,11 +17,51 @@ export default function HeaderHero() {
 
   const [showBadge, setShowBadge] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const subRef = useRef(null);
 
   const close = () => setIsMenuOpen(false);
 
+  useEffect(() => {
+    if (!titleRef.current || !subRef.current) return;
+
+    const letters = titleRef.current.querySelectorAll(".hero-letter");
+    const subSplit = SplitText.create(subRef.current, { type: "words" });
+
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    tl.from(letters, {
+      y: 100,
+      autoAlpha: 0,
+      stagger: 0.05,
+      duration: 1,
+    })
+    .from(subSplit.words, {
+      y: 30,
+      autoAlpha: 0,
+      stagger: 0.04,
+      duration: 0.7,
+    }, "-=0.5")
+    .from(".hero-cta", {
+      autoAlpha: 0,
+      y: 20,
+      duration: 0.6,
+    }, "-=0.4")
+    .from(".hero-badge", {
+      autoAlpha: 0,
+      y: -20,
+      duration: 0.5,
+    }, "-=0.4");
+
+    return () => {
+      tl.kill();
+      subSplit.revert();
+    };
+  }, []);
+
   return (
-    <section className="hero-section">
+    <section className="hero-section" ref={sectionRef}>
 
       {/* ── HEADER ── */}
       <header className="navbar">
@@ -132,11 +176,19 @@ export default function HeaderHero() {
       {/* ── HERO CONTENT ── */}
       <div className="hero-container">
         <div className="hero-content-left">
-          <h1 className="hero-title">
-            <span className="bold">Pull</span>
-            <span className="script">Lover</span>
+          <h1 className="hero-title" ref={titleRef}>
+            <span className="bold">
+              {"Pull".split("").map((char, i) => (
+                <span key={i} className="hero-letter">{char}</span>
+              ))}
+            </span>
+            <span className="script">
+              {"Lover".split("").map((char, i) => (
+                <span key={i} className="hero-letter">{char}</span>
+              ))}
+            </span>
           </h1>
-          <p className="hero-sub">
+          <p className="hero-sub" ref={subRef}>
             Eo adducta re per Isauriam, rege Persarum bellis finitimis
           </p>
           <Link href="/boutique" className="hero-cta">
