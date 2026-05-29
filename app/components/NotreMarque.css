@@ -1,70 +1,172 @@
-.notre-marque {
-    width: 100%;
-    background-color: #ffffff;
-    padding: 160px 80px 160px 80px;
-}
+/* ========================================
+   NotreMarque — /NotreMarque
+   ======================================== */
 
-.notre-marque__container {
+.nm-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
+    padding: 0 80px;
 }
 
-/* ---- Contenu texte ---- */
-
-.notre-marque__content {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-}
-
-.notre-marque__heading {
+.nm-eyebrow {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 3rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C95D5D;
+    margin: 0 0 10px;
+}
+
+/* ================================
+   Intro
+   ================================ */
+
+.nm-intro {
+    padding: 100px 0;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+}
+
+.nm-intro__inner {
+    display: flex;
+    gap: 80px;
+    align-items: flex-start;
+}
+
+.nm-intro__left {
+    flex: 0 0 320px;
+}
+
+.nm-intro__heading {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 2.5rem;
     font-weight: 700;
     line-height: 1.2;
     color: #1a1a1a;
-    margin: 0;
+    margin: 0 0 28px;
 }
 
-.notre-marque__rich-text {
+.nm-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nm-chip {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.7rem;
+    color: #6b7280;
+    background: #f9fafb;
+    border: 0.5px solid #e5e7eb;
+    padding: 5px 14px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+}
+
+.nm-intro__right {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
-.notre-marque__rich-text p {
+.nm-intro__right p {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 300;
-    line-height: 1.65;
-    color: #333333;
+    line-height: 1.8;
+    color: #444444;
     margin: 0;
 }
 
-/* ---- Bloc vidéo ---- */
+/* ================================
+   Stats
+   ================================ */
 
-.notre-marque__video-wrapper {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background-color: #c4c4c4;
-    /* placeholder gris comme dans Figma */
+.nm-stats {
+    padding: 0 0 100px;
+    background: #fff;
+}
+
+.nm-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #e5e7eb;
     border-radius: 10px;
     overflow: hidden;
 }
 
-.notre-marque__video {
+.nm-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 40px 24px;
+    border-right: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.nm-stat:last-child {
+    border-right: none;
+}
+
+.nm-stat__value {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #C95D5D;
+    line-height: 1;
+}
+
+.nm-stat__label {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #6b7280;
+    letter-spacing: 0.04em;
+}
+
+/* ================================
+   Vidéo
+   ================================ */
+
+.nm-video-section {
+    padding: 0 0 100px;
+    background: #fff;
+}
+
+.nm-video-section__header {
+    margin-bottom: 40px;
+}
+
+.nm-video-section__heading {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.nm-video__wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #c4c4c4;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.nm-video__el {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-/* Bouton play centré */
-.notre-marque__play-btn {
+.nm-video__play {
     position: absolute;
     inset: 0;
     display: flex;
@@ -76,71 +178,181 @@
     transition: opacity 0.2s ease;
 }
 
-.notre-marque__play-btn:hover {
+.nm-video__play:hover {
     opacity: 0.85;
 }
 
-.notre-marque__play-btn svg circle {
-    transition: fill 0.2s ease;
+/* ================================
+   CTA final
+   ================================ */
+
+.nm-cta {
+    background: #faf9f7;
+    padding: 100px 0;
 }
 
-.notre-marque__play-btn:hover svg circle {
-    fill: rgba(0, 0, 0, 0.6);
+.nm-cta__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
 }
 
-/* =============================================
-   Responsive — Tablet (≤ 1024px)
-   ============================================= */
+.nm-cta__heading {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.2;
+    max-width: 600px;
+}
+
+.nm-cta__sub {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 1rem;
+    font-weight: 300;
+    color: #6b7280;
+    margin: 0;
+    max-width: 460px;
+}
+
+.nm-cta__btn {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-radius: 10px;
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-top: 8px;
+}
+
+.nm-cta__btn:hover {
+    background-color: #C95D5D;
+    color: #ffffff;
+}
+
+/* ================================
+   Responsive — Tablet (810–1200px)
+   ================================ */
 
 @media (min-width: 810px) and (max-width: 1200px) {
-    .notre-marque {
-        padding: 100px 64px 100px 64px;
+    .nm-container {
+        padding: 0 64px;
     }
 
-    .notre-marque__container {
-        gap: 40px;
+    .nm-intro {
+        padding: 80px 0;
     }
 
-    .notre-marque__content {
-        gap: 60px;
+    .nm-intro__inner {
+        gap: 48px;
     }
 
-    .notre-marque__heading {
-        font-size: 2.25rem;
+    .nm-intro__left {
+        flex: 0 0 240px;
     }
 
-    .notre-marque__rich-text p {
-        font-size: 1rem;
+    .nm-intro__heading {
+        font-size: 2rem;
+    }
+
+    .nm-stats__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nm-stat:nth-child(2) {
+        border-right: none;
+    }
+
+    .nm-stat:nth-child(1),
+    .nm-stat:nth-child(2) {
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nm-video-section__heading {
+        font-size: 1.75rem;
+    }
+
+    .nm-cta__heading {
+        font-size: 2rem;
     }
 }
 
-/* =============================================
-   Responsive — Mobile (390px – 810px)
-   ============================================= */
+/* ================================
+   Responsive — Mobile (< 810px)
+   ================================ */
 
 @media (max-width: 810px) {
-    .notre-marque {
-        padding: 64px 43px 64px 32px;
+    .nm-container {
+        padding: 0 32px;
     }
 
-    .notre-marque__container {
-        gap: 32px;
+    .nm-intro {
+        padding: 64px 0;
     }
 
-    .notre-marque__content {
+    .nm-intro__inner {
+        flex-direction: column;
         gap: 40px;
     }
 
-    .notre-marque__heading {
+    .nm-intro__left {
+        flex: none;
+        width: 100%;
+    }
+
+    .nm-intro__heading {
+        font-size: 1.75rem;
+        margin-bottom: 20px;
+    }
+
+    .nm-stats {
+        padding: 0 0 64px;
+    }
+
+    .nm-stats__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nm-stat:nth-child(2) {
+        border-right: none;
+    }
+
+    .nm-stat:nth-child(1),
+    .nm-stat:nth-child(2) {
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nm-stat__value {
+        font-size: 1.75rem;
+    }
+
+    .nm-video-section {
+        padding: 0 0 64px;
+    }
+
+    .nm-video-section__heading {
         font-size: 1.5rem;
     }
 
-    .notre-marque__rich-text p {
-        font-size: 0.75rem;
+    .nm-cta {
+        padding: 64px 0;
     }
 
-    .notre-marque__play-btn svg {
-        width: 44px;
-        height: 44px;
+    .nm-cta__heading {
+        font-size: 1.75rem;
+    }
+
+    .nm-cta__sub {
+        font-size: 0.875rem;
     }
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import "./AproposSection.css";
 
 const CHIPS = [
@@ -82,7 +83,7 @@ const AproposSection = () => {
                         </div>
 
                         {/* Bouton — 40px après les chips */}
-                        <button className="apropos-btn">En savoir plus</button>
+                        <Link href="/NotreMarque" className="apropos-btn">En savoir plus</Link>
 
                     </div>
                 </div>

@@ -1,34 +1,51 @@
 /* =============================================
-   Contact — Page contact Desktop + Mobile
+   Contact — page /contact
    ============================================= */
 
 .contact {
     width: 100%;
-    padding: 160px 0;
-    min-height: calc(100vh - 120px);
+    padding: 100px 0;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
 }
 
 .contact__container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 80px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
+    gap: 80px;
+    align-items: start;
 }
 
-/* ── Formulaire ── */
+/* ── Col gauche ── */
 
 .contact__form-side {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 32px;
+}
+
+.contact__header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact__eyebrow {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #C95D5D;
+    margin: 0;
 }
 
 .contact__heading {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 48px;
+    font-size: 2.75rem;
     font-weight: 700;
     line-height: 1.15;
     color: #1a1a1a;
@@ -37,11 +54,57 @@
 
 .contact__subtext {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 0.875rem;
-    color: #666666;
-    margin: 0;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #6b7280;
+    line-height: 1.65;
+    margin: 8px 0 0;
 }
+
+/* ── Infos ── */
+
+.contact__infos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact__info-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #faf9f7;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.contact__info-icon {
+    display: flex;
+    align-items: center;
+    color: #C95D5D;
+    flex-shrink: 0;
+}
+
+.contact__info-label {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 2px;
+}
+
+.contact__info-value {
+    font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+/* ── Formulaire ── */
 
 .contact__form {
     display: flex;
@@ -69,7 +132,7 @@
     font-weight: 400;
     color: #1a1a1a;
     background-color: #ffffff;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #e5e7eb;
     border-radius: 10px;
     padding: 10px 14px;
     outline: none;
@@ -85,8 +148,8 @@
 
 .contact__input:focus,
 .contact__textarea:focus {
-    border-color: #c0392b;
-    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+    border-color: #C95D5D;
+    box-shadow: 0 0 0 3px rgba(201, 93, 93, 0.1);
 }
 
 .contact__textarea {
@@ -94,25 +157,25 @@
     min-height: 120px;
 }
 
-/* Bouton Envoyer — style fidèle à la maquette : outline */
 .contact__btn {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 0.9375rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #1a1a1a;
-    background-color: #ffffff;
-    border: 1.5px solid #1a1a1a;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #1a1a1a;
+    border: none;
     border-radius: 10px;
     padding: 12px 24px;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease;
     width: 100%;
     margin-top: 8px;
 }
 
 .contact__btn:hover:not(:disabled) {
-    background-color: #1a1a1a;
-    color: #ffffff;
+    background-color: #C95D5D;
 }
 
 .contact__btn:disabled {
@@ -120,7 +183,6 @@
     cursor: not-allowed;
 }
 
-/* Feedback */
 .contact__feedback {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
     font-size: 0.875rem;
@@ -144,18 +206,17 @@
 
 /* ── Image ── */
 
-.contact__map-side {
-    width: 100%;
+.contact__image-side {
     border-radius: 10px;
     overflow: hidden;
-    background-color: #d9d9d9;
-    align-self: stretch;
-    /* s'étire sur toute la hauteur de la ligne */
+    background-color: #e5e7eb;
+    position: sticky;
+    top: 100px;
 }
 
-.contact__map {
+.contact__image {
     width: 100%;
-    height: 521px;
+    min-height: 480px;
     display: block;
     object-fit: cover;
     object-position: center;
@@ -167,16 +228,12 @@
 
 @media (min-width: 810px) and (max-width: 1200px) {
     .contact {
-        padding: 64px 0;
+        padding: 80px 0;
     }
 
     .contact__container {
-        padding: 0 32px;
-        gap: 40px;
-    }
-
-    .contact__form-side {
-        gap: 60px;
+        padding: 0 64px;
+        gap: 48px;
     }
 
     .contact__heading {
@@ -190,28 +247,24 @@
 
 @media (max-width: 810px) {
     .contact {
-        padding: 48px 0;
+        padding: 64px 0;
     }
 
     .contact__container {
         grid-template-columns: 1fr;
-        padding: 0 20px;
-        gap: 40px;
-    }
-
-    .contact__form-side {
+        padding: 0 32px;
         gap: 40px;
     }
 
     .contact__heading {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
 
-    .contact__map-side {
-        min-height: 280px;
+    .contact__image-side {
+        position: static;
     }
 
-    .contact__map {
+    .contact__image {
         min-height: 280px;
     }
 }

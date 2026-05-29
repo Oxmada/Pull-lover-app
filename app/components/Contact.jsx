@@ -1,15 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 import "./Contact.css";
 
+const INFOS = [
+    {
+        icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+            </svg>
+        ),
+        label: "Email",
+        value: "bonjour@pull-lover.com",
+    },
+    {
+        icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12,6 12,12 16,14" />
+            </svg>
+        ),
+        label: "Délai de réponse",
+        value: "Sous 24 heures",
+    },
+];
+
 export default function Contact() {
-    const [formData, setFormData] = useState({
-        nom: "",
-        mail: "",
-        message: "",
-    });
+    const [formData, setFormData] = useState({ nom: "", mail: "", message: "" });
     const [status, setStatus] = useState(null); // null | "loading" | "success" | "error"
+
+    const formRef = useScrollReveal();
+    const imageRef = useScrollReveal();
 
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -18,14 +41,12 @@ export default function Contact() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus("loading");
-
         try {
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
-
             if (res.ok) {
                 setStatus("success");
                 setFormData({ nom: "", mail: "", message: "" });
@@ -42,13 +63,30 @@ export default function Contact() {
             <div className="contact__container">
 
                 {/* ── Formulaire ── */}
-                <div className="contact__form-side">
-                    <h1 className="contact__heading">
-                        Une question ?<br />Contactez nous !
-                    </h1>
-                    <p className="contact__subtext">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
+                <div className="contact__form-side reveal" ref={formRef}>
+
+                    <div className="contact__header">
+                        <p className="contact__eyebrow">Contactez-nous</p>
+                        <h1 className="contact__heading">
+                            Une question ?<br />On vous répond.
+                        </h1>
+                        <p className="contact__subtext">
+                            Notre équipe est disponible pour répondre à toutes vos questions
+                            sur nos produits, vos commandes ou notre marque.
+                        </p>
+                    </div>
+
+                    <div className="contact__infos">
+                        {INFOS.map((info) => (
+                            <div key={info.label} className="contact__info-item">
+                                <span className="contact__info-icon">{info.icon}</span>
+                                <div>
+                                    <p className="contact__info-label">{info.label}</p>
+                                    <p className="contact__info-value">{info.value}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                     <form className="contact__form" onSubmit={handleSubmit} noValidate>
                         <div className="contact__field">
@@ -66,7 +104,7 @@ export default function Contact() {
                         </div>
 
                         <div className="contact__field">
-                            <label htmlFor="mail" className="contact__label">Mail</label>
+                            <label htmlFor="mail" className="contact__label">Email</label>
                             <input
                                 id="mail"
                                 name="mail"
@@ -114,10 +152,10 @@ export default function Contact() {
                     </form>
                 </div>
 
-                {/* ── Image Cloudinary ── */}
-                <div className="contact__map-side">
+                {/* ── Image ── */}
+                <div className="contact__image-side reveal" ref={imageRef}>
                     <img
-                        className="contact__map"
+                        className="contact__image"
                         src="https://res.cloudinary.com/dewstflqp/image/upload/v1778833151/Pull-Lover_minimalist-indie-comicsty__mmweeg.jpg"
                         alt="Pull Lover"
                     />

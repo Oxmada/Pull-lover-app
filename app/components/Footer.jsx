@@ -77,7 +77,7 @@ export default function Footer() {
       <div className="footer-top-row">
         <div className="footer-brand">
           <LogoCoeur />
-          <span className="footer-tagline">Y a que la maille qui m'aille</span>
+          <span className="footer-tagline">Bien s'habiller, c'est la première des politesses</span>
         </div>
 
         {/* Nav visible desktop/tablette, cachée mobile */}

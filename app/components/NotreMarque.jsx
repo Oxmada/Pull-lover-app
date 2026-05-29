@@ -1,82 +1,150 @@
 "use client";
 
+import Link from "next/link";
+import { useScrollReveal } from "../hooks/useScrollReveal";
 import "./NotreMarque.css";
 
-export default function NotreMarque() {
-    return (
-        <section className="notre-marque">
-            <div className="notre-marque__container">
-                {/* Bloc texte */}
-                <div className="notre-marque__content">
-                    <h2 className="notre-marque__heading">
-                        Pull lover, une marque, une histoire
-                    </h2>
+const STATS = [
+    { value: "15+", label: "Artisanes malgaches" },
+    { value: "4", label: "Matières nobles" },
+    { value: "100%", label: "Fait main" },
+    { value: "2020", label: "Année de création" },
+];
 
-                    <div className="notre-marque__rich-text">
-                        <p>
-                            In the highlands of Madagascar, death arrives like quiet rain. Each ceremony tells a
-                            story deeper than words. We understand that remembrance is not about ending, but
-                            continuing. Our work bridges grief and healing, transforming pain into meaningful
-                            connection. We do not simply manage loss. We celebrate the profound journey of
-                            human experience.
-                        </p>
-                        <p>
-                            In the highlands of Madagascar, death arrives like quiet rain. Each ceremony tells a
-                            story deeper than words. We understand that remembrance is not about ending, but
-                            continuing. Our work bridges grief and healing, transforming pain into meaningful
-                            connection. We do not simply manage loss. We celebrate the profound journey of
-                            human experience.
-                        </p>
-                        <p>
-                            In the highlands of Madagascar, death arrives like quiet rain. Each ceremony tells a
-                            story deeper than words. We understand that remembrance is not about ending, but
-                            continuing. Our work bridges grief and healing, transforming pain into meaningful
-                            connection. We do not simply manage loss. We celebrate the profound journey of
-                            human experience.
-                        </p>
+const CHIPS = ["Laine mérinos", "Raphia naturel", "Coton bio", "Soie sauvage"];
+
+export default function NotreMarque() {
+    const introRef = useScrollReveal();
+    const statsRef = useScrollReveal();
+    const videoHeaderRef = useScrollReveal();
+    const videoWrapRef = useScrollReveal();
+    const ctaRef = useScrollReveal();
+
+    return (
+        <div className="nm">
+
+            {/* —— Intro —— */}
+            <section className="nm-intro">
+                <div className="nm-container">
+                    <div className="nm-intro__inner reveal" ref={introRef}>
+                        <div className="nm-intro__left">
+                            <p className="nm-eyebrow">Notre marque</p>
+                            <h1 className="nm-intro__heading">
+                                Pull Lover, une marque, une histoire
+                            </h1>
+                            <div className="nm-chips">
+                                {CHIPS.map((c) => (
+                                    <span key={c} className="nm-chip">{c}</span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="nm-intro__right">
+                            <p>
+                                Pull Lover est née d'une conviction simple : la mode peut être belle sans
+                                sacrifier l'humain ni la planète. Fondée à Antananarivo, notre maison s'est
+                                construite autour d'un réseau d'artisanes malgaches dont le savoir-faire,
+                                transmis de génération en génération, donne vie à chaque pièce. Rien n'est
+                                produit à la chaîne — chaque pull est l'expression d'un geste maîtrisé,
+                                d'une attention portée au moindre détail.
+                            </p>
+                            <p>
+                                Nous sélectionnons rigoureusement nos matières : laine mérinos douce et
+                                thermorégulatrice, raphia naturel récolté à la main, coton biologique certifié,
+                                soie sauvage aux reflets uniques. Ces fibres rares, issues des Hautes Terres
+                                malgaches, définissent l'identité de notre collection — une élégance sobre,
+                                durable, enracinée dans un territoire et une culture.
+                            </p>
+                            <p>
+                                Choisir Pull Lover, c'est rejoindre un projet qui place les femmes artisanes
+                                au cœur de sa démarche. Une part de chaque vente est reversée directement aux
+                                ateliers pour améliorer les conditions de travail et former les prochaines
+                                générations. La beauté d'un vêtement ne se mesure pas seulement à son
+                                apparence, mais à l'histoire qu'il porte et aux mains qui l'ont créé.
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                {/* Bloc vidéo */}
-                <div className="notre-marque__video-wrapper">
-                    <video
-                        className="notre-marque__video"
-                        controls
-                        preload="metadata"
-                    >
-                        <source
-                            src="https://res.cloudinary.com/dewstflqp/video/upload/v1778740605/vid%C3%A9o_de_pr%C3%A9sentation_Ultramaille_jtpbab.mp4"
-                            type="video/mp4"
-                        />
-                        Votre navigateur ne supporte pas la lecture vidéo.
-                    </video>
-
-                    {/* Bouton play superposé (masqué quand la vidéo est lancée via JS) */}
-                    <button
-                        className="notre-marque__play-btn"
-                        aria-label="Lire la vidéo"
-                        onClick={(e) => {
-                            const video = e.currentTarget
-                                .closest(".notre-marque__video-wrapper")
-                                .querySelector("video");
-                            video.play();
-                            e.currentTarget.style.display = "none";
-                        }}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 64 64"
-                            fill="white"
-                            width="56"
-                            height="56"
-                            aria-hidden="true"
-                        >
-                            <circle cx="32" cy="32" r="32" fill="rgba(0,0,0,0.45)" />
-                            <polygon points="26,20 48,32 26,44" fill="white" />
-                        </svg>
-                    </button>
+            {/* —— Stats —— */}
+            <section className="nm-stats">
+                <div className="nm-container">
+                    <div className="nm-stats__grid reveal" ref={statsRef}>
+                        {STATS.map((s) => (
+                            <div key={s.label} className="nm-stat">
+                                <span className="nm-stat__value">{s.value}</span>
+                                <span className="nm-stat__label">{s.label}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            {/* —— Vidéo —— */}
+            <section className="nm-video-section">
+                <div className="nm-container">
+                    <div className="nm-video-section__header reveal" ref={videoHeaderRef}>
+                        <p className="nm-eyebrow">Notre atelier</p>
+                        <h2 className="nm-video-section__heading">
+                            Voir comment chaque pièce prend vie
+                        </h2>
+                    </div>
+                    <div className="nm-video__wrapper reveal" ref={videoWrapRef}>
+                        <video
+                            className="nm-video__el"
+                            controls
+                            preload="metadata"
+                        >
+                            <source
+                                src="https://res.cloudinary.com/dewstflqp/video/upload/v1778740605/vid%C3%A9o_de_pr%C3%A9sentation_Ultramaille_jtpbab.mp4"
+                                type="video/mp4"
+                            />
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                        <button
+                            className="nm-video__play"
+                            aria-label="Lire la vidéo"
+                            onClick={(e) => {
+                                const video = e.currentTarget
+                                    .closest(".nm-video__wrapper")
+                                    .querySelector("video");
+                                video.play();
+                                e.currentTarget.style.display = "none";
+                            }}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 64 64"
+                                width="56"
+                                height="56"
+                                aria-hidden="true"
+                            >
+                                <circle cx="32" cy="32" r="32" fill="rgba(0,0,0,0.45)" />
+                                <polygon points="26,20 48,32 26,44" fill="white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            {/* —— CTA final —— */}
+            <section className="nm-cta">
+                <div className="nm-container">
+                    <div className="nm-cta__inner reveal" ref={ctaRef}>
+                        <p className="nm-eyebrow">Notre collection</p>
+                        <h2 className="nm-cta__heading">
+                            Prêt à trouver votre prochaine pièce ?
+                        </h2>
+                        <p className="nm-cta__sub">
+                            Découvrez nos pulls et accessoires faits main, créés à Antananarivo.
+                        </p>
+                        <Link href="/boutique" className="nm-cta__btn">
+                            Voir la collection
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+        </div>
     );
 }
