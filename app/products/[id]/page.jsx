@@ -20,6 +20,7 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [addedToCart, setAddedToCart] = useState(false);
+  const [sizeError, setSizeError] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -124,6 +125,11 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
+    if (productSizes.length > 0 && !selectedSize) {
+      setSizeError(true);
+      setTimeout(() => setSizeError(false), 3000);
+      return;
+    }
     addToCart({
       _id: product._id,
       name: product.name,
@@ -325,12 +331,15 @@ export default function ProductDetailPage() {
                     <button
                       key={size}
                       className={`size-btn ${selectedSize === size ? "active" : ""}`}
-                      onClick={() => setSelectedSize(size)}
+                      onClick={() => { setSelectedSize(size); setSizeError(false); }}
                     >
                       {size}
                     </button>
                   ))}
                 </div>
+                {sizeError && (
+                  <p className="size-error">Veuillez sélectionner une taille avant d&apos;ajouter au panier.</p>
+                )}
               </div>
             )}
 

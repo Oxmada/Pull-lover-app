@@ -336,6 +336,12 @@
   color: white;
 }
 
+.product-detail-page .size-error {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #e63946;
+}
+
 /* ── COULEURS ── */
 .product-detail-page .color-options {
   display: flex;

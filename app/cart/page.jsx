@@ -38,28 +38,34 @@ export default function CartPage() {
 
             <ul className="cart-list">
               {cartItems.map((item) => (
-                <li key={item._id} className="cart-item">
+                <li key={item.cartKey} className="cart-item">
 
                   {/* IMAGE */}
                   <div className="cart-item-image">
                     {item.image && <img src={item.image} alt={item.name} />}
                   </div>
 
-                  {/* NOM + DESCRIPTION + QTY */}
+                  {/* NOM + TAILLE + COULEUR + QTY */}
                   <div className="cart-item-info">
                     <strong>{item.name}</strong>
-                    <p>{item.description}</p>
+                    {(item.size || item.color) && (
+                      <p className="cart-item-variant">
+                        {item.size && <span>Taille : {item.size}</span>}
+                        {item.size && item.color && " · "}
+                        {item.color && <span>Couleur : {item.color}</span>}
+                      </p>
+                    )}
                     <div className="qty-controls">
-                      <button onClick={() => decreaseQty(item._id)}>−</button>
+                      <button onClick={() => decreaseQty(item.cartKey)}>−</button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => increaseQty(item._id)}>+</button>
+                      <button onClick={() => increaseQty(item.cartKey)}>+</button>
                     </div>
                   </div>
 
                   {/* PRIX + REMOVE */}
                   <div className="cart-item-right">
                     <span className="cart-item-price">{item.promoPrice ?? item.price} €</span>
-                    <button className="cart-remove" onClick={() => removeFromCart(item._id)}>
+                    <button className="cart-remove" onClick={() => removeFromCart(item.cartKey)}>
                       Supprimer
                     </button>
                   </div>
