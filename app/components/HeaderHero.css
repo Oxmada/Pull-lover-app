@@ -461,8 +461,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100dvh;
     background: #870003;
     display: flex;
     flex-direction: column;
