@@ -178,7 +178,9 @@ function NosMaillesContent() {
       {!loading && currentProducts.length > 0 && (
         <div className="products-grid">
           {currentProducts.map((product) => {
-            const colorCount = product.colors?.length ?? null;
+            const secondaryImage = product.images?.[0] || null;
+            const hasSecondary = !!secondaryImage;
+            const isOutOfStock = product.stock === 0 || !product.isAvailable;
 
             return (
               <div className="product-card" key={product._id}>
@@ -201,15 +203,24 @@ function NosMaillesContent() {
                   )}
 
                   <Link href={`/products/${product._id}`} className="product-image-link">
-                    <div className={`product-image-wrap ${product.stock === 0 ? "out-of-stock" : ""}`}>
+                    <div className={`product-image-wrap ${isOutOfStock ? "out-of-stock" : ""} ${hasSecondary ? "has-secondary" : ""}`}>
                       <Image
                         src={product.image || "/no-image.png"}
                         alt={product.name}
                         width={400}
                         height={480}
-                        className="product-img"
+                        className="product-img product-img-primary"
                       />
-                      {product.stock === 0 && (
+                      {hasSecondary && (
+                        <Image
+                          src={secondaryImage}
+                          alt={product.name}
+                          width={400}
+                          height={480}
+                          className="product-img product-img-secondary"
+                        />
+                      )}
+                      {isOutOfStock && (
                         <div className="stock-overlay">Rupture de stock</div>
                       )}
                     </div>
@@ -232,29 +243,48 @@ function NosMaillesContent() {
                     )}
                   </div>
 
-                  {colorCount !== null && colorCount > 0 && (
-                    <p className="product-colors">
-                      {colorCount} couleur{colorCount > 1 ? "s" : ""}
-                    </p>
+                  {product.colors?.length > 0 && (
+                    <div className="color-swatches">
+                      {product.colors.map((color, i) => (
+                        <span
+                          key={i}
+                          className="color-swatch"
+                          title={color.name}
+                          style={{ background: color.code || "#ccc" }}
+                        />
+                      ))}
+                    </div>
                   )}
 
                   <div className="product-bottom">
-                    <button
-                      className="add-to-cart-btn"
-                      disabled={!product.isAvailable || product.stock === 0}
-                      onClick={() =>
-                        addToCart({
-                          _id: product._id,
-                          name: product.name,
-                          price: product.promoPrice ?? product.price,
-                          image: product.image,
-                          quantity: 1,
-                          stock: product.stock,
-                        })
-                      }
-                    >
-                      Ajouter au panier
-                    </button>
+                    {product.sizes?.length > 0 ? (
+                      <div className="size-buttons">
+                        {product.sizes.map((size) => (
+                          <button
+                            key={size}
+                            className="size-btn"
+                            disabled={isOutOfStock}
+                            onClick={() =>
+                              addToCart({
+                                _id: product._id,
+                                name: product.name,
+                                price: product.promoPrice ?? product.price,
+                                image: product.image,
+                                quantity: 1,
+                                stock: product.stock,
+                                size,
+                              })
+                            }
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <Link href={`/products/${product._id}`} className="add-to-cart-btn">
+                        Voir le produit
+                      </Link>
+                    )}
                   </div>
                 </div>
 
