@@ -8,16 +8,6 @@ const INFOS = [
     {
         icon: (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-            </svg>
-        ),
-        label: "Email",
-        value: "bonjour@pull-lover.com",
-    },
-    {
-        icon: (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12,6 12,12 16,14" />
             </svg>
@@ -156,7 +146,7 @@ export default function Contact() {
                 <div className="contact__image-side reveal" ref={imageRef}>
                     <img
                         className="contact__image"
-                        src="https://res.cloudinary.com/dewstflqp/image/upload/v1778833151/Pull-Lover_minimalist-indie-comicsty__mmweeg.jpg"
+                        src="https://res.cloudinary.com/dewstflqp/image/upload/v1780126255/pull-over-polo-vert-olive-homme-malgache-chemin-sable_js6kmt.jpg"
                         alt="Pull Lover"
                     />
                 </div>
