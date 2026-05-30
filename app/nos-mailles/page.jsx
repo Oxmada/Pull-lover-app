@@ -10,24 +10,12 @@ import "./nos-mailles.css";
 
 const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
 
-const SORT_OPTIONS = [
-  { value: "", label: "Ordre par défaut" },
-  { value: "newest", label: "Nouveautés" },
-  { value: "price-asc", label: "Prix croissant" },
-  { value: "price-desc", label: "Prix décroissant" },
-  { value: "name-asc", label: "Nom A→Z" },
-  { value: "name-desc", label: "Nom Z→A" },
-];
-
 function NosMaillesContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
-  const sort = searchParams.get("sort") || "";
-  const priceMin = searchParams.get("priceMin") || "";
-  const priceMax = searchParams.get("priceMax") || "";
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
 
   const [products, setProducts] = useState([]);
@@ -35,8 +23,6 @@ function NosMaillesContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(search);
-  const [priceMinInput, setPriceMinInput] = useState(priceMin);
-  const [priceMaxInput, setPriceMaxInput] = useState(priceMax);
 
   const productsPerPage = 9;
 
@@ -62,16 +48,6 @@ function NosMaillesContent() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Debounce price inputs
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (priceMinInput !== priceMin || priceMaxInput !== priceMax) {
-        updateURL({ priceMin: priceMinInput, priceMax: priceMaxInput, page: "" });
-      }
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [priceMinInput, priceMaxInput]);
-
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -80,7 +56,6 @@ function NosMaillesContent() {
         const query = new URLSearchParams();
         if (search) query.append("search", search);
         if (category) query.append("category", category);
-        if (sort) query.append("sort", sort);
         const res = await fetch(`/api/products?${query.toString()}`);
         if (!res.ok) throw new Error("Erreur chargement produits");
         const data = await res.json();
@@ -93,7 +68,7 @@ function NosMaillesContent() {
       }
     }
     fetchProducts();
-  }, [search, category, sort]);
+  }, [search, category]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -109,22 +84,7 @@ function NosMaillesContent() {
     fetchCategories();
   }, []);
 
-  const filteredProducts = products.filter((product) => {
-    if (priceMin && product.price < parseFloat(priceMin)) return false;
-    if (priceMax && product.price > parseFloat(priceMax)) return false;
-    return true;
-  });
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sort) {
-      case "price-asc": return (a.promoPrice || a.price) - (b.promoPrice || b.price);
-      case "price-desc": return (b.promoPrice || b.price) - (a.promoPrice || a.price);
-      case "name-asc": return a.name.localeCompare(b.name);
-      case "name-desc": return b.name.localeCompare(a.name);
-      case "newest": return new Date(b.createdAt) - new Date(a.createdAt);
-      default: return 0;
-    }
-  });
+  const sortedProducts = [...products];
 
   const currentPage = Math.max(1, pageParam);
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
@@ -133,13 +93,11 @@ function NosMaillesContent() {
   const currentProducts = sortedProducts.slice(0, indexOfLastProduct);
 
   const resetFilters = () => {
-    setPriceMinInput("");
-    setPriceMaxInput("");
     setSearchInput("");
     router.push("/nos-mailles");
   };
 
-  const hasActiveFilters = search || category || sort || priceMin || priceMax;
+  const hasActiveFilters = search || category;
 
   return (
     <div className="boutique-container">
@@ -152,39 +110,17 @@ function NosMaillesContent() {
 
       {/* BARRE FILTRES */}
       <div className="filters-bar">
-        <div className="filters-left">
-          <div className="search-wrapper">
-            <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="search-input"
-            />
-          </div>
-
-          <div className="price-range">
-            <input
-              type="number"
-              placeholder="Prix min"
-              value={priceMinInput}
-              onChange={(e) => setPriceMinInput(e.target.value)}
-              className="price-input"
-              min="0"
-            />
-            <span className="price-sep">–</span>
-            <input
-              type="number"
-              placeholder="Prix max"
-              value={priceMaxInput}
-              onChange={(e) => setPriceMaxInput(e.target.value)}
-              className="price-input"
-              min="0"
-            />
-          </div>
+        <div className="search-wrapper">
+          <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="search-input"
+          />
         </div>
 
         <div className="filters-right">
@@ -206,16 +142,6 @@ function NosMaillesContent() {
               </button>
             );
           })}
-
-          <select
-            className="sort-select"
-            value={sort}
-            onChange={(e) => updateURL({ sort: e.target.value, page: "" })}
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
         </div>
       </div>
 
