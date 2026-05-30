@@ -21,7 +21,7 @@ export default function LifeStyleSection() {
                     {/* Image unique à droite */}
                     <div className="lifestyle-band-img">
                         <img
-                            src="https://res.cloudinary.com/dewstflqp/image/upload/v1778675682/pull-lover_femme_marche_sable_ayvfis.jpg"
+                            src="https://res.cloudinary.com/dewstflqp/image/upload/v1780152420/pull-lover-tricot-crochet-noir-femme-desert.jpg_rwfz99.jpg"
                             alt="Femme marchant sur la plage"
                         />
                     </div>
