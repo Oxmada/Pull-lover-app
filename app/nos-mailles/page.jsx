@@ -4,7 +4,6 @@ import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useCart } from "../components/CartContext";
 import { useFavorites } from "../components/FavoritesContext";
 import "./nos-mailles.css";
 
@@ -26,7 +25,6 @@ function NosMaillesContent() {
 
   const productsPerPage = 9;
 
-  const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
 
   const updateURL = (params) => {
@@ -257,34 +255,9 @@ function NosMaillesContent() {
                   )}
 
                   <div className="product-bottom">
-                    {product.sizes?.length > 0 ? (
-                      <div className="size-buttons">
-                        {product.sizes.map((size) => (
-                          <button
-                            key={size}
-                            className="size-btn"
-                            disabled={isOutOfStock}
-                            onClick={() =>
-                              addToCart({
-                                _id: product._id,
-                                name: product.name,
-                                price: product.promoPrice ?? product.price,
-                                image: product.image,
-                                quantity: 1,
-                                stock: product.stock,
-                                size,
-                              })
-                            }
-                          >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <Link href={`/products/${product._id}`} className="add-to-cart-btn">
-                        Voir le produit
-                      </Link>
-                    )}
+                    <Link href={`/products/${product._id}`} className="add-to-cart-btn">
+                      Voir le produit
+                    </Link>
                   </div>
                 </div>
 

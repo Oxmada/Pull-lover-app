@@ -355,38 +355,7 @@
   opacity: 1;
 }
 
-/* Grille de tailles */
-.size-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.size-btn {
-  padding: 0.28rem 0.65rem;
-  border: 1px solid var(--dark);
-  background: var(--white);
-  color: var(--dark);
-  font-size: 0.68rem;
-  font-family: var(--font);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  border-radius: 4px;
-}
-
-.size-btn:hover:not(:disabled) {
-  background: var(--dark);
-  color: var(--white);
-}
-
-.size-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-/* Lien "Voir le produit" quand pas de tailles */
+/* Lien "Voir le produit" */
 .add-to-cart-btn {
   display: inline-flex;
   align-items: center;
