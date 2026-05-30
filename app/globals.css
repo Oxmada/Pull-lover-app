@@ -1,6 +1,10 @@
 /* globals.css */
 
 :root {
+  /* Typographie */
+  --font: 'Montserrat', sans-serif;
+  --font-main: 'Montserrat', sans-serif;
+
   /* Palette principale */
   --primary: #6366f1;
   --primary-dark: #4f46e5;
