@@ -133,7 +133,7 @@ export default function NotreMarque() {
                     <div className="nm-cta__inner reveal" ref={ctaRef}>
                         <p className="nm-eyebrow">Notre collection</p>
                         <h2 className="nm-cta__heading">
-                            Prêt à craquer pour votre prochain pull ?
+                            Prêt à trouver votre prochain coup de cœur ?
                         </h2>
                         <p className="nm-cta__sub">
                             Découvrez nos pulls et accessoires faits main, créés à Antananarivo.
