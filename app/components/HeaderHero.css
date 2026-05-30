@@ -405,7 +405,7 @@
 
   .hero-content-left {
     align-items: flex-start;
-    padding-bottom: 4rem;
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
     max-width: 100%;
   }
 
@@ -454,7 +454,7 @@
   }
 
   .hero-content-left {
-    padding-bottom: 2.5rem;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
   }
 
   .nav-links {
@@ -566,7 +566,7 @@
   }
 
   .hero-content-left {
-    padding-bottom: 2rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   }
 
   .hero-sub {
