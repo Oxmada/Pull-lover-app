@@ -33,25 +33,29 @@ function RechercheContent() {
   }, [query]);
 
   return (
-    <div className="container" style={{ padding: "40px 0" }}>
-      <h1>Résultats pour : "{query}"</h1>
+    <div className="search-page">
+      <h1 className="search-title">Résultats pour : "{query}"</h1>
 
-      {loading && <p>Chargement...</p>}
+      {loading && <p className="loading">Chargement...</p>}
 
       {!loading && products.length === 0 && (
-        <p>Aucun produit trouvé</p>
+        <div className="no-results">
+          <h3>Aucun produit trouvé</h3>
+        </div>
       )}
 
       <div className="products-grid">
         {products.map((product) => (
           <Link
             key={product._id}
-            href={`/product/${product._id}`}
+            href={`/products/${product._id}`}
             className="product-card"
           >
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>{product.price} €</p>
+            <img src={product.image} alt={product.name} className="product-image" />
+            <div className="product-content">
+              <h3 className="product-name">{product.name}</h3>
+              <p className="product-price">{product.price} €</p>
+            </div>
           </Link>
         ))}
       </div>

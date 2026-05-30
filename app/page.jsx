@@ -48,7 +48,7 @@ export default function HomePage() {
                 <span className="promo-label">Offres spéciales</span>
                 <h2>Jusqu'à -50% sur une sélection</h2>
               </div>
-              <Link href="/boutique?promo=true" className="btn-view-all">Tout voir →</Link>
+              <Link href="/nos-mailles?promo=true" className="btn-view-all">Tout voir →</Link>
             </div>
             <div className="products-grid-pro">
               {promoProducts.map((product) => (

@@ -27,7 +27,7 @@ export default function CartPage() {
       {cartItems.length === 0 ? (
         <div className="cart-empty">
           <p>Votre panier est vide.</p>
-          <Link href="/boutique">Retour à la boutique</Link>
+          <Link href="/nos-mailles">Retour à la boutique</Link>
         </div>
       ) : (
         <div className="cart-wrapper">

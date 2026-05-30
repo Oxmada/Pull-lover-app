@@ -37,7 +37,7 @@ export default function FavorisPage() {
             </div>
             <h2>Votre liste de favoris est vide</h2>
             <p>Ajoutez des articles en cliquant sur le cœur dans la boutique.</p>
-            <Link href="/boutique" className="favoris-btn-boutique">
+            <Link href="/nos-mailles" className="favoris-btn-boutique">
               Découvrir la boutique
             </Link>
           </div>
@@ -135,7 +135,7 @@ export default function FavorisPage() {
             </div>
 
             <div className="favoris-footer">
-              <Link href="/boutique" className="favoris-link-boutique">
+              <Link href="/nos-mailles" className="favoris-link-boutique">
                 ← Continuer mes achats
               </Link>
             </div>

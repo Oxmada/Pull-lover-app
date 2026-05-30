@@ -138,7 +138,7 @@ export default function NotreMarque() {
                         <p className="nm-cta__sub">
                             Découvrez nos pulls et accessoires faits main, créés à Antananarivo.
                         </p>
-                        <Link href="/boutique" className="nm-cta__btn">
+                        <Link href="/nos-mailles" className="nm-cta__btn">
                             Voir la collection
                         </Link>
                     </div>

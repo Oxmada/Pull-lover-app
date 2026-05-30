@@ -42,7 +42,7 @@ const BurgerIcon = () => (
 
 const navLinks = [
     { label: "Accueil", href: "/" },
-    { label: "Nos mailles", href: "/boutique" },
+    { label: "Nos mailles", href: "/nos-mailles" },
     { label: "Notre marque", href: "/NotreMarque" },
     { label: "Contact", href: "/contact" },
 ];

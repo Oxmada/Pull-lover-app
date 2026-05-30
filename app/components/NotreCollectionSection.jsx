@@ -44,7 +44,7 @@ const NotreCollectionSection = () => {
                         <p className="ncs-label">Notre collection</p>
                         <h2 className="ncs-title">Nos meilleures ventes</h2>
                     </div>
-                    <Link href="/boutique?sort=newest" className="ncs-btn-all">
+                    <Link href="/nos-mailles?sort=newest" className="ncs-btn-all">
                         Voir tous les produits
                     </Link>
                 </div>

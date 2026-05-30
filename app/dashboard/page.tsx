@@ -77,7 +77,7 @@ export default async function DashboardOverview() {
           {recentOrders.length === 0 ? (
             <div className="db-summary-empty">
               <p>Aucune commande pour le moment.</p>
-              <Link href="/boutique" className="db-add-address" style={{ marginTop: 12 }}>
+              <Link href="/nos-mailles" className="db-add-address" style={{ marginTop: 12 }}>
                 Découvrir la boutique
               </Link>
             </div>

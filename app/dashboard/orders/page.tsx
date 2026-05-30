@@ -46,7 +46,7 @@ export default async function OrdersPage() {
             <p style={{ fontSize: 14, color: "#888", marginBottom: 16 }}>
               Vous n&apos;avez pas encore de commandes.
             </p>
-            <Link href="/boutique" className="db-add-address" style={{ display: "inline-flex" }}>
+            <Link href="/nos-mailles" className="db-add-address" style={{ display: "inline-flex" }}>
               Découvrir la boutique
             </Link>
           </div>

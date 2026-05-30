@@ -182,7 +182,7 @@ export default function ProductDetailPage() {
         <div className="product-detail-page">
           <div className="product-error">
             <h2>{error}</h2>
-            <Link href="/boutique" className="back-link">← Retour à la boutique</Link>
+            <Link href="/nos-mailles" className="back-link">← Retour à la boutique</Link>
           </div>
         </div>
       </div>

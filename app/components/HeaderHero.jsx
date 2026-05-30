@@ -100,7 +100,7 @@ export default function HeaderHero() {
         {/* Nav links */}
         <nav className={`nav-links ${isMenuOpen ? "active" : ""}`}>
           <Link href="/" onClick={close}>Accueil</Link>
-          <Link href="/boutique" onClick={close}>Nos mailles</Link>
+          <Link href="/nos-mailles" onClick={close}>Nos mailles</Link>
           <Link href="/NotreMarque" onClick={close}>Notre marque</Link>
           <Link href="/contact" onClick={close}>Contact</Link>
           {isAdmin && (
@@ -191,7 +191,7 @@ export default function HeaderHero() {
           <p className="hero-sub" ref={subRef}>
             Eo adducta re per Isauriam, rege Persarum bellis finitimis
           </p>
-          <Link href="/boutique" className="hero-cta">
+          <Link href="/nos-mailles" className="hero-cta">
             Je précommande
           </Link>
         </div>
