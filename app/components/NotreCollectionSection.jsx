@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "./CartContext";
+import { useFavorites } from "./FavoritesContext";
 import "./NotreCollectionSection.css";
 
 const NotreCollectionSection = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [wishlist, setWishlist] = useState([]);
-    const { addToCart } = useCart();
+    const { toggleFavorite, isFavorite } = useFavorites();
 
     useEffect(() => {
         async function loadProducts() {
@@ -28,12 +27,6 @@ const NotreCollectionSection = () => {
     }, []);
 
     const newProducts = products.slice(0, 4);
-
-    const toggleWishlist = (id) => {
-        setWishlist((prev) =>
-            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-        );
-    };
 
     return (
         <section className="ncs-section" id="featured">
@@ -62,18 +55,20 @@ const NotreCollectionSection = () => {
                 ) : (
                     <div className="ncs-grid">
                         {newProducts.map((product) => {
-                            const colorCount = product.colors?.length ?? null;
-                            const isWishlisted = wishlist.includes(product._id);
+                            const secondaryImage = product.images?.[0] || null;
+                            const hasSecondary = !!secondaryImage;
+                            const isOutOfStock = product.stock === 0 || !product.isAvailable;
+
                             return (
                                 <div className="ncs-card" key={product._id}>
 
                                     <div className="ncs-card-image-outer">
                                         <button
-                                            className={`ncs-wishlist-btn ${isWishlisted ? "active" : ""}`}
-                                            onClick={() => toggleWishlist(product._id)}
+                                            className={`ncs-wishlist-btn ${isFavorite(product._id) ? "active" : ""}`}
+                                            onClick={() => toggleFavorite(product)}
                                             aria-label="Ajouter aux favoris"
                                         >
-                                            <svg viewBox="0 0 24 24" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+                                            <svg viewBox="0 0 24 24" fill={isFavorite(product._id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" width="18" height="18">
                                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                             </svg>
                                         </button>
@@ -85,15 +80,24 @@ const NotreCollectionSection = () => {
                                         )}
 
                                         <Link href={`/products/${product._id}`} className="ncs-card-image-link">
-                                            <div className={`ncs-card-image-wrap ${product.stock === 0 ? "out-of-stock" : ""}`}>
+                                            <div className={`ncs-card-image-wrap ${isOutOfStock ? "out-of-stock" : ""} ${hasSecondary ? "has-secondary" : ""}`}>
                                                 <Image
                                                     src={product.image || "/no-image.png"}
                                                     alt={product.name}
                                                     width={400}
                                                     height={480}
-                                                    className="ncs-card-img-photo"
+                                                    className="ncs-card-img ncs-card-img-primary"
                                                 />
-                                                {product.stock === 0 && (
+                                                {hasSecondary && (
+                                                    <Image
+                                                        src={secondaryImage}
+                                                        alt={product.name}
+                                                        width={400}
+                                                        height={480}
+                                                        className="ncs-card-img ncs-card-img-secondary"
+                                                    />
+                                                )}
+                                                {isOutOfStock && (
                                                     <div className="ncs-stock-overlay">Rupture de stock</div>
                                                 )}
                                             </div>
@@ -116,27 +120,23 @@ const NotreCollectionSection = () => {
                                             )}
                                         </div>
 
-                                        {colorCount !== null && colorCount > 0 && (
-                                            <p className="ncs-card-colors">
-                                                {colorCount} couleur{colorCount > 1 ? "s" : ""}
-                                            </p>
+                                        {product.colors?.length > 0 && (
+                                            <div className="ncs-color-swatches">
+                                                {product.colors.map((color, i) => (
+                                                    <span
+                                                        key={i}
+                                                        className="ncs-color-swatch"
+                                                        title={color.name}
+                                                        style={{ background: color.code || "#ccc" }}
+                                                    />
+                                                ))}
+                                            </div>
                                         )}
 
                                         <div className="ncs-card-bottom">
-                                            <button
-                                                className="ncs-add-to-cart"
-                                                disabled={!product.isAvailable || product.stock === 0}
-                                                onClick={() => addToCart({
-                                                    _id: product._id,
-                                                    name: product.name,
-                                                    price: product.promoPrice ?? product.price,
-                                                    image: product.image,
-                                                    quantity: 1,
-                                                    stock: product.stock,
-                                                })}
-                                            >
-                                                Ajouter au panier
-                                            </button>
+                                            <Link href={`/products/${product._id}`} className="ncs-voir-produit">
+                                                Voir le produit
+                                            </Link>
                                         </div>
                                     </div>
 
@@ -145,7 +145,6 @@ const NotreCollectionSection = () => {
                         })}
                     </div>
                 )}
-
 
             </div>
         </section>
