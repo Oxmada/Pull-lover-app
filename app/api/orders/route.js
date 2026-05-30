@@ -149,17 +149,25 @@ if (existingCustomer) {
     };
 
     // Liste des produits formatée
-    const productListHtml = cartItems
-      .map(
-        (item) => `
-        <tr style="border-bottom:1px solid #e2e8f0">
-          <td style="padding:12px 0;font-size:14px;color:#475569">${item.name || "Produit"}</td>
-          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:center">${item.quantity}</td>
-          <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600">${item.price ? Number(item.price).toLocaleString("fr-FR") + " €" : "-"}</td>
-        </tr>
-      `
-      )
-      .join("");
+    const productListHtml = cartItems.map((item) => `
+      <tr style="border-bottom:1px solid #e2e8f0">
+        <td style="padding:12px 8px 12px 0;vertical-align:top">
+          <table role="presentation" cellpadding="0" cellspacing="0">
+            <tr>
+              ${item.image ? `<td style="padding-right:12px;vertical-align:top">
+                <img src="${item.image}" width="48" height="60" alt="${item.name || ""}" style="display:block;border-radius:4px;object-fit:cover;border:1px solid #e2e8f0">
+              </td>` : ""}
+              <td style="vertical-align:top">
+                <p style="margin:0;font-size:14px;font-weight:600;color:#0f172a">${item.name || "Produit"}</p>
+                ${item.size ? `<p style="margin:3px 0 0;font-size:12px;color:#94a3b8">Taille : ${item.size}</p>` : ""}
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="padding:12px 0;font-size:14px;color:#475569;text-align:center;vertical-align:top">${item.quantity}</td>
+        <td style="padding:12px 0;font-size:14px;color:#475569;text-align:right;font-weight:600;vertical-align:top">${item.price ? Number(item.price).toLocaleString("fr-FR") + " €" : "-"}</td>
+      </tr>
+    `).join("");
 
     /* ======================
        📧 TEMPLATES EMAIL
