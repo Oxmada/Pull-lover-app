@@ -88,9 +88,7 @@ function NosMaillesContent() {
 
   const currentPage = Math.max(1, pageParam);
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = sortedProducts.slice(0, indexOfLastProduct);
+  const currentProducts = sortedProducts.slice(0, currentPage * productsPerPage);
 
   const resetFilters = () => {
     setSearchInput("");
@@ -266,8 +264,8 @@ function NosMaillesContent() {
         </div>
       )}
 
-      {/* VOIR PLUS / PAGINATION */}
-      {!loading && totalPages > 1 && currentPage < totalPages && (
+      {/* VOIR PLUS */}
+      {!loading && currentPage < totalPages && (
         <div className="pagination">
           <button
             className="voir-plus-btn"
@@ -275,16 +273,7 @@ function NosMaillesContent() {
           >
             Voir plus
           </button>
-          <p className="pagination-info">
-            {Math.min(indexOfLastProduct, sortedProducts.length)} / {sortedProducts.length} produits
-          </p>
         </div>
-      )}
-
-      {!loading && sortedProducts.length > 0 && currentPage >= totalPages && (
-        <p className="pagination-info" style={{ textAlign: "center", marginTop: "2rem" }}>
-          {sortedProducts.length} produit{sortedProducts.length > 1 ? "s" : ""}
-        </p>
       )}
     </div>
   );

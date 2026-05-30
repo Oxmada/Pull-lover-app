@@ -382,11 +382,6 @@
   color: var(--white);
 }
 
-.pagination-info {
-  font-size: 0.85rem;
-  color: var(--gray);
-}
-
 /* ── SKELETON ── */
 .skeleton-card {
   background: var(--white);
