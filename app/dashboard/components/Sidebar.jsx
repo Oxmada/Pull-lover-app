@@ -4,14 +4,44 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
+const HomeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <polyline points="9 22 9 12 15 12 15 22" />
+  </svg>
+);
+
+const OrdersIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2" />
+    <line x1="9" y1="9" x2="15" y2="9" />
+    <line x1="9" y1="13" x2="15" y2="13" />
+    <line x1="9" y1="17" x2="12" y2="17" />
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
+const MapPinIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
+  </svg>
+);
+
 export default function Sidebar({ user }) {
   const pathname = usePathname();
 
   const menuItems = [
-    { icon: "🏠", label: "Vue d'ensemble", short: "Dashboard", path: "/dashboard" },
-    { icon: "📦", label: "Commandes", short: "Commandes", path: "/dashboard/orders" },
-    { icon: "👤", label: "Profil", short: "Profil", path: "/dashboard/profile" },
-    { icon: "📍", label: "Adresses", short: "Adresses", path: "/dashboard/addresses" },
+    { icon: <HomeIcon />, label: "Vue d'ensemble", short: "Dashboard", path: "/dashboard" },
+    { icon: <OrdersIcon />, label: "Commandes", short: "Commandes", path: "/dashboard/orders" },
+    { icon: <UserIcon />, label: "Profil", short: "Profil", path: "/dashboard/profile" },
+    { icon: <MapPinIcon />, label: "Adresses", short: "Adresses", path: "/dashboard/addresses" },
   ];
 
   return (
