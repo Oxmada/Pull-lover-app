@@ -91,8 +91,8 @@ export default function LoginPage() {
 
         {/* SOCIAL — Frame 4646 : h50px, gap 20px */}
         <div className="login-social">
-          <button>Google</button>
-          <button>Facebook</button>
+          <button onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>Google</button>
+          <button disabled title="Bientôt disponible">Facebook</button>
         </div>
 
         {/* FOOTER — Frame 4644 : h30px, space-between */}
