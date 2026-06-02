@@ -2,12 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCart } from "@/app/components/CartContext";
 import "./checkout.css";
 
-export default function CheckoutPage() {
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      fontSize: "13px",
+      fontFamily: "Montserrat, sans-serif",
+      color: "#111",
+      "::placeholder": { color: "#aaa" },
+    },
+    invalid: { color: "#ef4444" },
+  },
+};
+
+function CheckoutInner() {
   const router = useRouter();
   const { cartItems, cartTotal, clearCart } = useCart();
+  const stripe = useStripe();
+  const elements = useElements();
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -18,12 +36,8 @@ export default function CheckoutPage() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("Madagascar");
   const [shipping, setShipping] = useState("colissimo");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [zip, setZip] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const TVA_RATE = 0.20;
   const tva = Math.round(cartTotal * TVA_RATE);
@@ -33,38 +47,83 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
+
     if (!firstname || !lastname || !email || !city || !address) {
-      alert("Veuillez remplir tous les champs obligatoires");
+      setErrorMsg("Veuillez remplir tous les champs obligatoires.");
       return;
     }
     if (!cartItems || cartItems.length === 0) {
-      alert("Votre panier est vide");
+      setErrorMsg("Votre panier est vide.");
       return;
     }
+    if (!stripe || !elements) {
+      setErrorMsg("Stripe n'est pas encore chargé. Réessayez.");
+      return;
+    }
+
     setLoading(true);
+
     try {
-      const res = await fetch("/api/orders", {
+      // 1. Créer le PaymentIntent côté serveur
+      const piRes = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: total, customerEmail: email }),
+      });
+      const piData = await piRes.json();
+      if (!piRes.ok) {
+        setErrorMsg(piData.message || "Erreur lors de la création du paiement.");
+        return;
+      }
+
+      // 2. Confirmer le paiement avec la carte Stripe
+      const { error, paymentIntent } = await stripe.confirmCardPayment(piData.clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: `${firstname} ${lastname}`,
+            email,
+            address: { city, postal_code: postalCode, country: "FR" },
+          },
+        },
+      });
+
+      if (error) {
+        setErrorMsg(error.message);
+        return;
+      }
+
+      if (paymentIntent.status !== "succeeded") {
+        setErrorMsg("Le paiement n'a pas abouti. Réessayez.");
+        return;
+      }
+
+      // 3. Créer la commande en base
+      const orderRes = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customer: { firstname, lastname, email, company, city, address, postalCode, country },
           cartItems,
-          total: cartTotal,
+          total,
           payment: "card",
           delivery: shipping,
+          stripePaymentId: paymentIntent.id,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Erreur lors de la commande");
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) {
+        setErrorMsg(orderData.message || "Commande non enregistrée, contactez le support.");
         return;
       }
-      alert("✅ Commande confirmée !");
+
       clearCart();
-      router.push("/");
-    } catch (error) {
-      console.error("CHECKOUT ERROR:", error);
-      alert("Erreur serveur");
+      router.push("/success");
+
+    } catch (err) {
+      console.error("CHECKOUT ERROR:", err);
+      setErrorMsg("Erreur inattendue. Réessayez.");
     } finally {
       setLoading(false);
     }
@@ -73,238 +132,196 @@ export default function CheckoutPage() {
   return (
     <div className="checkout-page">
 
-      {/* FOND ANIMÉ */}
       <div className="checkout-bg">
         <span /><span /><span /><span />
       </div>
 
       <div className="checkout-inner">
 
-      {/* BOUTON RETOUR */}
-      <button className="checkout-back" onClick={() => router.back()}>
-        ← Retour
-      </button>
+        <button className="checkout-back" onClick={() => router.back()}>
+          ← Retour
+        </button>
 
-      <div className="checkout-wrapper">
+        <div className="checkout-wrapper">
 
-        {/* COLONNE GAUCHE — Formulaire */}
-        <div className="checkout-left">
+          {/* COLONNE GAUCHE */}
+          <div className="checkout-left">
 
-          {/* CONTACT */}
-          <div className="checkout-section">
-            <h3 className="checkout-section-title">Contact</h3>
-            <input
-              type="email"
-              placeholder="Tom.exemple@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="checkout-input"
-              required
-            />
-          </div>
-
-          {/* LIVRAISON */}
-          <div className="checkout-section">
-            <h3 className="checkout-section-title">Livraison</h3>
-            <input
-              type="text"
-              placeholder="Pays / région"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="checkout-input"
-            />
-            <div className="checkout-row">
+            {/* CONTACT */}
+            <div className="checkout-section">
+              <h3 className="checkout-section-title">Contact</h3>
               <input
-                type="text"
-                placeholder="Prénom (optionnel)"
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                className="checkout-input"
-              />
-              <input
-                type="text"
-                placeholder="Nom"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
+                type="email"
+                placeholder="Tom.exemple@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="checkout-input"
                 required
               />
             </div>
-            <input
-              type="text"
-              placeholder="Entreprise"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              className="checkout-input"
-            />
-            <input
-              type="text"
-              placeholder="Adresse"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="checkout-input"
-              required
-            />
-            <div className="checkout-row">
+
+            {/* LIVRAISON */}
+            <div className="checkout-section">
+              <h3 className="checkout-section-title">Livraison</h3>
               <input
                 type="text"
-                placeholder="Code postal"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
+                placeholder="Pays / région"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="checkout-input"
+              />
+              <div className="checkout-row">
+                <input
+                  type="text"
+                  placeholder="Prénom"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                  className="checkout-input"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Nom"
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                  className="checkout-input"
+                  required
+                />
+              </div>
+              <input
+                type="text"
+                placeholder="Entreprise (optionnel)"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
                 className="checkout-input"
               />
               <input
                 type="text"
-                placeholder="Ville"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
+                placeholder="Adresse"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 className="checkout-input"
                 required
               />
-            </div>
-          </div>
-
-          {/* MODE D'EXPÉDITION */}
-          <div className="checkout-section">
-            <h3 className="checkout-section-title">Mode d'expédition</h3>
-            <label className="checkout-radio">
-              <input
-                type="radio"
-                name="shipping"
-                value="colissimo"
-                checked={shipping === "colissimo"}
-                onChange={() => setShipping("colissimo")}
-              />
-              <span>Colissimo - Signature - International Livraison contre signature entre 2 et 8 jours</span>
-            </label>
-            <label className="checkout-radio">
-              <input
-                type="radio"
-                name="shipping"
-                value="relais"
-                checked={shipping === "relais"}
-                onChange={() => setShipping("relais")}
-              />
-              <span>Livraison en point relais colissimo en 2 à 4 jours</span>
-            </label>
-          </div>
-
-          {/* PAIEMENT */}
-          <div className="checkout-section">
-            <h3 className="checkout-section-title">Paiement</h3>
-            <div className="checkout-card-row">
-              <input
-                type="text"
-                placeholder="1234 1234 1234 1234"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                className="checkout-input checkout-input-card"
-              />
-              <div className="card-icons">
-                <span>VISA</span>
-                <span>MC</span>
-                <span>AMEX</span>
+              <div className="checkout-row">
+                <input
+                  type="text"
+                  placeholder="Code postal"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  className="checkout-input"
+                />
+                <input
+                  type="text"
+                  placeholder="Ville"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="checkout-input"
+                  required
+                />
               </div>
             </div>
-            <div className="checkout-row">
-              <input
-                type="text"
-                placeholder="MM / YY"
-                value={expiry}
-                onChange={(e) => setExpiry(e.target.value)}
-                className="checkout-input"
-              />
-              <input
-                type="text"
-                placeholder="CVC"
-                value={cvc}
-                onChange={(e) => setCvc(e.target.value)}
-                className="checkout-input"
-              />
+
+            {/* MODE D'EXPÉDITION */}
+            <div className="checkout-section">
+              <h3 className="checkout-section-title">Mode d'expédition</h3>
+              <label className="checkout-radio">
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="colissimo"
+                  checked={shipping === "colissimo"}
+                  onChange={() => setShipping("colissimo")}
+                />
+                <span>Colissimo — Livraison avec signature entre 2 et 8 jours</span>
+              </label>
+              <label className="checkout-radio">
+                <input
+                  type="radio"
+                  name="shipping"
+                  value="relais"
+                  checked={shipping === "relais"}
+                  onChange={() => setShipping("relais")}
+                />
+                <span>Point relais Colissimo — 2 à 4 jours</span>
+              </label>
             </div>
-            <input
-              type="text"
-              placeholder="Full name on card"
-              value={cardName}
-              onChange={(e) => setCardName(e.target.value)}
-              className="checkout-input"
-            />
-            <select
-              className="checkout-input checkout-select"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
+
+            {/* PAIEMENT — Stripe Elements */}
+            <div className="checkout-section">
+              <h3 className="checkout-section-title">Paiement</h3>
+              <div className="checkout-stripe-card">
+                <CardElement options={CARD_ELEMENT_OPTIONS} />
+              </div>
+              <p className="checkout-stripe-notice">
+                🔒 Paiement sécurisé par Stripe. Vos données carte ne transitent jamais par nos serveurs.
+              </p>
+            </div>
+
+            {errorMsg && <p className="checkout-error">{errorMsg}</p>}
+
+            <button
+              className="checkout-submit"
+              onClick={handleSubmit}
+              disabled={loading || !stripe}
             >
-              <option>Madagascar</option>
-              <option>France</option>
-              <option>United States</option>
-              <option>Réunion</option>
-            </select>
-            <input
-              type="text"
-              placeholder="ZIP"
-              value={zip}
-              onChange={(e) => setZip(e.target.value)}
-              className="checkout-input"
-            />
+              {loading ? "Traitement en cours..." : `Payer ${total} €`}
+            </button>
+
           </div>
 
-          {/* BOUTON */}
-          <button
-            className="checkout-submit"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? "Envoi..." : "Vérifier la commande"}
-          </button>
+          {/* COLONNE DROITE — Résumé */}
+          <div className="checkout-right">
 
-        </div>
-
-        {/* COLONNE DROITE — Résumé */}
-        <div className="checkout-right">
-
-          {/* LISTE PRODUITS */}
-          <div className="checkout-items">
-            {cartItems.map((item) => (
-              <div key={item._id} className="checkout-item">
-                <div className="checkout-item-image">
-                  {item.image && <img src={item.image} alt={item.name} />}
+            <div className="checkout-items">
+              {cartItems.map((item) => (
+                <div key={item._id} className="checkout-item">
+                  <div className="checkout-item-image">
+                    {item.image && <img src={item.image} alt={item.name} />}
+                  </div>
+                  <div className="checkout-item-info">
+                    <strong>{item.name}</strong>
+                    <p>{item.description}</p>
+                  </div>
+                  <span className="checkout-item-price">
+                    {item.promoPrice ?? item.price} €
+                  </span>
                 </div>
-                <div className="checkout-item-info">
-                  <strong>{item.name}</strong>
-                  <p>{item.description}</p>
-                </div>
-                <span className="checkout-item-price">
-                  {item.promoPrice ?? item.price} €
-                </span>
+              ))}
+            </div>
+
+            <div className="checkout-summary">
+              <h3 className="checkout-summary-title">Résumé</h3>
+              <div className="checkout-summary-row">
+                <span>Sous-total ({totalQty})</span>
+                <span>{cartTotal} €</span>
               </div>
-            ))}
-          </div>
+              <div className="checkout-summary-row">
+                <span>TVA (20%)</span>
+                <span>{tva} €</span>
+              </div>
+              <div className="checkout-summary-row">
+                <span>Livraison</span>
+                <span>{livraison} €</span>
+              </div>
+              <div className="checkout-summary-divider" />
+              <div className="checkout-summary-row checkout-summary-total">
+                <span>Total</span>
+                <span>{total} €</span>
+              </div>
+            </div>
 
-          {/* RÉSUMÉ */}
-          <div className="checkout-summary">
-            <h3 className="checkout-summary-title">Résumé de la commande</h3>
-            <div className="checkout-summary-row">
-              <span>Sous-total ({totalQty})</span>
-              <span>{cartTotal} €</span>
-            </div>
-            <div className="checkout-summary-row">
-              <span>TVA (20%)</span>
-              <span>{tva} €</span>
-            </div>
-            <div className="checkout-summary-row">
-              <span>Livraison</span>
-              <span>{livraison} €</span>
-            </div>
-            <div className="checkout-summary-divider" />
-            <div className="checkout-summary-row checkout-summary-total">
-              <span>Total</span>
-              <span>{total} €</span>
-            </div>
           </div>
-
         </div>
-      </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutInner />
+    </Elements>
   );
 }

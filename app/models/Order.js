@@ -24,6 +24,11 @@ const OrderSchema = new mongoose.Schema(
 
     total: Number,
 
+    stripePaymentId: {
+      type: String,
+      default: null,
+    },
+
     // ✅ AJOUTER CE CHAMP
     payment: {
       type: String,

@@ -243,6 +243,35 @@
   color: #555;
 }
 
+/* ── STRIPE CARD ELEMENT ── */
+.checkout-stripe-card {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkout-stripe-card:focus-within {
+  border-color: #C95D5D;
+  box-shadow: 0 0 0 3px rgba(201, 93, 93, 0.1);
+}
+
+.checkout-stripe-notice {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.checkout-error {
+  font-size: 13px;
+  color: #ef4444;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
 /* ── BOUTON VÉRIFIER ── */
 .checkout-submit {
   width: 100%;
