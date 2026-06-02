@@ -318,8 +318,18 @@
 }
 
 .vn-nl-btn:hover {
-  background: var(--error);
+  background: #C95D5D;
 }
+
+.vn-nl-feedback {
+  font-size: 0.8rem;
+  margin-top: 6px;
+  width: 100%;
+  text-align: right;
+}
+.vn-nl-feedback--ok   { color: #2d7a4f; }
+.vn-nl-feedback--warn { color: #b45309; }
+.vn-nl-feedback--err  { color: #C95D5D; }
 
 /* ── Responsive ── */
 @media (max-width: 1200px) and (min-width: 810px) {

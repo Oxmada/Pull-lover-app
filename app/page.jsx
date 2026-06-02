@@ -12,8 +12,31 @@ import { useScrollReveal } from "./hooks/useScrollReveal";
 
 export default function HomePage() {
   const [products, setProducts] = useState([]);
+  const [nlEmail, setNlEmail] = useState("");
+  const [nlStatus, setNlStatus] = useState(null); // "success" | "error" | "duplicate"
   const promoRef = useScrollReveal(0.1);
   const valuesRef = useScrollReveal(0.1);
+
+  async function handleNewsletter(e) {
+    e.preventDefault();
+    setNlStatus(null);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: nlEmail }),
+      });
+      if (res.ok) {
+        setNlStatus("success");
+        setNlEmail("");
+      } else {
+        const data = await res.json();
+        setNlStatus(res.status === 409 ? "duplicate" : "error");
+      }
+    } catch {
+      setNlStatus("error");
+    }
+  }
 
   useEffect(() => {
     async function loadProducts() {
@@ -142,10 +165,26 @@ export default function HomePage() {
                 <h3>Restez informé</h3>
                 <p>Offres exclusives en avant-première</p>
               </div>
-              <div className="vn-nl-form">
-                <input type="email" className="vn-nl-input" placeholder="Votre adresse email" />
-                <button className="vn-nl-btn">S'inscrire</button>
-              </div>
+              <form className="vn-nl-form" onSubmit={handleNewsletter}>
+                <input
+                  type="email"
+                  className="vn-nl-input"
+                  placeholder="Votre adresse email"
+                  value={nlEmail}
+                  onChange={(e) => setNlEmail(e.target.value)}
+                  required
+                />
+                <button className="vn-nl-btn" type="submit">S'inscrire</button>
+              </form>
+              {nlStatus === "success" && (
+                <p className="vn-nl-feedback vn-nl-feedback--ok">Inscription confirmée !</p>
+              )}
+              {nlStatus === "duplicate" && (
+                <p className="vn-nl-feedback vn-nl-feedback--warn">Cet email est déjà inscrit.</p>
+              )}
+              {nlStatus === "error" && (
+                <p className="vn-nl-feedback vn-nl-feedback--err">Une erreur est survenue, réessayez.</p>
+              )}
             </div>
 
           </div>
