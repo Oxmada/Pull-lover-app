@@ -56,7 +56,7 @@ export default function Header() {
 
     const { cartItems } = useCart();
     const { favorites } = useFavorites();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const isAdmin = session?.user?.role === "admin";
     const cartCount = cartItems?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
     const favCount = favorites?.length || 0;
@@ -112,7 +112,9 @@ export default function Header() {
                             <BagIcon />
                             {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                         </Link>
-                        {!session ? (
+                        {status === "loading" ? (
+                            <span className="h-icon-btn" aria-hidden="true"><UserIcon /></span>
+                        ) : !session ? (
                             <Link href="/auth/login" className="h-icon-btn" onClick={close} aria-label="Connexion">
                                 <UserIcon />
                             </Link>
@@ -134,7 +136,9 @@ export default function Header() {
                         <BagIcon />
                         {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                     </Link>
-                    {!session ? (
+                    {status === "loading" ? (
+                        <span className="h-icon-btn" aria-hidden="true"><UserIcon /></span>
+                    ) : !session ? (
                         <Link href="/auth/login" className="h-icon-btn" aria-label="Connexion">
                             <UserIcon />
                         </Link>
