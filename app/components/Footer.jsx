@@ -3,18 +3,17 @@
 import Link from "next/link";
 import "./Footer.css";
 
-const LogoCoeur = ({ className = "" }) => (
+const LogoCoeur = () => (
   <img
     src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
     alt="Pull-lover logo"
     width={40}
     height={40}
-    className={className}
   />
 );
 
 const FacebookIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
@@ -42,13 +41,6 @@ const YouTubeIcon = () => (
   </svg>
 );
 
-const navLinks = [
-  { label: "Accueil", href: "/" },
-  { label: "Nos mailles", href: "/nos-mailles" },
-  { label: "Notre marque", href: "/NotreMarque" },
-  { label: "Contact", href: "/contact" },
-];
-
 const socialLinks = [
   { icon: <FacebookIcon />, href: "https://facebook.com", label: "Facebook" },
   { icon: <InstagramIcon />, href: "https://instagram.com", label: "Instagram" },
@@ -56,79 +48,87 @@ const socialLinks = [
   { icon: <YouTubeIcon />, href: "https://youtube.com", label: "YouTube" },
 ];
 
-const SocialList = () => (
-  <ul className="footer-social-list">
-    {socialLinks.map((s) => (
-      <li key={s.label}>
-        <a href={s.href} target="_blank" rel="noopener noreferrer"
-          aria-label={s.label} className="footer-social-link">
-          {s.icon}
-        </a>
-      </li>
-    ))}
-  </ul>
-);
+const exploreLinks = [
+  { label: "Accueil", href: "/" },
+  { label: "Nos mailles", href: "/nos-mailles" },
+  { label: "Notre marque", href: "/NotreMarque" },
+  { label: "Boutique", href: "/boutique" },
+];
+
+const accountLinks = [
+  { label: "Mon espace", href: "/dashboard" },
+  { label: "Mes favoris", href: "/favoris" },
+  { label: "Mon panier", href: "/cart" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Footer() {
   return (
     <footer className="footer">
 
-      {/* ── DESKTOP/TABLETTE : logo + nav + rien à droite ── */}
-      <div className="footer-top-row">
-        <div className="footer-brand">
-          <LogoCoeur />
-          <span className="footer-tagline">Bien s'habiller, c'est la première des politesses</span>
+      {/* ── COLONNES ── */}
+      <div className="footer-columns">
+
+        {/* Colonne 1 — Marque */}
+        <div className="footer-col footer-col-brand">
+          <div className="footer-brand">
+            <LogoCoeur />
+            <span className="footer-logo-text">Pull Lover</span>
+          </div>
+          <p className="footer-tagline">Bien s'habiller,<br />c'est la première des politesses</p>
+          <ul className="footer-social-list">
+            {socialLinks.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer"
+                  aria-label={s.label} className="footer-social-link">
+                  {s.icon}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Nav visible desktop/tablette, cachée mobile */}
-        <nav aria-label="Navigation principale" className="footer-nav-desktop">
-          <ul className="footer-nav-list">
-            {navLinks.map((link) => (
+        {/* Colonne 2 — Explorer */}
+        <div className="footer-col">
+          <p className="footer-col-title">Explorer</p>
+          <ul className="footer-col-list">
+            {exploreLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="footer-nav-link">{link.label}</Link>
+                <Link href={link.href} className="footer-col-link">{link.label}</Link>
               </li>
             ))}
           </ul>
-        </nav>
+        </div>
 
-        {/* Socials visibles mobile uniquement */}
-        <nav aria-label="Réseaux sociaux" className="footer-socials-top">
-          <SocialList />
-        </nav>
-      </div>
-
-      {/* Nav visible mobile uniquement */}
-      <div className="footer-nav-row">
-        <nav aria-label="Navigation principale">
-          <ul className="footer-nav-list">
-            {navLinks.map((link) => (
+        {/* Colonne 3 — Mon compte */}
+        <div className="footer-col">
+          <p className="footer-col-title">Mon compte</p>
+          <ul className="footer-col-list">
+            {accountLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="footer-nav-link">{link.label}</Link>
+                <Link href={link.href} className="footer-col-link">{link.label}</Link>
               </li>
             ))}
           </ul>
-        </nav>
+        </div>
+
       </div>
 
       <div className="footer-divider" />
 
-      {/* ── BOTTOM : copyright + légal + crédit + socials desktop ── */}
+      {/* ── BOTTOM BAR ── */}
       <div className="footer-bottom-row">
-        <p className="footer-copyright">©2026 Pull-lover All right reserved.</p>
-        <Link href="/politique-de-confidentialite" className="footer-nav-link" style={{ fontSize: 13 }}>
+        <p className="footer-copyright">©2026 Pull-lover. All rights reserved.</p>
+        <Link href="/politique-de-confidentialite" className="footer-legal-link">
           Politique de confidentialité
         </Link>
         <p className="footer-credit">
-          Réaliser par{" "}
+          Réalisé par{" "}
           <a href="https://oxmad-digital.com" target="_blank"
             rel="noopener noreferrer" className="footer-credit-link">
             Oxmad-digital
           </a>
         </p>
-        {/* Socials visibles desktop/tablette uniquement */}
-        <nav aria-label="Réseaux sociaux" className="footer-socials-bottom">
-          <SocialList />
-        </nav>
       </div>
 
     </footer>
