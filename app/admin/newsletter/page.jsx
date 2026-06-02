@@ -1,0 +1,170 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import "../customers/customers.css";
+
+const PER_PAGE = 50;
+
+export default function AdminNewsletterPage() {
+  const [subscribers, setSubscribers] = useState([]);
+  const [total, setTotal]             = useState(0);
+  const [totalPages, setTotalPages]   = useState(1);
+  const [loading, setLoading]         = useState(true);
+  const [search, setSearch]           = useState("");
+  const [page, setPage]               = useState(1);
+  const [toast, setToast]             = useState(null);
+
+  const showToast = (msg, type = "success") => {
+    setToast({ message: msg, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  useEffect(() => {
+    const t = setTimeout(() => load(), 300);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, page]);
+
+  async function load() {
+    setLoading(true);
+    const params = new URLSearchParams({ page, limit: PER_PAGE });
+    if (search) params.append("search", search);
+    const res = await fetch(`/api/admin/newsletter?${params}`);
+    const data = await res.json();
+    setSubscribers(data.subscribers || []);
+    setTotal(data.total || 0);
+    setTotalPages(data.totalPages || 1);
+    setLoading(false);
+  }
+
+  async function handleDelete(id, email) {
+    if (!confirm(`Supprimer ${email} de la newsletter ?`)) return;
+    const res = await fetch("/api/admin/newsletter", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      showToast("Abonné supprimé");
+      load();
+    } else {
+      showToast("Erreur lors de la suppression", "error");
+    }
+  }
+
+  function exportCSV() {
+    const rows = [["Email", "Date d'inscription"]];
+    subscribers.forEach((s) =>
+      rows.push([s.email, new Date(s.createdAt).toLocaleDateString("fr-FR")])
+    );
+    const csv = rows.map((r) => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `newsletter_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="ap-page">
+      {/* Topbar */}
+      <div className="ap-topbar">
+        <Link href="/admin/dashboard" className="ap-back-btn">← Dashboard</Link>
+        <h1 className="ap-topbar-title">Newsletter</h1>
+        <button className="ap-btn-add" onClick={exportCSV} disabled={loading || total === 0}>
+          Exporter CSV
+        </button>
+      </div>
+
+      {/* Toolbar */}
+      <div className="ap-toolbar">
+        <input
+          className="ap-search-input"
+          placeholder="Rechercher un email…"
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+        />
+        <div className="ap-stats-inline">
+          <div className="ap-stat-chip">
+            <span className="ap-stat-chip-value">{total}</span>
+            <span className="ap-stat-chip-label">abonnés</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="ap-table-wrap">
+        {loading ? (
+          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Chargement…</p>
+        ) : subscribers.length === 0 ? (
+          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Aucun abonné trouvé.</p>
+        ) : (
+          <table className="ap-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Inscrit le</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {subscribers.map((s, i) => (
+                <tr key={s._id} style={{ borderBottom: "1px solid #f5f5f4" }}>
+                  <td style={{ padding: "12px 16px", color: "#a8a29e", fontSize: 13 }}>
+                    {(page - 1) * PER_PAGE + i + 1}
+                  </td>
+                  <td style={{ padding: "12px 16px", fontWeight: 600, fontSize: 14 }}>{s.email}</td>
+                  <td style={{ padding: "12px 16px", color: "#78716c", fontSize: 13 }}>
+                    {new Date(s.createdAt).toLocaleDateString("fr-FR", { dateStyle: "medium" })}
+                  </td>
+                  <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                    <button
+                      onClick={() => handleDelete(s._id, s.email)}
+                      style={{
+                        background: "none", border: "none", color: "#C95D5D",
+                        cursor: "pointer", fontSize: 13, fontWeight: 600,
+                      }}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
+          <button className="ap-filter-btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
+            ← Préc.
+          </button>
+          <span style={{ padding: "8px 16px", fontSize: 13, color: "#57534e" }}>
+            {page} / {totalPages}
+          </span>
+          <button className="ap-filter-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+            Suiv. →
+          </button>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: "fixed", bottom: 24, right: 24, zIndex: 9999,
+          background: toast.type === "error" ? "#C95D5D" : "#0f172a",
+          color: "#fff", padding: "12px 20px", borderRadius: 10,
+          fontSize: 14, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+        }}>
+          {toast.message}
+        </div>
+      )}
+    </div>
+  );
+}

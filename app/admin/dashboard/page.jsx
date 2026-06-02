@@ -35,6 +35,9 @@ export default async function AdminDashboard() {
         <a href="/admin/orders" className={styles.card}>
           Commandes
         </a>
+        <a href="/admin/newsletter" className={styles.card}>
+          Newsletter
+        </a>
       </div>
 
       <DashboardStats />
