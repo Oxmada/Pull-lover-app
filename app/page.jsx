@@ -165,26 +165,28 @@ export default function HomePage() {
                 <h3>Restez informé</h3>
                 <p>Offres exclusives en avant-première</p>
               </div>
-              <form className="vn-nl-form" onSubmit={handleNewsletter}>
-                <input
-                  type="email"
-                  className="vn-nl-input"
-                  placeholder="Votre adresse email"
-                  value={nlEmail}
-                  onChange={(e) => setNlEmail(e.target.value)}
-                  required
-                />
-                <button className="vn-nl-btn" type="submit">S'inscrire</button>
-              </form>
-              {nlStatus === "success" && (
-                <p className="vn-nl-feedback vn-nl-feedback--ok">Inscription confirmée !</p>
-              )}
-              {nlStatus === "duplicate" && (
-                <p className="vn-nl-feedback vn-nl-feedback--warn">Cet email est déjà inscrit.</p>
-              )}
-              {nlStatus === "error" && (
-                <p className="vn-nl-feedback vn-nl-feedback--err">Une erreur est survenue, réessayez.</p>
-              )}
+              <div className="vn-nl-right">
+                <form className="vn-nl-form" onSubmit={handleNewsletter}>
+                  <input
+                    type="email"
+                    className="vn-nl-input"
+                    placeholder="Votre adresse email"
+                    value={nlEmail}
+                    onChange={(e) => setNlEmail(e.target.value)}
+                    required
+                  />
+                  <button className="vn-nl-btn" type="submit">S'inscrire</button>
+                </form>
+                {nlStatus === "success" && (
+                  <p className="vn-nl-feedback vn-nl-feedback--ok">Inscription confirmée !</p>
+                )}
+                {nlStatus === "duplicate" && (
+                  <p className="vn-nl-feedback vn-nl-feedback--warn">Cet email est déjà inscrit.</p>
+                )}
+                {nlStatus === "error" && (
+                  <p className="vn-nl-feedback vn-nl-feedback--err">Une erreur est survenue, réessayez.</p>
+                )}
+              </div>
             </div>
 
           </div>
