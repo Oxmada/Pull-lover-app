@@ -2,6 +2,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import { connectDB } from "@/app/lib/db";
 import User from "@/app/models/User";
 import bcrypt from "bcryptjs";
@@ -16,6 +17,10 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
     CredentialsProvider({
       async authorize(credentials) {
@@ -56,12 +61,43 @@ export const authOptions = {
   ],
 
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google" || account?.provider === "facebook") {
+        await connectDB();
+        const existing = await User.findOne({ email: user.email });
+        if (!existing) {
+          await User.create({
+            name: user.name,
+            email: user.email,
+            emailVerified: true,
+            role: "customer",
+            lastLoginAt: new Date(),
+          });
+        } else {
+          existing.lastLoginAt = new Date();
+          if (!existing.emailVerified) existing.emailVerified = true;
+          await existing.save();
+        }
+      }
+      return true;
+    },
+
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role ?? "user";
-        token.emailVerified = user.emailVerified ?? (account?.provider === "google");
+        token.role = user.role ?? "customer";
+        token.emailVerified = user.emailVerified ?? ["google", "facebook"].includes(account?.provider);
       }
+      // Charger l'id et le rôle réels depuis MongoDB pour les providers OAuth
+      if (account?.provider && account.provider !== "credentials") {
+        await connectDB();
+        const dbUser = await User.findOne({ email: token.email });
+        if (dbUser) {
+          token.id = dbUser._id.toString();
+          token.role = dbUser.role;
+          token.emailVerified = dbUser.emailVerified;
+        }
+      }
+      if (!token.id && user?.id) token.id = user.id;
       return token;
     },
 
