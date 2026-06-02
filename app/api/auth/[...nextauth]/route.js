@@ -1,6 +1,7 @@
 // app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { connectDB } from "@/app/lib/db";
 import User from "@/app/models/User";
 import bcrypt from "bcryptjs";
@@ -11,6 +12,10 @@ export const authOptions = {
   },
 
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
       async authorize(credentials) {
         await connectDB();
@@ -66,7 +71,7 @@ export const authOptions = {
   },
 
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
 };
 
