@@ -19,23 +19,16 @@ export default function HomePage() {
 
   async function handleNewsletter(e) {
     e.preventDefault();
-    setNlStatus(null);
-    try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: nlEmail }),
-      });
-      if (res.ok) {
-        setNlStatus("success");
-        setNlEmail("");
-      } else {
-        const data = await res.json();
-        setNlStatus(res.status === 409 ? "duplicate" : "error");
-      }
-    } catch {
-      setNlStatus("error");
-    }
+    setNlStatus("success");
+    setNlEmail("");
+    fetch("/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: nlEmail }),
+    }).then((res) => {
+      if (res.status === 409) setNlStatus("duplicate");
+      else if (!res.ok) setNlStatus("error");
+    }).catch(() => setNlStatus("error"));
   }
 
   useEffect(() => {
