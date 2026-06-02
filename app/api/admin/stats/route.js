@@ -70,7 +70,7 @@ export async function GET(request) {
       Customer.countDocuments({ lastOrderAt: { $ne: null, $lt: thirtyDaysAgo }, status: "active" }),
 
       // Stock
-      Product.countDocuments({ stock: { $lt: 5 }, isAvailable: true }),
+      Product.countDocuments({ stock: { $gt: 0, $lt: 5 } }),
 
       // Revenus
       Order.aggregate([{ $group: { _id: null, total: { $sum: "$total" } } }]),
