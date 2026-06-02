@@ -112,9 +112,12 @@ export default function Footer() {
 
       <div className="footer-divider" />
 
-      {/* ── BOTTOM : copyright + crédit + socials desktop ── */}
+      {/* ── BOTTOM : copyright + légal + crédit + socials desktop ── */}
       <div className="footer-bottom-row">
         <p className="footer-copyright">©2026 Pull-lover All right reserved.</p>
+        <Link href="/politique-de-confidentialite" className="footer-nav-link" style={{ fontSize: 13 }}>
+          Politique de confidentialité
+        </Link>
         <p className="footer-credit">
           Réaliser par{" "}
           <a href="https://oxmad-digital.com" target="_blank"

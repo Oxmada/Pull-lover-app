@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "Politique de confidentialité — Pull Lover",
   description: "Politique de confidentialité et protection des données personnelles de Pull Lover.",
@@ -62,7 +64,7 @@ export default function PolitiqueConfidentialitePage() {
           <li><strong>Droit d'opposition</strong> : vous opposer à certains traitements</li>
         </ul>
         <p style={{ marginTop: 12 }}>
-          Pour exercer ces droits, contactez-nous à <a href="mailto:tom.wybo@yahoo.fr" style={{ color: "#6366f1" }}>tom.wybo@yahoo.fr</a>. Nous répondons dans un délai maximum de 30 jours.
+          Pour exercer ces droits, et notamment demander la <Link href="/suppression-donnees" style={{ color: "#6366f1", fontWeight: 600 }}>suppression de vos données</Link>, contactez-nous à <a href="mailto:tom.wybo@yahoo.fr" style={{ color: "#6366f1" }}>tom.wybo@yahoo.fr</a>. Nous répondons dans un délai maximum de 30 jours.
         </p>
       </Section>
 
