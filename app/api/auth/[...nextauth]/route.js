@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 export const authOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
 
   providers: [
@@ -55,15 +56,17 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
-        token.role = user.role;
-        token.emailVerified = user.emailVerified;
+        token.id = user.id;
+        token.role = user.role ?? "user";
+        token.emailVerified = user.emailVerified ?? (account?.provider === "google");
       }
       return token;
     },
 
     async session({ session, token }) {
+      session.user.id = token.id;
       session.user.role = token.role;
       session.user.emailVerified = token.emailVerified;
       return session;
