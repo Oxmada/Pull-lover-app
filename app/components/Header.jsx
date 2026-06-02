@@ -151,6 +151,14 @@ export default function Header() {
                                 <div className="h-user-dropdown">
                                     <p className="h-user-name">{session.user?.name || session.user?.email}</p>
                                     <div className="h-user-divider" />
+                                    <Link
+                                        href="/dashboard"
+                                        className="h-user-link"
+                                        onClick={() => setUserMenuOpen(false)}
+                                    >
+                                        Mon espace
+                                    </Link>
+                                    <div className="h-user-divider" />
                                     <button
                                         className="h-user-signout"
                                         onClick={() => { setUserMenuOpen(false); signOut({ callbackUrl: "/" }); }}
