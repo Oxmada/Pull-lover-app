@@ -89,7 +89,8 @@ export default function NotreMarque() {
                             Voir comment chaque pièce prend vie
                         </h2>
                         <p className="nm-video-section__sub">
-                            Chaque vêtement Pull Lover est tricoté à la main dans l'atelier familial{" "}
+                            Nos vêtements ne sortent pas d'une ligne de production anonyme. Chaque pièce est
+                            tricotée à la main dans l'atelier familial{" "}
                             <a
                                 href="https://www.ultramaille.com"
                                 target="_blank"
@@ -98,7 +99,10 @@ export default function NotreMarque() {
                             >
                                 Ultramaille
                             </a>
-                            , à Antananarivo.
+                            , basé à Antananarivo. C'est là que savoir-faire artisanal et matières nobles
+                            se rencontrent, pour donner naissance à des pièces pensées pour durer.
+                            Dans cette vidéo, vous pouvez observer les gestes précis et le soin apporté
+                            à chaque étape de fabrication.
                         </p>
                     </div>
                     <div className="nm-video__wrapper reveal" ref={videoWrapRef}>
