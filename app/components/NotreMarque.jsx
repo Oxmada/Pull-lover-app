@@ -88,6 +88,18 @@ export default function NotreMarque() {
                         <h2 className="nm-video-section__heading">
                             Voir comment chaque pièce prend vie
                         </h2>
+                        <p className="nm-video-section__sub">
+                            Chaque vêtement Pull Lover est tricoté à la main dans l'atelier familial{" "}
+                            <a
+                                href="https://www.ultramaille.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="nm-video-section__link"
+                            >
+                                Ultramaille
+                            </a>
+                            , à Antananarivo.
+                        </p>
                     </div>
                     <div className="nm-video__wrapper reveal" ref={videoWrapRef}>
                         <video

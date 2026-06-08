@@ -150,6 +150,20 @@
     line-height: 1.2;
 }
 
+.nm-video-section__sub {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.nm-video-section__link {
+    color: #1a1a1a;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 .nm-video__wrapper {
     position: relative;
     width: 100%;
