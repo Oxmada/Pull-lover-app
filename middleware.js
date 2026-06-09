@@ -20,6 +20,15 @@ export async function middleware(req) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
+  // 🔒 PROTÉGER LES FAVORIS (connexion obligatoire)
+  if (pathname.startsWith("/favoris")) {
+    if (!token) {
+      const loginUrl = new URL("/auth/login", req.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   // 🔒 PROTÉGER SEULEMENT LES SOUS-PAGES ADMIN
   if (pathname.startsWith("/admin/")) {
     if (!token) {
@@ -46,5 +55,5 @@ if (pathname.startsWith("/products")) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/favoris"],
 };

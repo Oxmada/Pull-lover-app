@@ -120,6 +120,12 @@ const UserSchema = new mongoose.Schema(
       default: null,
     },
 
+    // ❤️ FAVORIS
+    favorites: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    }],
+
   }, // ✅ Fermeture correcte de l'objet
   { 
     timestamps: true

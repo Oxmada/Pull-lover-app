@@ -12,17 +12,33 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
-  /* 🔄 Charger depuis localStorage */
+  /* 🔄 Charger depuis localStorage (avec expiration 24h) */
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+    const lastActivity = localStorage.getItem("cartLastActivity");
+
+    if (!savedCart) return;
+    const cartData = JSON.parse(savedCart);
+    if (!Array.isArray(cartData) || cartData.length === 0) return;
+
+    if (lastActivity) {
+      const elapsed = Date.now() - parseInt(lastActivity, 10);
+      if (elapsed > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem("cart");
+        localStorage.removeItem("cartLastActivity");
+        return;
+      }
     }
+
+    setCartItems(cartData);
   }, []);
 
-  /* 💾 Sauvegarde auto */
+  /* 💾 Sauvegarde auto + mise à jour horodatage */
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
+    if (cartItems.length > 0) {
+      localStorage.setItem("cartLastActivity", Date.now().toString());
+    }
   }, [cartItems]);
 
   /* ➕ Ajouter au panier */

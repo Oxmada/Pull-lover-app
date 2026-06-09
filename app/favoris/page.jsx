@@ -2,13 +2,44 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useFavorites } from "../components/FavoritesContext";
 import { useCart } from "../components/CartContext";
+import { ButtonPrimary, ButtonSecondary, ButtonGhost } from "../components/ui/Button";
+import { BadgePromo } from "../components/ui/Tag";
 import "./favoris.css";
 
 export default function FavorisPage() {
-  const { favorites, removeFavorite } = useFavorites();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { favorites, removeFavorite, loading } = useFavorites();
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/auth/login?callbackUrl=/favoris");
+    }
+  }, [status, router]);
+
+  if (status === "loading" || loading) {
+    return (
+      <div className="favoris-page">
+        <div className="favoris-bg"><span /><span /><span /><span /></div>
+        <div className="favoris-inner">
+          <div className="favoris-header">
+            <h1 className="favoris-title">Mes favoris</h1>
+          </div>
+          <div className="favoris-empty">
+            <p>Chargement...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) return null;
 
   return (
     <div className="favoris-page">
@@ -37,9 +68,9 @@ export default function FavorisPage() {
             </div>
             <h2>Votre liste de favoris est vide</h2>
             <p>Ajoutez des articles en cliquant sur le cœur dans la boutique.</p>
-            <Link href="/nos-mailles" className="favoris-btn-boutique">
+            <ButtonPrimary href="/nos-mailles">
               Découvrir la boutique
-            </Link>
+            </ButtonPrimary>
           </div>
         ) : (
           <>
@@ -58,7 +89,7 @@ export default function FavorisPage() {
                     {/* IMAGE */}
                     <div className="fav-image-wrap">
                       {hasPromo && (
-                        <span className="fav-badge">-{discountPct}%</span>
+                        <BadgePromo>-{discountPct}%</BadgePromo>
                       )}
                       <button
                         className="fav-remove-icon"
@@ -104,8 +135,8 @@ export default function FavorisPage() {
                       )}
 
                       <div className="fav-actions">
-                        <button
-                          className="fav-add-cart"
+                        <ButtonPrimary
+                          full
                           disabled={!product.isAvailable || product.stock === 0}
                           onClick={() =>
                             addToCart({
@@ -119,13 +150,13 @@ export default function FavorisPage() {
                           }
                         >
                           {product.stock === 0 ? "Rupture de stock" : "Ajouter au panier"}
-                        </button>
-                        <button
-                          className="fav-remove-btn"
+                        </ButtonPrimary>
+                        <ButtonSecondary
+                          size="sm"
                           onClick={() => removeFavorite(product._id)}
                         >
                           Retirer
-                        </button>
+                        </ButtonSecondary>
                       </div>
                     </div>
 
@@ -135,9 +166,9 @@ export default function FavorisPage() {
             </div>
 
             <div className="favoris-footer">
-              <Link href="/nos-mailles" className="favoris-link-boutique">
+              <ButtonGhost href="/nos-mailles">
                 ← Continuer mes achats
-              </Link>
+              </ButtonGhost>
             </div>
           </>
         )}
