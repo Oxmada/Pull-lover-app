@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -28,7 +28,20 @@ function NosMaillesContent() {
 
   const productsPerPage = 9;
 
+  const [filterOpen, setFilterOpen] = useState(false);
+  const filterRef = useRef(null);
+
   const { toggleFavorite, isFavorite } = useFavorites();
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setFilterOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const updateURL = (params) => {
     const newParams = new URLSearchParams(searchParams);
@@ -138,6 +151,45 @@ function NosMaillesContent() {
               </button>
             );
           })}
+        </div>
+
+        {/* Dropdown mobile */}
+        <div className="filter-dropdown" ref={filterRef}>
+          <button
+            className={`filter-dropdown-btn${GENDER_FILTERS.some((label) => {
+              const cat = categories.find((c) => c.name.toLowerCase() === label.toLowerCase());
+              return cat && category === cat._id;
+            }) ? " active" : ""}`}
+            onClick={() => setFilterOpen((o) => !o)}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            {GENDER_FILTERS.find((label) => {
+              const cat = categories.find((c) => c.name.toLowerCase() === label.toLowerCase());
+              return cat && category === cat._id;
+            }) || "Filtres"}
+            <svg className={`filter-chevron${filterOpen ? " open" : ""}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          {filterOpen && (
+            <div className="filter-dropdown-panel">
+              {GENDER_FILTERS.map((label) => {
+                const cat = categories.find((c) => c.name.toLowerCase() === label.toLowerCase());
+                const isActive = cat ? category === cat._id : false;
+                return (
+                  <button
+                    key={label}
+                    className={`filter-dropdown-option${isActive ? " active" : ""}`}
+                    onClick={() => {
+                      if (!cat) return;
+                      updateURL({ category: isActive ? "" : cat._id, page: "" });
+                      setFilterOpen(false);
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
