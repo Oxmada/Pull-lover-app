@@ -1,0 +1,40 @@
+/* ── Chip — étiquette matière non-cliquable ── */
+.chip {
+  display: inline-block;
+  font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* ── Eyebrow — label de section en capitales ── */
+.eyebrow {
+  display: block;
+  font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #C95D5D;
+  margin: 0;
+}
+
+/* ── BadgePromo — pastille remise sur image ── */
+.badge-promo {
+  display: inline-block;
+  font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background: #C95D5D;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}

@@ -1,0 +1,75 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-montserrat, 'Montserrat', sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 6px;
+  border: 1.5px solid transparent;
+  padding: 12px 28px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* — Tailles — */
+.btn-sm {
+  padding: 8px 18px;
+  font-size: 13px;
+}
+
+.btn-lg {
+  padding: 16px 40px;
+  font-size: 15px;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* — Primary — */
+.btn-primary {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #333;
+  border-color: #333;
+}
+
+/* — Secondary — */
+.btn-secondary {
+  background: transparent;
+  color: #1a1a1a;
+  border-color: #1a1a1a;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* — Ghost — */
+.btn-ghost {
+  background: transparent;
+  color: #1a1a1a;
+  border-color: transparent;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: #C95D5D;
+}
