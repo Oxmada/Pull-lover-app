@@ -305,6 +305,18 @@
     max-height: 60px;
     opacity: 1;
   }
+
+  /* Texte centré + bouton réduit */
+  .ncs-card-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .ncs-card-bottom .btn {
+    font-size: 11px;
+    padding: 6px 10px;
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -323,5 +335,10 @@
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem 0.75rem;
+  }
+
+  .ncs-card-bottom .btn {
+    font-size: 10px;
+    padding: 5px 8px;
   }
 }
