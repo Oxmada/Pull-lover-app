@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useFavorites } from "./FavoritesContext";
 import { useSession, signOut } from "next-auth/react";
@@ -49,10 +50,11 @@ const navLinks = [
 
 // ── Component ──────────────────────────────────────────────────────
 
-export default function Header() {
+export default function Header({ transparent = false }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
+    const pathname = usePathname();
 
     const { cartItems } = useCart();
     const { favorites } = useFavorites();
@@ -62,6 +64,14 @@ export default function Header() {
     const favCount = favorites?.length || 0;
 
     const close = () => setMenuOpen(false);
+
+    const handleAccueilClick = (e) => {
+        close();
+        if (pathname === "/") {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    };
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -74,9 +84,9 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="h-wrapper">
-            {/* Bandeau */}
-            <div className="h-bandeau">Nouvel arrivage le 20/06/2026 à 19H</div>
+        <header className={`h-wrapper${transparent ? " h-wrapper--transparent" : ""}`}>
+            {/* Bandeau — masqué en mode transparent (home) */}
+            {!transparent && <div className="h-bandeau">Nouvel arrivage le 20/06/2026 à 19H</div>}
 
             {/* Navbar */}
             <nav className="h-navbar">
@@ -89,7 +99,11 @@ export default function Header() {
                 <ul className={`h-nav-list ${menuOpen ? "h-nav-list--open" : ""}`}>
                     {navLinks.map((link) => (
                         <li key={link.href}>
-                            <Link href={link.href} className="h-nav-link" onClick={close}>
+                            <Link
+                                href={link.href}
+                                className="h-nav-link"
+                                onClick={link.href === "/" ? handleAccueilClick : close}
+                            >
                                 {link.label}
                             </Link>
                         </li>

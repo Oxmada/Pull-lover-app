@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "../components/CartContext";
 import { useState } from "react";
-import { ButtonPrimary, ButtonSecondary } from "../components/ui/Button";
+import { ButtonPrimary } from "../components/ui/Button";
 import "./cart.css";
 
 export default function CartPage() {
@@ -66,9 +66,14 @@ export default function CartPage() {
                   {/* PRIX + REMOVE */}
                   <div className="cart-item-right">
                     <span className="cart-item-price">{item.promoPrice ?? item.price} €</span>
-                    <ButtonSecondary size="sm" onClick={() => removeFromCart(item.cartKey)}>
-                      Supprimer
-                    </ButtonSecondary>
+                    <button className="cart-remove-btn" onClick={() => removeFromCart(item.cartKey)} aria-label="Supprimer l'article">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                      </svg>
+                    </button>
                   </div>
 
                 </li>

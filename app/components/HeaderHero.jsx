@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { useCart } from "./CartContext";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import "./HeaderHero.css";
@@ -10,18 +8,10 @@ import "./HeaderHero.css";
 gsap.registerPlugin(SplitText);
 
 export default function HeaderHero() {
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === "admin";
-  const { cartItems } = useCart();
-  const cartCount = cartItems?.reduce((total, item) => total + (item.quantity || 1), 0) || 0;
-
   const [showBadge, setShowBadge] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subRef = useRef(null);
-
-  const close = () => setIsMenuOpen(false);
 
   useEffect(() => {
     if (!titleRef.current || !subRef.current) return;
@@ -31,28 +21,10 @@ export default function HeaderHero() {
 
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-    tl.from(letters, {
-      y: 100,
-      autoAlpha: 0,
-      stagger: 0.05,
-      duration: 1,
-    })
-    .from(subSplit.words, {
-      y: 30,
-      autoAlpha: 0,
-      stagger: 0.04,
-      duration: 0.7,
-    }, "-=0.5")
-    .from(".hero-cta", {
-      autoAlpha: 0,
-      y: 20,
-      duration: 0.6,
-    }, "-=0.4")
-    .from(".hero-badge", {
-      autoAlpha: 0,
-      y: -20,
-      duration: 0.5,
-    }, "-=0.4");
+    tl.from(letters, { y: 100, autoAlpha: 0, stagger: 0.05, duration: 1 })
+      .from(subSplit.words, { y: 30, autoAlpha: 0, stagger: 0.04, duration: 0.7 }, "-=0.5")
+      .from(".hero-cta", { autoAlpha: 0, y: 20, duration: 0.6 }, "-=0.4")
+      .from(".hero-badge", { autoAlpha: 0, y: -20, duration: 0.5 }, "-=0.4");
 
     return () => {
       tl.kill();
@@ -63,117 +35,6 @@ export default function HeaderHero() {
   return (
     <section className="hero-section" ref={sectionRef}>
 
-      {/* ── HEADER ── */}
-      <header className="navbar">
-        <Link href="/" className="logo">
-          <div className="logo-combined">
-            <div className="logo-icon-wrapper">
-              <img
-                src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
-                alt="PullLover Cœur"
-                className="navbar-logo-img"
-              />
-            </div>
-            <img
-              src="https://res.cloudinary.com/dewstflqp/image/upload/v1778092616/logo_pull-lover_blanc_fond_transparent-3_ajf2kj.png"
-              alt="PullLover Logo"
-              className="navbar-text-img"
-            />
-          </div>
-        </Link>
-
-        {/* Burger / Close */}
-        <button
-          className={`burger-menu${isMenuOpen ? " burger-menu--open" : ""}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "Fermer" : "Menu"}
-        >
-          {isMenuOpen ? "✕" : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          )}
-        </button>
-
-        {/* Nav links */}
-        <nav className={`nav-links ${isMenuOpen ? "active" : ""}`}>
-          <Link href="/" onClick={close}>Accueil</Link>
-          <Link href="/nos-mailles" onClick={close}>Nos mailles</Link>
-          <Link href="/NotreMarque" onClick={close}>Notre marque</Link>
-          <Link href="/contact" onClick={close}>Contact</Link>
-          {isAdmin && (
-            <Link href="/admin/dashboard" className="admin-link" onClick={close}>
-              Dashboard
-            </Link>
-          )}
-
-          {/* Icônes dans le burger mobile */}
-          <div className="burger-icons">
-            <Link href="/wishlist" onClick={close}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-            </Link>
-            <Link href="/cart" className="cart-icon" onClick={close}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M6 8V7C6 4.79086 7.79086 3 10 3H14C16.2091 3 18 4.79086 18 7V8M19 8H5C3.89543 8 3 8.89543 3 10V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V10C21 8.89543 20.1046 8 19 8Z" />
-              </svg>
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-            </Link>
-            {!session ? (
-              <Link href="/auth/login" onClick={close}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="12" cy="7" r="4" />
-                  <path d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21" />
-                </svg>
-              </Link>
-            ) : (
-              <button onClick={() => { signOut({ callbackUrl: "/" }); close(); }} className="logout-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="12" cy="7" r="4" />
-                  <path d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </nav>
-
-        {/* Icônes desktop */}
-        <div className="nav-icons">
-          <Link href="/cart" className="cart-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 8V7C6 4.79086 7.79086 3 10 3H14C16.2091 3 18 4.79086 18 7V8M19 8H5C3.89543 8 3 8.89543 3 10V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V10C21 8.89543 20.1046 8 19 8Z" />
-            </svg>
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </Link>
-
-          <Link href="/wishlist">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-          </Link>
-
-          {!session ? (
-            <Link href="/auth/login">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <circle cx="12" cy="7" r="4" />
-                <path d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21" />
-              </svg>
-            </Link>
-          ) : (
-            <button onClick={() => signOut({ callbackUrl: "/" })} className="logout-icon" title="Déconnexion">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <circle cx="12" cy="7" r="4" />
-                <path d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21" />
-              </svg>
-            </button>
-          )}
-        </div>
-      </header>
-
-      {/* ── HERO CONTENT ── */}
       <div className="hero-container">
         <div className="hero-content-left">
           <h1 className="hero-title" ref={titleRef}>
@@ -215,7 +76,6 @@ export default function HeaderHero() {
         </div>
       </div>
 
-      {/* Réseaux sociaux */}
       <div className="social-vertical">
         <span className="follow-label">Suivez-nous</span>
         <div className="social-line" />
