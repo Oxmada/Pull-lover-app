@@ -341,6 +341,13 @@
 @media (max-width: 810px) {
     .h-wrapper--transparent .h-burger--open {
         top: 28px;
+        color: #78716c;
+    }
+
+    /* Menu ouvert sur fond blanc — override les couleurs transparentes */
+    .h-wrapper--transparent .h-nav-list--open .h-nav-link,
+    .h-wrapper--transparent .h-nav-list--open .h-icon-btn {
+        color: #0f172a;
     }
 }
 
