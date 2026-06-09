@@ -284,7 +284,7 @@
 /* ── Mobile : 390px – 809px ── */
 @media (min-width: 390px) and (max-width: 809px) {
     .ct-section {
-        padding: 60px 32px 60px 32px;
+        padding: 60px 1.5rem 60px 1.5rem;
     }
 
     .ct-inner-wrapper {

@@ -147,7 +147,7 @@
 
 @media (max-width: 810px) {
     .process-inner {
-        padding: 60px 32px;
+        padding: 60px 1.5rem;
         gap: 32px;
     }
 

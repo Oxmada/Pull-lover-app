@@ -291,7 +291,7 @@
 
 @media (max-width: 810px) {
     .nm-container {
-        padding: 0 32px;
+        padding: 0 1.5rem;
     }
 
     .nm-intro {
