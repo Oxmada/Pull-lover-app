@@ -169,12 +169,13 @@
 /* ── MOBILE (< 810px) ── */
 @media (max-width: 809px) {
   .footer-columns {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 24px;
     padding: 36px 24px 28px;
   }
 
   .footer-col-brand {
+    grid-column: 1 / -1;
     gap: 12px;
   }
 

@@ -369,20 +369,47 @@
 
 @media (max-width: 810px) {
     .ncs-wrapper {
-        padding: 60px 32px;
+        padding: 60px 0;
     }
 
     .ncs-header {
         flex-direction: column;
         align-items: flex-start;
-        margin-bottom: 20px;
-    }
-
-    .ncs-grid {
-        grid-template-columns: 1fr;
+        margin-bottom: 24px;
+        padding: 0 20px;
+        gap: 16px;
     }
 
     .ncs-title {
-        font-size: 24px;
+        font-size: 28px;
+    }
+
+    .ncs-grid {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding: 4px 20px;
+        gap: 14px;
+    }
+
+    .ncs-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ncs-card {
+        flex: 0 0 72vw;
+        scroll-snap-align: start;
+    }
+
+    .ncs-card:last-child {
+        margin-right: 20px;
+    }
+
+    .ncs-card-bottom {
+        max-height: 50px;
+        opacity: 1;
     }
 }
