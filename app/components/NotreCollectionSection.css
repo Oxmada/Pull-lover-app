@@ -399,10 +399,11 @@
         flex-direction: row;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
+        scroll-padding-left: 1.5rem;
         -ms-overflow-style: none;
         scrollbar-width: none;
-        padding: 0;
-        gap: 0;
+        padding: 0 1.5rem;
+        gap: 1rem;
     }
 
     .ncs-grid::-webkit-scrollbar {
@@ -410,7 +411,7 @@
     }
 
     .ncs-card {
-        flex: 0 0 100%;
+        flex: 0 0 calc(100% - 3rem);
         scroll-snap-align: start;
     }
 
@@ -418,14 +419,12 @@
         margin-right: 0;
     }
 
-    /* Image bord-à-bord */
     .ncs-card-image-wrap {
-        border-radius: 0;
+        border-radius: var(--radius-md);
     }
 
-    /* Padding horizontal sur les infos uniquement */
     .ncs-card-info {
-        padding: 0.9rem 20px 0;
+        padding: 0.9rem 0 0;
     }
 
     .ncs-card-bottom {
