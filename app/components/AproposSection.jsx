@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { ButtonPrimary } from "./ui/Button";
+import { Chip, Eyebrow } from "./ui/Tag";
 import "./AproposSection.css";
 
 const CHIPS = [
@@ -53,7 +54,7 @@ const AproposSection = () => {
 
                         {/* Groupe label + titre — gap 10px */}
                         <div className="apropos-header">
-                            <p className="apropos-eyebrow">Notre marque</p>
+                            <Eyebrow className="apropos-eyebrow">Notre marque</Eyebrow>
                             <h2 className="apropos-title">La passion de la maille</h2>
                         </div>
 
@@ -72,18 +73,14 @@ const AproposSection = () => {
                         {/* Chips — 20px après la description */}
                         <div className="apropos-chips" ref={chipsRef}>
                             {CHIPS.map((chip, i) => (
-                                <span
-                                    className="apropos-chip"
-                                    key={chip}
-                                    style={{ animationDelay: `${i * 0.12}s` }}
-                                >
+                                <Chip key={chip} style={{ animationDelay: `${i * 0.12}s` }}>
                                     {chip}
-                                </span>
+                                </Chip>
                             ))}
                         </div>
 
                         {/* Bouton — 40px après les chips */}
-                        <Link href="/NotreMarque" className="apropos-btn">En savoir plus</Link>
+                        <ButtonPrimary href="/NotreMarque" style={{ marginTop: "40px" }}>En savoir plus</ButtonPrimary>
 
                     </div>
                 </div>

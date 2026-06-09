@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ButtonPrimary } from "./ui/Button";
+import { Eyebrow, BadgePromo } from "./ui/Tag";
 import { useFavorites } from "./FavoritesContext";
 import "./NotreCollectionSection.css";
 
@@ -34,12 +36,12 @@ const NotreCollectionSection = () => {
 
                 <div className="ncs-header">
                     <div className="ncs-header-titles">
-                        <p className="ncs-label">Notre collection</p>
+                        <Eyebrow>Notre collection</Eyebrow>
                         <h2 className="ncs-title">Nos meilleures ventes</h2>
                     </div>
-                    <Link href="/nos-mailles?sort=newest" className="ncs-btn-all">
+                    <ButtonPrimary href="/nos-mailles?sort=newest">
                         Voir tous les produits
-                    </Link>
+                    </ButtonPrimary>
                 </div>
 
                 {loading ? (
@@ -74,9 +76,9 @@ const NotreCollectionSection = () => {
                                         </button>
 
                                         {product.promoPrice && (
-                                            <span className="ncs-badge-promo">
+                                            <BadgePromo>
                                                 -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                                            </span>
+                                            </BadgePromo>
                                         )}
 
                                         <Link href={`/products/${product._id}`} className="ncs-card-image-link">
@@ -134,9 +136,9 @@ const NotreCollectionSection = () => {
                                         )}
 
                                         <div className="ncs-card-bottom">
-                                            <Link href={`/products/${product._id}`} className="ncs-voir-produit">
+                                            <ButtonPrimary href={`/products/${product._id}`} size="sm">
                                                 Voir le produit
-                                            </Link>
+                                            </ButtonPrimary>
                                         </div>
                                     </div>
 
