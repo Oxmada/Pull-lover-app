@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ButtonPrimary } from "../../components/ui/Button";
 import "./register.css";
 
 export default function RegisterPage() {
@@ -141,9 +142,9 @@ export default function RegisterPage() {
           {message && <p className={`register-message ${messageType}`}>{message}</p>}
 
           {/* BOUTON */}
-          <button className="register-btn" onClick={handleSubmit} disabled={loading}>
+          <ButtonPrimary full onClick={handleSubmit} disabled={loading}>
             {loading ? "Création..." : "Créer mon compte"}
-          </button>
+          </ButtonPrimary>
 
           {/* DIVIDER */}
           <div className="register-divider">

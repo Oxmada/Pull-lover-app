@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --red: #c0392b;
   --dark: #1a1a1a;
   --gray: #6b7280;
@@ -161,14 +161,6 @@
   top: 0.75rem;
   left: 0.75rem;
   z-index: 10;
-  padding: 0.25rem 0.6rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  background: var(--red);
-  color: var(--white);
-  border-radius: 10px;
 }
 
 .product-image-link {
@@ -182,7 +174,7 @@
   aspect-ratio: 3 / 4;
   background: var(--gray-light);
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .product-img {
@@ -190,7 +182,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: transform 0.5s ease;
 }
 
@@ -306,7 +298,7 @@
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   white-space: nowrap;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .add-to-cart-btn:hover:not(:disabled) {
@@ -338,7 +330,7 @@
   font-weight: 500;
   letter-spacing: 0.04em;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: background 0.2s, color 0.2s;
 }
 
@@ -373,7 +365,7 @@
   height: 14px;
   margin: 0.75rem auto 0.4rem;
   width: 70%;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .skeleton-line.short {
@@ -417,7 +409,7 @@
   color: var(--dark);
   font-size: 0.875rem;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: background 0.2s, color 0.2s;
 }
 

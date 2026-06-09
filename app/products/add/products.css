@@ -1,4 +1,4 @@
-/* 📦 PRODUCTS MANAGEMENT PAGE */
+﻿/* 📦 PRODUCTS MANAGEMENT PAGE */
 
 .dashboard-container {
   max-width: 1400px;
@@ -27,7 +27,7 @@
 /* ALERTS */
 .alert {
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin-bottom: 1.5rem;
 }
 
@@ -41,7 +41,7 @@
 .filters-card {
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 1.5rem;
   display: flex;
@@ -68,7 +68,7 @@
 .filter-select {
   padding: 0.75rem;
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   transition: all 0.3s;
 }
@@ -86,7 +86,7 @@
   justify-content: space-between;
   padding: 1rem 1.5rem;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin-bottom: 1.5rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
@@ -102,7 +102,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 
 .spinner {
@@ -110,7 +110,7 @@
   height: 50px;
   border: 4px solid #e5e7eb;
   border-top-color: #667eea;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
 }
@@ -122,7 +122,7 @@
 /* TABLE */
 .table-container {
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
@@ -169,7 +169,7 @@
   width: 60px;
   height: 60px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 2px solid #e5e7eb;
 }
 
@@ -177,7 +177,7 @@
   width: 60px;
   height: 60px;
   background: #f3f4f6;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -198,14 +198,14 @@
   background: #fef3c7;
   color: #92400e;
   padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   font-size: 0.85rem;
 }
 
 /* STOCK BADGE */
 .stock-badge {
   padding: 0.35rem 0.75rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.85rem;
 }
@@ -236,7 +236,7 @@
   width: 36px;
   height: 36px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s;
@@ -272,7 +272,7 @@
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -314,7 +314,7 @@
   margin-top: 2rem;
   padding: 1.5rem;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -323,7 +323,7 @@
   background: white;
   color: #374151;
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
@@ -360,7 +360,7 @@
 
 .modal-content {
   background: white;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
@@ -422,7 +422,7 @@
   height: 36px;
   border: none;
   background: #f3f4f6;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   cursor: pointer;
   font-size: 1.2rem;
   color: #6b7280;
@@ -458,7 +458,7 @@
   width: 100%;
   padding: 0.75rem;
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 1rem;
   font-family: inherit;
   transition: all 0.3s;
@@ -505,7 +505,7 @@
 .image-preview-item {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   border: 2px solid #e5e7eb;
 }
@@ -525,7 +525,7 @@
   border: none;
   background: rgba(239, 68, 68, 0.9);
   color: white;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   cursor: pointer;
   font-size: 1rem;
   display: flex;

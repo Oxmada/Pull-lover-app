@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Contact — page /contact
    ============================================= */
 
@@ -75,7 +75,7 @@
     gap: 14px;
     padding: 14px 16px;
     background: #faf9f7;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     border: 1px solid #e5e7eb;
 }
 
@@ -133,7 +133,7 @@
     color: #1a1a1a;
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     padding: 10px 14px;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -166,7 +166,7 @@
     color: #ffffff;
     background-color: #1a1a1a;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     padding: 12px 24px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -189,7 +189,7 @@
     font-weight: 500;
     margin: 0;
     padding: 10px 14px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
 }
 
 .contact__feedback--success {
@@ -207,7 +207,7 @@
 /* ── Image ── */
 
 .contact__image-side {
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     background-color: #e5e7eb;
     position: sticky;

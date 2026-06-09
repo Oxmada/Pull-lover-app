@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Admin — Gestion des commandes
    Palette : #C95D5D | #0f172a | #f5f5f4
    ============================================= */
@@ -26,7 +26,7 @@
   background: #fff;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -54,7 +54,7 @@
   background: #fff;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -70,7 +70,7 @@
 .ap-toolbar {
   background: #fff;
   border: 1px solid #e7e5e4;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 12px 16px;
   margin-bottom: 16px;
   display: flex;
@@ -84,7 +84,7 @@
   min-width: 200px;
   padding: 8px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-family: inherit;
   color: #0f172a;
@@ -107,7 +107,7 @@
 .ap-filter-btn {
   padding: 7px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #57534e;
   font-size: 12px;
@@ -129,7 +129,7 @@
   gap: 8px;
   padding: 8px 15px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #0f172a;
   font-size: 13px;
@@ -160,7 +160,7 @@
   padding: 5px 0;
   background: #fff;
   border: 1px solid #e7e5e4;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   min-width: 150px;
   animation: ap-drop-fade 0.15s ease;
@@ -189,7 +189,7 @@
 .ap-sort-btn {
   padding: 8px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -238,7 +238,7 @@
 /* ── Table ── */
 .ap-table-wrap {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #e7e5e4;
   overflow-x: auto;
 }
@@ -285,7 +285,7 @@
   right: 24px;
   z-index: 9999;
   padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -316,7 +316,7 @@
 
 .ap-confirm-dialog {
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
   padding: 28px 28px 20px;
   max-width: 360px;
@@ -338,7 +338,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -352,7 +352,7 @@
   background: #be123c;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   font-family: inherit;
@@ -376,7 +376,7 @@
   background: #fff;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -400,7 +400,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
@@ -416,7 +416,7 @@
   background: #fff1f2;
   color: #be123c;
   border: 1.5px solid #fecdd3;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -442,7 +442,7 @@
 .ao-avatar {
   width: 34px;
   height: 34px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: #0f172a;
   color: #fff;
   font-size: 12px;
@@ -495,7 +495,7 @@
 .ao-payment {
   display: inline-flex;
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -509,7 +509,7 @@
 /* Status select */
 .ao-status-select {
   padding: 5px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 11px;
   font-weight: 700;
   border: none;

@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/app/components/CartContext";
 import { useFavorites } from "@/app/components/FavoritesContext";
+import { ButtonPrimary, ButtonSecondary } from "@/app/components/ui/Button";
+import { BadgePromo } from "@/app/components/ui/Tag";
 import "./product-detail.css";
 
 export default function ProductDetailPage() {
@@ -219,7 +221,7 @@ export default function ProductDetailPage() {
               />
 
               {product.promoPrice && (
-                <span className="promo-badge">-{getDiscount()}%</span>
+                <BadgePromo>-{getDiscount()}%</BadgePromo>
               )}
 
               <button
@@ -363,12 +365,13 @@ export default function ProductDetailPage() {
 
             {/* Ajouter au panier */}
             {product.stock > 0 ? (
-              <button
-                className={`add-to-cart-btn ${addedToCart ? "added" : ""}`}
+              <ButtonPrimary
+                full
                 onClick={handleAddToCart}
+                className={addedToCart ? "added" : ""}
               >
                 {addedToCart ? "Ajouté au panier ✓" : "Ajouter au panier"}
-              </button>
+              </ButtonPrimary>
             ) : (
               <p className="out-of-stock-msg">Rupture de stock</p>
             )}
@@ -436,9 +439,9 @@ export default function ProductDetailPage() {
             })}
           </div>
 
-          <button className="write-review-btn" onClick={() => setShowReviewForm(!showReviewForm)}>
+          <ButtonSecondary onClick={() => setShowReviewForm(!showReviewForm)}>
             Écrire un avis
-          </button>
+          </ButtonSecondary>
 
           {showReviewForm && (
             <div className="review-form">
@@ -456,7 +459,7 @@ export default function ProductDetailPage() {
                   </span>
                 ))}
               </div>
-              <button onClick={submitReview} className="submit-review-btn">Envoyer mon avis</button>
+              <ButtonPrimary onClick={submitReview}>Envoyer mon avis</ButtonPrimary>
             </div>
           )}
         </div>

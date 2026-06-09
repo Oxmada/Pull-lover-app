@@ -4,6 +4,7 @@ import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
+import { ButtonPrimary } from "../../components/ui/Button";
 import "./login.css";
 
 export default function LoginPage() {
@@ -80,9 +81,9 @@ export default function LoginPage() {
 
           {error && <p className="login-error">{error}</p>}
 
-          <button className="login-btn" onClick={handleLogin} disabled={loading}>
+          <ButtonPrimary full onClick={handleLogin} disabled={loading}>
             {loading ? "Connexion..." : "Se connecter"}
-          </button>
+          </ButtonPrimary>
 
           <div className="login-divider">
             <span /><p>Ou continuer avec</p><span />

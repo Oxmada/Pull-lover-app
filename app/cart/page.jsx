@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "../components/CartContext";
 import { useState } from "react";
+import { ButtonPrimary, ButtonSecondary } from "../components/ui/Button";
 import "./cart.css";
 
 export default function CartPage() {
@@ -65,9 +66,9 @@ export default function CartPage() {
                   {/* PRIX + REMOVE */}
                   <div className="cart-item-right">
                     <span className="cart-item-price">{item.promoPrice ?? item.price} €</span>
-                    <button className="cart-remove" onClick={() => removeFromCart(item.cartKey)}>
+                    <ButtonSecondary size="sm" onClick={() => removeFromCart(item.cartKey)}>
                       Supprimer
-                    </button>
+                    </ButtonSecondary>
                   </div>
 
                 </li>
@@ -105,9 +106,9 @@ export default function CartPage() {
                 <span>Total</span>
                 <span>{total} €</span>
               </div>
-              <button className="checkout-btn" onClick={() => router.push("/checkout")}>
+              <ButtonPrimary full onClick={() => router.push("/checkout")}>
                 Procéder au paiement
-              </button>
+              </ButtonPrimary>
             </div>
           </div>
 

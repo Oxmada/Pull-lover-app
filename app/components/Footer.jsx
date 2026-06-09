@@ -7,8 +7,8 @@ const LogoCoeur = () => (
   <img
     src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
     alt="Pull-lover logo"
-    width={40}
-    height={40}
+    width={26}
+    height={26}
   />
 );
 
@@ -121,6 +121,9 @@ export default function Footer() {
         <p className="footer-copyright">©2026 Pull-lover. All rights reserved.</p>
         <Link href="/mentions-legales" className="footer-legal-link">
           Mentions légales
+        </Link>
+        <Link href="/conditions-de-vente" className="footer-legal-link">
+          Conditions de vente
         </Link>
         <Link href="/politique-de-confidentialite" className="footer-legal-link">
           Politique de confidentialité

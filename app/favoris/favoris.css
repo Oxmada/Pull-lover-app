@@ -1,4 +1,4 @@
-/* ── PAGE ── */
+﻿/* ── PAGE ── */
 .favoris-page {
   min-height: 100vh;
   background: #faf8f7;
@@ -20,7 +20,7 @@
 
 .favoris-bg span {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   filter: blur(60px);
 }
 
@@ -153,7 +153,7 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   text-decoration: none;
   letter-spacing: 0.03em;
   transition: background 0.2s;
@@ -173,7 +173,7 @@
 /* ── CARTE ── */
 .fav-card {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   border: 1px solid #E5E7EB;
   overflow: hidden;
   display: flex;
@@ -208,19 +208,11 @@
 }
 
 /* ── BADGE PROMO ── */
-.fav-badge {
+.badge-promo {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 2;
-  background: #C95D5D;
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.04em;
 }
 
 /* ── BOUTON CŒUR (supprimer) ── */
@@ -231,7 +223,7 @@
   z-index: 2;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.9);
   border: none;
   cursor: pointer;
@@ -327,7 +319,7 @@
   font-size: 12px;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   letter-spacing: 0.03em;
   transition: background 0.2s;
@@ -352,7 +344,7 @@
   font-size: 11px;
   font-weight: 500;
   border: 1px solid #E5E7EB;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }

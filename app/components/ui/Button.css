@@ -1,4 +1,4 @@
-.btn {
+﻿.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -7,7 +7,7 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.03em;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1.5px solid transparent;
   padding: 12px 28px;
   cursor: pointer;

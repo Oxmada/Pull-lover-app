@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCart } from "../components/CartContext";
 import { useFavorites } from "../components/FavoritesContext";
+import { ButtonPrimary, ButtonGhost } from "../components/ui/Button";
+import { BadgePromo } from "../components/ui/Tag";
 import "./boutique.css";
 
 const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
@@ -205,9 +207,9 @@ function BoutiqueContent() {
 
                   {/* Badge promo — haut gauche */}
                   {product.promoPrice && (
-                    <span className="badge-promo">
+                    <BadgePromo>
                       -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                    </span>
+                    </BadgePromo>
                   )}
 
                   {/* IMAGE */}
@@ -255,8 +257,8 @@ function BoutiqueContent() {
 
                   {/* Bouton panier — apparaît au hover */}
                   <div className="product-bottom">
-                    <button
-                      className="add-to-cart-btn"
+                    <ButtonPrimary
+                      full
                       disabled={!product.isAvailable || product.stock === 0}
                       onClick={() =>
                         addToCart({
@@ -270,7 +272,7 @@ function BoutiqueContent() {
                       }
                     >
                       Ajouter au panier
-                    </button>
+                    </ButtonPrimary>
                   </div>
                 </div>
 
@@ -284,12 +286,11 @@ function BoutiqueContent() {
       {!loading && totalPages > 1 && (
         <div className="pagination">
           {currentPage < totalPages && (
-            <button
-              className="voir-plus-btn"
+            <ButtonGhost
               onClick={() => setCurrentPage(currentPage + 1)}
             >
               Voir plus
-            </button>
+            </ButtonGhost>
           )}
           <p className="pagination-info">
             {Math.min(indexOfLastProduct, sortedProducts.length)} / {sortedProducts.length} produits

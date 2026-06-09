@@ -1,4 +1,4 @@
-/* globals.css */
+﻿/* globals.css */
 
 :root {
   /* Typographie */
@@ -11,6 +11,12 @@
   --dark: #0f172a;
   --white: #ffffff;
   --error: #ef4444;
+
+  /* Border-radius */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-full: 50%;
 
   /* Gris — palette complète */
   --gray-100: #f8fafc;
@@ -71,7 +77,7 @@ body {
 .btn {
   display: inline-block;
   padding: 1rem 2.5rem;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;

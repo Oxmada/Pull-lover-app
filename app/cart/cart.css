@@ -1,4 +1,4 @@
-/* ── PAGE ── */
+﻿/* ── PAGE ── */
 .cart-page {
   min-height: 100vh;
   background: #faf8f7;
@@ -47,7 +47,7 @@
 
 .cart-bg span {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   filter: blur(60px);
 }
 
@@ -124,7 +124,7 @@
 .cart-left {
   flex: 1;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #E5E7EB;
   padding: 28px 40px;
   display: flex;
@@ -170,7 +170,7 @@
 
 .cart-list::-webkit-scrollbar { width: 4px; }
 .cart-list::-webkit-scrollbar-track { background: transparent; }
-.cart-list::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 4px; }
+.cart-list::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: var(--radius-sm); }
 
 /* ── ITEM ── */
 .cart-item {
@@ -195,7 +195,7 @@
   width: 60px !important;
   height: 60px !important;
   background: #f5f5f5;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   flex-shrink: 0 !important;
 }
@@ -255,7 +255,7 @@
   color: #111;
   font-size: 14px;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -324,7 +324,7 @@
 /* ── CODE PROMO ── */
 .cart-promo {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #E5E7EB;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 20px 50px rgba(201, 93, 93, 0.08);
@@ -339,7 +339,7 @@
   flex: 1;
   padding: 10px 14px;
   border: 1px solid #E5E7EB;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   outline: none;
   font-family: 'Montserrat', sans-serif;
@@ -358,7 +358,7 @@
   padding: 10px 16px;
   background: #fff;
   border: 1px solid #E5E7EB;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -377,7 +377,7 @@
 /* ── RÉSUMÉ ── */
 .cart-summary {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #E5E7EB;
   padding: 20px;
   display: flex;
@@ -418,7 +418,7 @@
   font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   letter-spacing: 0.03em;
   font-family: 'Montserrat', sans-serif;
@@ -443,7 +443,7 @@
   .cart-left {
     width: 307px;
     flex: none;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     padding: 20px;
     gap: 20px;
     overflow-y: auto;
@@ -473,7 +473,7 @@
   .cart-left {
     width: 100%;
     flex: none;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     padding: 20px;
     gap: 20px;
     max-height: 378px;

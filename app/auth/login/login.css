@@ -1,4 +1,4 @@
-/* ── PAGE ── */
+﻿/* ── PAGE ── */
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -20,7 +20,7 @@
 
 .login-bg span {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   filter: blur(60px);
 }
 
@@ -88,7 +88,7 @@
   width: 100%;
   max-width: 480px;
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -121,7 +121,7 @@
   align-items: center;
   height: 50px;
   border: 1px solid #E5E7EB;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 10px 20px;
   gap: 10px;
   background: #fff;
@@ -214,7 +214,7 @@
   font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.03em;
@@ -256,7 +256,7 @@
 .login-social button {
   height: 50px;
   border: 1px solid #E5E7EB;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: #fff;
   font-size: 13px;
   font-weight: 500;

@@ -1,4 +1,4 @@
-.lifestyle-section {
+﻿.lifestyle-section {
     width: 100%;
     background: #fff;
     padding: 100px 0 60px 0;
@@ -14,7 +14,7 @@
 .lifestyle-band {
     display: grid;
     grid-template-columns: 1fr 420px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     height: 480px;
     background: #c95d5d;

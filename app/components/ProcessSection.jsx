@@ -1,5 +1,6 @@
 "use client";
 
+import { Eyebrow } from "./ui/Tag";
 import "./ProcessSection.css";
 
 const T = "translate(0,680) scale(0.06640625,-0.06640625)";
@@ -62,7 +63,7 @@ export default function ProcessSection() {
 
                 {/* En-tête */}
                 <div className="process-header">
-                    <p className="process-label">Notre processus</p>
+                    <Eyebrow>Notre processus</Eyebrow>
                     <h2 className="process-title">Comment ça fonctionne ?</h2>
                     <p className="process-subtitle">
                         De la commande à la livraison, nous prenons soin de chaque étape pour vous offrir une expérience unique et sans souci.

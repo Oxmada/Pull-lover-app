@@ -1,4 +1,4 @@
-/* Header.css — Pull-lover */
+﻿/* Header.css — Pull-lover */
 
 @import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Montserrat:wght@600;700&display=swap');
 
@@ -115,7 +115,7 @@
     min-width: 18px;
     height: 18px;
     padding: 0 4px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     background: #C95D5D;
     color: #fff;
     font-size: 11px;
@@ -195,7 +195,7 @@
         z-index: 110;
         width: 32px;
         height: 32px;
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         border: 1.5px solid #e7e5e4;
         background: #fafaf9;
         color: #78716c;
@@ -238,7 +238,7 @@
     right: 0;
     background: #fff;
     border: 1px solid #E5E7EB;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     padding: 12px;
     min-width: 180px;
@@ -278,7 +278,7 @@
     font-weight: 500;
     color: #1a1a1a;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     transition: background 0.15s;
 }
 
@@ -297,7 +297,7 @@
     color: #e53935;
     cursor: pointer;
     text-align: left;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     transition: background 0.15s, color 0.15s;
 }
 
@@ -309,6 +309,6 @@
 .h-nav-link--admin {
     background: rgba(0, 0, 0, 0.06);
     padding: 0.3rem 0.75rem;
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     font-size: 0.85rem;
 }

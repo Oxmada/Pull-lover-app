@@ -1,4 +1,4 @@
-/* CounterTime.css */
+﻿/* CounterTime.css */
 
 .ct-section {
     width: 100%;
@@ -78,7 +78,7 @@
     background: #f3f4f6;
     border: 0.5px solid #e5e7eb;
     padding: 2px 10px;
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     margin-top: 2px;
 }
 
@@ -165,7 +165,7 @@
     height: 120px;
     background: #ffffff;
     border: 1.5px solid #1a1a1a;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     font-family: 'Montserrat', sans-serif;
     font-size: 3rem;
     font-weight: 700;
@@ -196,7 +196,7 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 5px 0;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
 }
 
 /* ── Barre de progression ──
@@ -206,7 +206,7 @@
     height: 12px;
     background: #ffffff;
     border: 1.5px solid #1a1a1a;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     overflow: hidden;
 }
 
@@ -253,7 +253,7 @@
         width: 66px;
         height: 92px;
         font-size: 2.25rem;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
     }
 
     .ct-sep {
@@ -273,7 +273,7 @@
     .ct-label {
         font-size: 0.58rem;
         padding: 4px 0;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
     }
 
     .ct-progress-track {
@@ -373,7 +373,7 @@
         width: 100%;
         height: 70px;
         font-size: 1.75rem;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
     }
 
     .ct-sep {
@@ -385,13 +385,13 @@
     .ct-label {
         font-size: 0.55rem;
         padding: 4px 0;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
         letter-spacing: 0.1em;
     }
 
     /* Barre de progression */
     .ct-progress-track {
         height: 9px;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
     }
 }

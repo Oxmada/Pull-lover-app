@@ -1,4 +1,4 @@
-/* product-detail.css */
+﻿/* product-detail.css */
 
 /* ── VARIABLES ── */
 .product-detail-page {
@@ -44,7 +44,7 @@
 .product-detail-page .main-image {
   position: relative;
   background: #f3f4f6;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 12px;
   width: 100%;
@@ -58,17 +58,10 @@
   display: block;
 }
 
-.product-detail-page .promo-badge {
+.product-detail-page .badge-promo {
   position: absolute;
   top: 14px;
   left: 14px;
-  background: var(--brand);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.04em;
 }
 
 .product-detail-page .wishlist-btn {
@@ -79,7 +72,7 @@
   height: 40px;
   background: white;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all var(--t);
@@ -104,7 +97,7 @@
   height: 40px;
   background: white;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   font-size: 22px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -134,7 +127,7 @@
   width: 76px;
   height: 76px;
   border: 2px solid transparent;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
   transition: border-color var(--t);
@@ -221,7 +214,7 @@
   background: var(--brand-light);
   color: var(--brand);
   padding: 4px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-size: 13px;
   font-weight: 600;
 }
@@ -312,7 +305,7 @@
 .product-detail-page .size-btn {
   width: 46px;
   height: 46px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: 1.5px solid var(--border);
   background: white;
   cursor: pointer;
@@ -351,7 +344,7 @@
 .product-detail-page .color-btn {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: 3px solid transparent;
   cursor: pointer;
   transition: all var(--t);
@@ -365,33 +358,12 @@
   transform: scale(1.1);
 }
 
-/* ── BOUTON AJOUTER AU PANIER (outlined) ── */
-.product-detail-page .add-to-cart-btn {
-  width: 100%;
-  padding: 16px 28px;
-  background: white;
-  color: var(--dark);
-  border: 1.5px solid var(--dark);
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background var(--t), color var(--t);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ── BOUTON AJOUTER AU PANIER ── */
+.product-detail-page .product-info > .btn-primary {
+  margin-top: 16px;
 }
 
-.product-detail-page .add-to-cart-btn:hover {
-  background: var(--dark);
-  color: white;
-}
-
-.product-detail-page .add-to-cart-btn.added {
+.product-detail-page .product-info .btn-primary.added {
   background: #16a34a;
   border-color: #16a34a;
   color: white;
@@ -427,7 +399,7 @@
   gap: 28px;
   padding: 20px;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   margin-bottom: 28px;
 }
@@ -481,14 +453,14 @@
   flex: 1;
   height: 6px;
   background: var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
 .product-detail-page .rating-bar .bar-fill {
   height: 100%;
   background: var(--gold);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 
 .product-detail-page .rating-bar .bar-count {
@@ -561,7 +533,7 @@
   letter-spacing: 0.04em;
   transition: background var(--t);
   padding: 12px 28px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-size: 13px;
 }
 
@@ -570,7 +542,7 @@
 .product-detail-page .review-form {
   background: white;
   padding: 24px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   margin-top: 16px;
 }
@@ -580,7 +552,7 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   margin-bottom: 12px;
   font-size: 14px;
   font-family: 'Montserrat', sans-serif;
@@ -633,7 +605,7 @@
   letter-spacing: 0.04em;
   transition: background var(--t);
   padding: 11px 24px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-size: 13px;
 }
 
@@ -644,7 +616,7 @@
   color: #16a34a;
   border: 1px solid #bbf7d0;
   padding: 12px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   margin-bottom: 16px;
   font-size: 13px;
   font-weight: 500;
@@ -681,7 +653,7 @@
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background: #f3f4f6;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   margin-bottom: 10px;
 }
 
@@ -731,7 +703,7 @@
   height: 36px;
   border: 2.5px solid var(--border);
   border-top-color: var(--brand);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   animation: spin 0.8s linear infinite;
 }
 

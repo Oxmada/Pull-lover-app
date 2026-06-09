@@ -1,4 +1,4 @@
-/* ── Chip — étiquette matière non-cliquable ── */
+﻿/* ── Chip — étiquette matière non-cliquable ── */
 .chip {
   display: inline-block;
   font-family: var(--font-montserrat, 'Montserrat', sans-serif);
@@ -8,7 +8,7 @@
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   padding: 5px 14px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
@@ -34,7 +34,7 @@
   color: #fff;
   background: #C95D5D;
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   letter-spacing: 0.02em;
   white-space: nowrap;
 }

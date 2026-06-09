@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import { ButtonPrimary } from "./ui/Button";
+import { Chip, Eyebrow } from "./ui/Tag";
 import "./NotreMarque.css";
 
 const STATS = [
@@ -28,13 +29,13 @@ export default function NotreMarque() {
                 <div className="nm-container">
                     <div className="nm-intro__inner reveal" ref={introRef}>
                         <div className="nm-intro__left">
-                            <p className="nm-eyebrow">Notre marque</p>
+                            <Eyebrow className="nm-eyebrow">Notre marque</Eyebrow>
                             <h1 className="nm-intro__heading">
                                 Pull Lover, une marque, une histoire
                             </h1>
                             <div className="nm-chips">
                                 {CHIPS.map((c) => (
-                                    <span key={c} className="nm-chip">{c}</span>
+                                    <Chip key={c}>{c}</Chip>
                                 ))}
                             </div>
                         </div>
@@ -84,7 +85,7 @@ export default function NotreMarque() {
             <section className="nm-video-section">
                 <div className="nm-container">
                     <div className="nm-video-section__header reveal" ref={videoHeaderRef}>
-                        <p className="nm-eyebrow">Notre atelier</p>
+                        <Eyebrow className="nm-eyebrow">Notre atelier</Eyebrow>
                         <h2 className="nm-video-section__heading">
                             Voir comment chaque pièce prend vie
                         </h2>
@@ -147,16 +148,16 @@ export default function NotreMarque() {
             <section className="nm-cta">
                 <div className="nm-container">
                     <div className="nm-cta__inner reveal" ref={ctaRef}>
-                        <p className="nm-eyebrow">Notre collection</p>
+                        <Eyebrow className="nm-eyebrow">Notre collection</Eyebrow>
                         <h2 className="nm-cta__heading">
                             Prêt à trouver votre prochain coup de cœur ?
                         </h2>
                         <p className="nm-cta__sub">
                             Découvrez nos pulls et accessoires faits main, créés à Antananarivo.
                         </p>
-                        <Link href="/nos-mailles" className="nm-cta__btn">
+                        <ButtonPrimary href="/nos-mailles" size="lg">
                             Voir la collection
-                        </Link>
+                        </ButtonPrimary>
                     </div>
                 </div>
             </section>

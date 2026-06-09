@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Admin — Gestion des clients
    Palette : #C95D5D | #0f172a | #f5f5f4
    ============================================= */
@@ -27,7 +27,7 @@
   background: #fff;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -56,7 +56,7 @@
   background: #C95D5D;
   color: #fff;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   font-family: inherit;
@@ -75,7 +75,7 @@
 .ap-toolbar {
   background: #fff;
   border: 1px solid #e7e5e4;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 12px 16px;
   margin-bottom: 16px;
   display: flex;
@@ -89,7 +89,7 @@
   min-width: 220px;
   padding: 8px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-family: inherit;
   color: #0f172a;
@@ -108,7 +108,7 @@
 .ap-filter-btn {
   padding: 8px 15px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #57534e;
   font-size: 13px;
@@ -156,7 +156,7 @@
 /* ── Table ── */
 .ap-table-wrap {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #e7e5e4;
   overflow-x: auto;
 }
@@ -202,7 +202,7 @@
   height: 42px;
   background: #0f172a;
   color: #fff;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -251,7 +251,7 @@
   background: #f0f9ff;
   color: #0369a1;
   border: 1px solid #bae6fd;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 13px;
   font-weight: 700;
   padding: 3px 12px;
@@ -267,7 +267,7 @@
 }
 
 /* ── Badges statut ── */
-.ap-badge       { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
+.ap-badge       { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: var(--radius-lg); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
 .ap-badge-ok    { background: #f0fdf4; color: #15803d; }
 .ap-badge-out   { background: #fff1f2; color: #be123c; }
 
@@ -282,7 +282,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
@@ -299,7 +299,7 @@
   background: #f5f5f4;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -314,7 +314,7 @@
   background: #f0fdf4;
   color: #15803d;
   border: 1.5px solid #bbf7d0;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -329,7 +329,7 @@
   background: #fff1f2;
   color: #be123c;
   border: 1.5px solid #fecdd3;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -358,7 +358,7 @@
   background: #0f172a;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -376,7 +376,7 @@
   right: 24px;
   z-index: 9999;
   padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -408,7 +408,7 @@
 
 .ap-confirm-dialog {
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
   padding: 28px 28px 20px;
   max-width: 360px;
@@ -430,7 +430,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -445,7 +445,7 @@
   background: #be123c;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   font-family: inherit;
@@ -481,7 +481,7 @@
   background: #fef9c3;
   color: #854d0e;
   border: 1px solid #fde68a;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -516,7 +516,7 @@
   background: #fff;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -541,7 +541,7 @@
   padding: 14px 16px;
   border-top: 1px solid #f5f5f4;
   background: #fafaf9;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
   flex-wrap: wrap;
 }
 
@@ -550,7 +550,7 @@
   background: #fff;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -572,7 +572,7 @@
   background: #fff;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;

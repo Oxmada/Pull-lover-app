@@ -1,4 +1,4 @@
-/* ── PAGE ── */
+﻿/* ── PAGE ── */
 .verify-page {
   min-height: 100vh;
   display: flex;
@@ -20,7 +20,7 @@
 
 .verify-bg span {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   filter: blur(60px);
 }
 
@@ -88,7 +88,7 @@
   width: 100%;
   max-width: 480px;
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -108,7 +108,7 @@
 .verify-icon {
   width: 72px;
   height: 72px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,7 +151,7 @@
   font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.03em;
@@ -168,7 +168,7 @@
   height: 52px;
   border: 3px solid #E5E7EB;
   border-top-color: #C95D5D;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   animation: spin 0.9s linear infinite;
 }
 

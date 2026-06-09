@@ -1,4 +1,4 @@
-/* ── CONTAINER ── */
+﻿/* ── CONTAINER ── */
 .boutique-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -159,7 +159,7 @@
   color: #1a1a1a;
   font-size: 0.875rem;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: background 0.2s, color 0.2s;
   font-family: var(--font-montserrat, 'Montserrat', sans-serif);
   letter-spacing: 0.04em;

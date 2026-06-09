@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCart } from "@/app/components/CartContext";
+import { ButtonPrimary, ButtonGhost } from "@/app/components/ui/Button";
 import "./checkout.css";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -139,9 +140,9 @@ function CheckoutInner() {
 
       <div className="checkout-inner">
 
-        <button className="checkout-back" onClick={() => router.back()}>
-          ← Retour
-        </button>
+        <ButtonGhost onClick={() => router.back()}>
+          Retour
+        </ButtonGhost>
 
         <div className="checkout-wrapper">
 
@@ -261,13 +262,13 @@ function CheckoutInner() {
 
             {errorMsg && <p className="checkout-error">{errorMsg}</p>}
 
-            <button
-              className="checkout-submit"
+            <ButtonPrimary
+              full
               onClick={handleSubmit}
               disabled={loading || !stripe}
             >
               {loading ? "Traitement en cours..." : `Payer ${total} €`}
-            </button>
+            </ButtonPrimary>
 
           </div>
 

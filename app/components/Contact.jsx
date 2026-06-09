@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
+import { ButtonPrimary } from "./ui/Button";
 import "./Contact.css";
 
 const INFOS = [
@@ -121,13 +122,13 @@ export default function Contact() {
                             />
                         </div>
 
-                        <button
+                        <ButtonPrimary
                             type="submit"
-                            className="contact__btn"
+                            full
                             disabled={status === "loading"}
                         >
                             {status === "loading" ? "Envoi en cours..." : "Envoyer"}
-                        </button>
+                        </ButtonPrimary>
 
                         {status === "success" && (
                             <p className="contact__feedback contact__feedback--success">

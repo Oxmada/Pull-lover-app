@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════
+﻿/* ═══════════════════════════════════════
    DASHBOARD CLIENT — CSS
 ═══════════════════════════════════════ */
 
@@ -45,7 +45,7 @@
 .user-avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: #c0616a;
   color: #fff;
   display: flex;
@@ -174,7 +174,7 @@
 .db-kpi-card {
   background: #fff;
   border: 1px solid #e2e5ea;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
@@ -206,7 +206,7 @@
 .db-card {
   background: #fff;
   border: 1px solid #e2e5ea;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin: 20px auto;
   padding: 20px 24px;
   max-width: 960px;
@@ -256,7 +256,7 @@
 .db-profile-avatar {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   object-fit: cover;
   border: 2px solid #e2e5ea;
   margin-left: auto;
@@ -266,7 +266,7 @@
 .db-profile-avatar-placeholder {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: #c0616a;
   color: #fff;
   display: flex;
@@ -342,7 +342,7 @@
 .db-badge {
   display: inline-block;
   padding: 3px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
@@ -407,7 +407,7 @@
   color: #c0616a;
   background: none;
   border: 1px dashed #c0616a;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   padding: 8px 14px;
   transition: background 0.15s;
@@ -432,7 +432,7 @@
   width: 28px; height: 28px;
   border: 2px solid #e8e8e4;
   border-top-color: #c0616a;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -578,7 +578,7 @@
 .order-card {
   background: #fff;
   border: 1px solid #e2e5ea;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
@@ -631,7 +631,7 @@
 .timeline-dot {
   width: 26px;
   height: 26px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -697,7 +697,7 @@
   background: #fef2f2;
   color: #dc2626;
   padding: 12px 16px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   text-align: center;
   margin-bottom: 14px;
@@ -737,7 +737,7 @@
 .db-form-input {
   padding: 10px 12px;
   border: 1px solid #e2e5ea;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   color: #1a1a1a;
   background: #fff;
@@ -769,7 +769,7 @@
   background: #1a1a1a;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -785,7 +785,7 @@
   color: #15803d;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   margin: 0;
 }
@@ -795,7 +795,7 @@
   color: #b91c1c;
   background: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   margin: 0;
 }
@@ -829,7 +829,7 @@
     padding: 12px 0;
     justify-content: center;
     border-left: none;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     margin: 0 8px;
   }
 

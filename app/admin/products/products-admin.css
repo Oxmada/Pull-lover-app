@@ -1,4 +1,4 @@
-/* =============================================
+﻿/* =============================================
    Admin — Gestion des produits
    Layout : topbar compacte + table pleine largeur
    Palette : #C95D5D | #0f172a | #f5f5f4
@@ -27,7 +27,7 @@
   background: #fff;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -60,7 +60,7 @@
   background: #C95D5D;
   color: #fff;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   font-family: inherit;
@@ -82,7 +82,7 @@
   background: #fff;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -98,7 +98,7 @@
 .ap-toolbar {
   background: #fff;
   border: 1px solid #e7e5e4;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 12px 16px;
   margin-bottom: 16px;
   display: flex;
@@ -120,7 +120,7 @@
   min-width: 200px;
   padding: 8px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-family: inherit;
   color: #0f172a;
@@ -141,7 +141,7 @@
   background: #0f172a;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -168,7 +168,7 @@
 .ap-filter-btn {
   padding: 8px 15px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #57534e;
   font-size: 13px;
@@ -193,7 +193,7 @@
   gap: 8px;
   padding: 8px 15px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #0f172a;
   font-size: 13px;
@@ -226,7 +226,7 @@
   padding: 5px 0;
   background: #fff;
   border: 1px solid #e7e5e4;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   min-width: 170px;
   animation: ap-drop-fade 0.15s ease;
@@ -261,7 +261,7 @@
 .ap-sort-btn {
   padding: 8px 13px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -316,7 +316,7 @@
 /* ── Table ── */
 .ap-table-wrap {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid #e7e5e4;
   overflow-x: auto;
 }
@@ -366,7 +366,7 @@
   width: 50px;
   height: 50px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid #e7e5e4;
   flex-shrink: 0;
 }
@@ -375,7 +375,7 @@
   width: 50px;
   height: 50px;
   background: #f5f5f4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -397,7 +397,7 @@
   width: 62px;
   padding: 6px 8px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   text-align: center;
   font-size: 14px;
   font-weight: 600;
@@ -411,7 +411,7 @@
 .ap-stock-input:focus { border-color: #C95D5D; background: #fff; }
 
 /* Badges */
-.ap-badge        { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
+.ap-badge        { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: var(--radius-lg); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
 .ap-badge-ok     { background: #f0fdf4; color: #15803d; }
 .ap-badge-low    { background: #fffbeb; color: #b45309; }
 .ap-badge-out    { background: #fff1f2; color: #be123c; }
@@ -424,7 +424,7 @@
   background: #f5f5f4;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -439,7 +439,7 @@
   background: #fff1f2;
   color: #be123c;
   border: 1.5px solid #fecdd3;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
@@ -467,7 +467,7 @@
   right: 24px;
   z-index: 9999;
   padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -499,7 +499,7 @@
 
 .ap-modal {
   background: #fff;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
   width: 100%;
   max-width: 480px;
@@ -528,7 +528,7 @@
 .ap-modal-close {
   width: 30px;
   height: 30px;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   border: 1.5px solid #e7e5e4;
   background: #fafaf9;
   color: #78716c;
@@ -561,7 +561,7 @@
   flex-direction: column;
   align-items: center;
   padding: 3px 7px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
   min-width: 36px;
@@ -595,7 +595,7 @@
   position: relative;
   width: 36px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
   transition: background 0.2s;
@@ -611,7 +611,7 @@
   top: 3px;
   width: 14px;
   height: 14px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   background: #fff;
   transition: left 0.2s;
   box-shadow: 0 1px 3px rgba(0,0,0,0.18);
@@ -635,7 +635,7 @@
 
 .ap-confirm-dialog {
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
   padding: 28px 28px 20px;
   max-width: 360px;
@@ -661,7 +661,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -676,7 +676,7 @@
   background: #be123c;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
   font-family: inherit;
@@ -701,7 +701,7 @@
   background: #fff;
   color: #0f172a;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -727,7 +727,7 @@
 .ap-category-select {
   padding: 8px 12px;
   border: 1.5px solid #e7e5e4;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -750,7 +750,7 @@
   background: #f5f5f4;
   color: #57534e;
   border: 1.5px solid #e7e5e4;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;

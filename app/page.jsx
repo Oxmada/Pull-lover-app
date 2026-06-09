@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ButtonPrimary, ButtonGhost } from "./components/ui/Button";
+import { Eyebrow, BadgePromo } from "./components/ui/Tag";
 import "./home.css";
 import CounterTime from "./components/CounterTime";
 import AproposSection from "./components/AproposSection";
@@ -61,18 +63,18 @@ export default function HomePage() {
           <div className="container-pro">
             <div className="promo-header-pro">
               <div>
-                <span className="promo-label">Offres spéciales</span>
+                <Eyebrow>Offres spéciales</Eyebrow>
                 <h2>Jusqu'à -50% sur une sélection</h2>
               </div>
-              <Link href="/nos-mailles?promo=true" className="btn-view-all">Tout voir →</Link>
+              <ButtonGhost href="/nos-mailles?promo=true">Tout voir →</ButtonGhost>
             </div>
             <div className="products-grid-pro">
               {promoProducts.map((product) => (
                 <Link href={`/products/${product._id}`} key={product._id} className="product-card-pro">
                   {product.promoPrice && (
-                    <span className="product-discount">
+                    <BadgePromo>
                       -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                    </span>
+                    </BadgePromo>
                   )}
                   <div className="product-image-pro">
                     <img src={product.image || "/no-image.png"} alt={product.name} />
@@ -168,7 +170,7 @@ export default function HomePage() {
                     onChange={(e) => setNlEmail(e.target.value)}
                     required
                   />
-                  <button className="vn-nl-btn" type="submit">S'inscrire</button>
+                  <ButtonPrimary type="submit">S'inscrire</ButtonPrimary>
                 </form>
                 {nlStatus === "success" && (
                   <p className="vn-nl-feedback vn-nl-feedback--ok">Inscription confirmée !</p>
