@@ -145,6 +145,16 @@ const NotreCollectionSection = () => {
                                 </div>
                             );
                         })}
+
+                        {/* Slide CTA — visible uniquement dans le carrousel mobile */}
+                        <div className="ncs-card ncs-card-cta">
+                            <div className="ncs-cta-body">
+                                <p className="ncs-cta-text">Découvrez toute<br />notre collection</p>
+                                <ButtonPrimary href="/nos-mailles?sort=newest">
+                                    Voir tous les produits
+                                </ButtonPrimary>
+                            </div>
+                        </div>
                     </div>
                 )}
 

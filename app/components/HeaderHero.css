@@ -212,10 +212,10 @@
   .hero-container {
     flex-direction: column-reverse;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 40px;
     text-align: left;
-    padding: 110px 1.5rem 2rem; /* 88px navbar + 22px breathing room */
+    padding: 2rem 1.5rem;
   }
 
   .hero-section {
@@ -234,11 +234,13 @@
   }
 
   .hero-content-right {
+    position: absolute;
+    top: 108px;
+    left: 1.5rem;
     display: flex;
     justify-content: flex-start;
     padding: 0;
-    flex: none;
-    width: 100%;
+    width: auto;
   }
 
   .social-vertical {
@@ -276,9 +278,15 @@
     padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 
+  .hero-content-right {
+    left: 1.5rem;
+    right: 1.5rem;
+    width: auto;
+    justify-content: center;
+  }
+
   .hero-badge {
     width: fit-content;
-    margin: 0 auto;
     font-size: 0.75rem;
     padding: 0.6rem 1.2rem;
   }
