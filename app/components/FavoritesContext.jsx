@@ -1,14 +1,12 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 
 const FavoritesContext = createContext();
 
 export function FavoritesProvider({ children }) {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +25,7 @@ export function FavoritesProvider({ children }) {
 
   const toggleFavorite = useCallback(async (product) => {
     if (!session) {
-      router.push(`/auth/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`);
+      signIn(undefined, { callbackUrl: window.location.href });
       return;
     }
 
@@ -48,7 +46,7 @@ export function FavoritesProvider({ children }) {
         body: JSON.stringify({ productId: product._id }),
       }).catch(console.error);
     }
-  }, [session, favorites, router]);
+  }, [session, favorites]);
 
   const isFavorite = useCallback(
     (id) => favorites.some((p) => p._id === id),

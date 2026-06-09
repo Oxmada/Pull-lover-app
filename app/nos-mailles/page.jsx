@@ -5,6 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFavorites } from "../components/FavoritesContext";
+import { ButtonPrimary, ButtonGhost } from "../components/ui/Button";
+import { BadgePromo } from "../components/ui/Tag";
+import "../components/NotreCollectionSection.css";
 import "./nos-mailles.css";
 
 const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
@@ -36,7 +39,6 @@ function NosMaillesContent() {
     router.push(`/nos-mailles?${newParams.toString()}`);
   };
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== search) {
@@ -93,8 +95,6 @@ function NosMaillesContent() {
     router.push("/nos-mailles");
   };
 
-  const hasActiveFilters = search || category;
-
   return (
     <div className="boutique-container">
 
@@ -141,23 +141,14 @@ function NosMaillesContent() {
         </div>
       </div>
 
-      {/* RESET */}
-      {hasActiveFilters && (
-        <div className="active-filters-bar">
-          <button className="reset-btn" onClick={resetFilters}>
-            Réinitialiser les filtres
-          </button>
-        </div>
-      )}
-
       {/* SKELETON */}
       {loading && (
         <div className="products-grid">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="skeleton-card">
-              <div className="skeleton-image" />
-              <div className="skeleton-line" />
-              <div className="skeleton-line short" />
+            <div key={i} className="ncs-skeleton">
+              <div className="ncs-skeleton-img" />
+              <div className="ncs-skeleton-text" />
+              <div className="ncs-skeleton-text ncs-skeleton-text--short" />
             </div>
           ))}
         </div>
@@ -181,11 +172,11 @@ function NosMaillesContent() {
             const isOutOfStock = product.stock === 0 || !product.isAvailable;
 
             return (
-              <div className="product-card" key={product._id}>
+              <div className="ncs-card" key={product._id}>
 
-                <div className="product-image-outer">
+                <div className="ncs-card-image-outer">
                   <button
-                    className={`wishlist-btn ${isFavorite(product._id) ? "active" : ""}`}
+                    className={`ncs-wishlist-btn ${isFavorite(product._id) ? "active" : ""}`}
                     onClick={() => toggleFavorite(product)}
                     aria-label="Ajouter aux favoris"
                   >
@@ -195,19 +186,19 @@ function NosMaillesContent() {
                   </button>
 
                   {product.promoPrice && (
-                    <span className="badge-promo">
+                    <BadgePromo>
                       -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                    </span>
+                    </BadgePromo>
                   )}
 
-                  <Link href={`/products/${product._id}`} className="product-image-link">
-                    <div className={`product-image-wrap ${isOutOfStock ? "out-of-stock" : ""} ${hasSecondary ? "has-secondary" : ""}`}>
+                  <Link href={`/products/${product._id}`} className="ncs-card-image-link">
+                    <div className={`ncs-card-image-wrap ${isOutOfStock ? "out-of-stock" : ""} ${hasSecondary ? "has-secondary" : ""}`}>
                       <Image
                         src={product.image || "/no-image.png"}
                         alt={product.name}
                         width={400}
                         height={480}
-                        className="product-img product-img-primary"
+                        className="ncs-card-img ncs-card-img-primary"
                       />
                       {hasSecondary && (
                         <Image
@@ -215,38 +206,38 @@ function NosMaillesContent() {
                           alt={product.name}
                           width={400}
                           height={480}
-                          className="product-img product-img-secondary"
+                          className="ncs-card-img ncs-card-img-secondary"
                         />
                       )}
                       {isOutOfStock && (
-                        <div className="stock-overlay">Rupture de stock</div>
+                        <div className="ncs-stock-overlay">Rupture de stock</div>
                       )}
                     </div>
                   </Link>
                 </div>
 
-                <div className="product-info">
-                  <Link href={`/products/${product._id}`} className="product-name">
+                <div className="ncs-card-info">
+                  <Link href={`/products/${product._id}`} className="ncs-card-name">
                     {product.name}
                   </Link>
 
-                  <div className="product-price">
+                  <div className="ncs-card-price">
                     {product.promoPrice ? (
                       <>
-                        <span className="price-promo">{product.promoPrice.toLocaleString()} €</span>
-                        <span className="price-old">{product.price.toLocaleString()} €</span>
+                        <span className="ncs-price-promo">{product.promoPrice.toLocaleString()} €</span>
+                        <span className="ncs-price-old">{product.price.toLocaleString()} €</span>
                       </>
                     ) : (
-                      <span className="price-normal">{product.price.toLocaleString()} €</span>
+                      <span className="ncs-price-current">{product.price.toLocaleString()} €</span>
                     )}
                   </div>
 
                   {product.colors?.length > 0 && (
-                    <div className="color-swatches">
+                    <div className="ncs-color-swatches">
                       {product.colors.map((color, i) => (
                         <span
                           key={i}
-                          className="color-swatch"
+                          className="ncs-color-swatch"
                           title={color.name}
                           style={{ background: color.code || "#ccc" }}
                         />
@@ -254,10 +245,10 @@ function NosMaillesContent() {
                     </div>
                   )}
 
-                  <div className="product-bottom">
-                    <Link href={`/products/${product._id}`} className="add-to-cart-btn">
+                  <div className="ncs-card-bottom">
+                    <ButtonPrimary href={`/products/${product._id}`} size="sm">
                       Voir le produit
-                    </Link>
+                    </ButtonPrimary>
                   </div>
                 </div>
 
@@ -270,12 +261,11 @@ function NosMaillesContent() {
       {/* VOIR PLUS */}
       {!loading && currentPage < totalPages && (
         <div className="pagination">
-          <button
-            className="voir-plus-btn"
+          <ButtonGhost
             onClick={() => updateURL({ page: String(currentPage + 1) })}
           >
             Voir plus
-          </button>
+          </ButtonGhost>
         </div>
       )}
     </div>

@@ -80,7 +80,7 @@ const AproposSection = () => {
                         </div>
 
                         {/* Bouton — 40px après les chips */}
-                        <ButtonPrimary href="/NotreMarque" style={{ marginTop: "40px" }}>En savoir plus</ButtonPrimary>
+                        <ButtonPrimary href="/NotreMarque" style={{ marginTop: "40px", alignSelf: "flex-start" }}>En savoir plus</ButtonPrimary>
 
                     </div>
                 </div>

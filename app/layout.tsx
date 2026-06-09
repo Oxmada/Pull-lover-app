@@ -12,8 +12,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "MyShop",
-  description: "Boutique en ligne",
+  title: "Pull Lover",
+  description: "Boutique de mailles artisanales faites main à Antananarivo",
 };
 
 export const viewport = {
