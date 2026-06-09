@@ -119,6 +119,9 @@ export default function Footer() {
       {/* ── BOTTOM BAR ── */}
       <div className="footer-bottom-row">
         <p className="footer-copyright">©2026 Pull-lover. All rights reserved.</p>
+        <Link href="/mentions-legales" className="footer-legal-link">
+          Mentions légales
+        </Link>
         <Link href="/politique-de-confidentialite" className="footer-legal-link">
           Politique de confidentialité
         </Link>
