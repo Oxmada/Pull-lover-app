@@ -771,7 +771,3 @@
   .ap-topbar   { flex-wrap: wrap; }
   .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
 }
-
-@media (max-width: 768px) {
-  .ap-page { padding-top: 68px; }
-}

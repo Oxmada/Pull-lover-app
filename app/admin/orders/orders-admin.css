@@ -542,7 +542,3 @@
   .ap-topbar { flex-wrap: wrap; }
   .ap-filters { display: none; }
 }
-
-@media (max-width: 768px) {
-  .ap-page { padding-top: 68px; }
-}

@@ -31,9 +31,6 @@
   .title     { font-size: 20px; }
 }
 
-@media (max-width: 768px) {
-  .container { padding-top: 68px; }
-}
 
 @media (max-width: 640px) {
   .container { padding: 12px; }
