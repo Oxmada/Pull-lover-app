@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -8,16 +8,16 @@ const PER_PAGE = 20;
 
 const STATUS_OPTIONS = [
   { value: "pending",    label: "En attente"     },
-  { value: "confirmed",  label: "ConfirmÃ©e"      },
-  { value: "processing", label: "En prÃ©paration" },
-  { value: "paid",       label: "PayÃ©e"          },
-  { value: "shipped",    label: "ExpÃ©diÃ©e"       },
-  { value: "delivered",  label: "LivrÃ©e"         },
-  { value: "cancelled",  label: "AnnulÃ©e"        },
+  { value: "confirmed",  label: "Confirmée"      },
+  { value: "processing", label: "En préparation" },
+  { value: "paid",       label: "Payée"          },
+  { value: "shipped",    label: "Expédiée"       },
+  { value: "delivered",  label: "Livrée"         },
+  { value: "cancelled",  label: "Annulée"        },
 ];
 
 const PAYMENT_LABELS = {
-  cash:          "EspÃ¨ces",
+  cash:          "Espèces",
   mobile_money:  "Mobile Money",
   card:          "Carte",
   bank_transfer: "Virement",
@@ -26,10 +26,10 @@ const PAYMENT_LABELS = {
 const STATUS_FILTERS = [
   { label: "Toutes",      value: ""           },
   { label: "En attente",  value: "pending"    },
-  { label: "PrÃ©paration", value: "processing" },
-  { label: "ExpÃ©diÃ©es",   value: "shipped"    },
-  { label: "LivrÃ©es",     value: "delivered"  },
-  { label: "AnnulÃ©es",    value: "cancelled"  },
+  { label: "Préparation", value: "processing" },
+  { label: "Expédiées",   value: "shipped"    },
+  { label: "Livrées",     value: "delivered"  },
+  { label: "Annulées",    value: "cancelled"  },
 ];
 
 const SORT_OPTIONS = [
@@ -110,7 +110,7 @@ export default function AdminOrdersPage() {
       const data = await res.json();
       if (!res.ok) { showToast(data.message || "Erreur lors du changement de statut", "error"); return; }
       setOrders(prev => prev.map(o => o._id === data._id ? data : o));
-      showToast("Statut mis Ã  jour");
+      showToast("Statut mis à jour");
     } catch {
       showToast("Erreur serveur", "error");
     } finally {
@@ -120,14 +120,14 @@ export default function AdminOrdersPage() {
 
   const deleteOrder = (id) => {
     askConfirm(
-      "Supprimer cette commande dÃ©finitivement ?",
+      "Supprimer cette commande définitivement ?",
       async () => {
         try {
           const res  = await fetch(`/api/admin/orders/${id}`, { method: "DELETE" });
           const data = await res.json();
           if (res.ok) {
             setOrders(prev => prev.filter(o => o._id !== id));
-            showToast("Commande supprimÃ©e");
+            showToast("Commande supprimée");
           } else {
             showToast(data.message || "Impossible de supprimer", "error");
           }
@@ -150,7 +150,7 @@ export default function AdminOrdersPage() {
       const data = await res.json();
       if (!data.orders) return;
 
-      const headers = ["PrÃ©nom","Nom","Email","TÃ©lÃ©phone","Adresse","Ville","Total (â‚¬)","Paiement","Statut","Date"];
+      const headers = ["Prénom","Nom","Email","Téléphone","Adresse","Ville","Total (€)","Paiement","Statut","Date"];
       const rows = data.orders.map(o => {
         const c = o.customer || {};
         return [
@@ -164,7 +164,7 @@ export default function AdminOrdersPage() {
       });
 
       const csv  = [headers.join(";"), ...rows].join("\n");
-      const blob = new Blob(["ï»¿" + csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
@@ -203,7 +203,7 @@ export default function AdminOrdersPage() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Commandes</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Exportâ€¦" : "â†“ Export CSV"}
+          {exporting ? "Export…" : "↓ Export CSV"}
         </button>
       </div>
 
@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
       <div className="ap-toolbar">
         <input
           type="text"
-          placeholder="Rechercher par nom, email, villeâ€¦"
+          placeholder="Rechercher par nom, email, ville…"
           value={search}
           onChange={e => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
           className="ap-search-input"
@@ -236,7 +236,7 @@ export default function AdminOrdersPage() {
         <div className="ap-sort-wrap" ref={sortRef}>
           <button className="ap-sort-trigger" onClick={() => setSortOpen(o => !o)}>
             {SORT_OPTIONS.find(o => o.value === sort)?.label}
-            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>â–¼</span>
+            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>▼</span>
           </button>
           {sortOpen && (
             <ul className="ap-sort-dropdown">
@@ -247,14 +247,14 @@ export default function AdminOrdersPage() {
                   onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
                 >
                   {o.label}
-                  {sort === o.value && <span className="ap-sort-check">âœ“</span>}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
                 </li>
               ))}
             </ul>
           )}
         </div>
         <button onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")} className="ap-sort-btn">
-          {sortDir === "asc" ? "â†‘" : "â†“"}
+          {sortDir === "asc" ? "↑" : "↓"}
         </button>
 
         {stats && (
@@ -273,12 +273,12 @@ export default function AdminOrdersPage() {
               <div className="ap-stat-sep" />
               <div className="ap-stat-chip ok">
                 <span className="ap-stat-chip-value">{stats.delivered}</span>
-                <span className="ap-stat-chip-label">LivrÃ©es</span>
+                <span className="ap-stat-chip-label">Livrées</span>
               </div>
               <div className="ap-stat-sep" />
               <div className="ap-stat-chip danger">
                 <span className="ap-stat-chip-value">{stats.cancelled}</span>
-                <span className="ap-stat-chip-label">AnnulÃ©es</span>
+                <span className="ap-stat-chip-label">Annulées</span>
               </div>
             </div>
           </>
@@ -288,9 +288,9 @@ export default function AdminOrdersPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">â³</span>Chargementâ€¦</div>
+          <div className="ap-state"><span className="ap-state-icon">��</span>Chargement…</div>
         ) : orders.length === 0 ? (
-          <div className="ap-state"><span className="ap-state-icon">ðŸ“­</span>Aucune commande trouvÃ©e</div>
+          <div className="ap-state"><span className="ap-state-icon">📭</span>Aucune commande trouvée</div>
         ) : (
           <table className="ap-table">
             <thead>
@@ -308,7 +308,7 @@ export default function AdminOrdersPage() {
             <tbody>
               {orders.map(o => {
                 const c        = o.customer || {};
-                const fullName = [c.firstname, c.lastname].filter(Boolean).join(" ") || c.name || "â€”";
+                const fullName = [c.firstname, c.lastname].filter(Boolean).join(" ") || c.name || "—";
                 const initials = ((c.firstname?.[0] || "") + (c.lastname?.[0] || "")).toUpperCase() || "?";
 
                 return (
@@ -332,11 +332,11 @@ export default function AdminOrdersPage() {
                       </div>
                     </td>
                     <td>
-                      <span className="ao-total">{(o.total || 0).toLocaleString()} â‚¬</span>
+                      <span className="ao-total">{(o.total || 0).toLocaleString()} €</span>
                     </td>
                     <td>
                       <span className={`ao-payment ao-payment-${o.payment}`}>
-                        {PAYMENT_LABELS[o.payment] || o.payment || "â€”"}
+                        {PAYMENT_LABELS[o.payment] || o.payment || "—"}
                       </span>
                     </td>
                     <td>
@@ -353,12 +353,12 @@ export default function AdminOrdersPage() {
                     </td>
                     <td>
                       <span className="ap-date">
-                        {o.createdAt ? new Date(o.createdAt).toLocaleDateString("fr-FR") : "â€”"}
+                        {o.createdAt ? new Date(o.createdAt).toLocaleDateString("fr-FR") : "—"}
                       </span>
                     </td>
                     <td>
                       <div className="ap-actions">
-                        <Link href={`/admin/orders/${o._id}`} className="ap-btn-view" title="Voir le dÃ©tail">â†—</Link>
+                        <Link href={`/admin/orders/${o._id}`} className="ap-btn-view" title="Voir le détail">↗</Link>
                         <button className="ap-btn-delete" onClick={() => deleteOrder(o._id)}>
                           Supprimer
                         </button>
@@ -376,14 +376,14 @@ export default function AdminOrdersPage() {
       {pagination.totalPages > 1 && (
         <div className="ap-pagination">
           <button className="ap-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-            â† PrÃ©c.
+            � Préc.
           </button>
           <span className="ap-page-info">
             Page {page} / {pagination.totalPages}
-            <span className="ap-page-total"> â€” {pagination.total} commandes</span>
+            <span className="ap-page-total"> — {pagination.total} commandes</span>
           </span>
           <button className="ap-page-btn" disabled={page === pagination.totalPages} onClick={() => setPage(p => p + 1)}>
-            Suiv. â†’
+            Suiv. →
           </button>
         </div>
       )}
