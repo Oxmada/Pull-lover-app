@@ -123,29 +123,15 @@
   white-space: nowrap;
 }
 
-/* ── Footer ── */
-.admin-sidebar-footer {
-  padding: 16px 20px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.admin-logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px 0;
+/* ── Bouton déconnexion (dans la nav) ── */
+.admin-nav-logout {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 13px;
-  color: #888;
-  font-weight: 500;
-  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
-  transition: color 0.15s;
+  text-align: left;
+  width: 100%;
+  margin-top: auto;
 }
-
-.admin-logout-btn:hover { color: #c0616a; }
 
 /* ── Bottom nav (mobile) ── */
 .admin-bottom-nav {
@@ -192,20 +178,10 @@
     width: auto;
   }
 
-  .admin-sidebar-footer {
-    padding: 12px 0;
-    display: flex;
+  .admin-nav-logout {
     justify-content: center;
-  }
-
-  .admin-logout-btn {
-    justify-content: center;
-    padding: 10px 0;
+    margin: 0 8px;
     width: auto;
-  }
-
-  .admin-logout-btn span {
-    display: none;
   }
 }
 

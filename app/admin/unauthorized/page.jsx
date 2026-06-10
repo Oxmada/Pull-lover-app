@@ -7,16 +7,16 @@ export default function UnauthorizedPage() {
       <div className={styles.card}>
         <div className={styles.icon}>🚫</div>
 
-        <h1 className={styles.title}>Accès refusé</h1>
+        <h1 className={styles.title}>Acc�s refus�</h1>
 
         <p className={styles.text}>
-          Cette zone est réservée aux administrateurs.
-          Vous n’avez pas les autorisations nécessaires.
+          Cette zone est r�serv�e aux administrateurs.
+          Vous n�avez pas les autorisations n�cessaires.
         </p>
 
         <div className={styles.actions}>
           <Link href="/" className={styles.buttonPrimary}>
-            Retour à l’accueil
+            Retour � l�accueil
           </Link>
 
           <Link href="/login" className={styles.buttonSecondary}>

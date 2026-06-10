@@ -7,16 +7,16 @@ import "./order-detail.css";
 
 const STATUS_OPTIONS = [
   { value: "pending",    label: "En attente"     },
-  { value: "confirmed",  label: "Confirmée"      },
-  { value: "processing", label: "En préparation" },
-  { value: "paid",       label: "Payée"          },
-  { value: "shipped",    label: "Expédiée"       },
-  { value: "delivered",  label: "Livrée"         },
-  { value: "cancelled",  label: "Annulée"        },
+  { value: "confirmed",  label: "Confirm�e"      },
+  { value: "processing", label: "En pr�paration" },
+  { value: "paid",       label: "Pay�e"          },
+  { value: "shipped",    label: "Exp�di�e"       },
+  { value: "delivered",  label: "Livr�e"         },
+  { value: "cancelled",  label: "Annul�e"        },
 ];
 
 const PAYMENT_LABELS = {
-  cash:          "Espèces",
+  cash:          "Esp�ces",
   mobile_money:  "Mobile Money",
   card:          "Carte bancaire",
   bank_transfer: "Virement bancaire",
@@ -62,7 +62,7 @@ export default function AdminOrderDetailPage() {
       const data = await res.json();
       if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
       setOrder(data);
-      showToast("Statut mis à jour — email envoyé au client");
+      showToast("Statut mis � jour � email envoy� au client");
     } catch {
       showToast("Erreur serveur", "error");
     } finally {
@@ -73,7 +73,7 @@ export default function AdminOrderDetailPage() {
   if (loading) {
     return (
       <div className="od-page">
-        <div className="od-loading">Chargement…</div>
+        <div className="od-loading">Chargement�</div>
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function AdminOrderDetailPage() {
   if (!order) return null;
 
   const c           = order.customer || {};
-  const fullName    = [c.firstname, c.lastname].filter(Boolean).join(" ") || "—";
+  const fullName    = [c.firstname, c.lastname].filter(Boolean).join(" ") || "�";
   const initials    = ((c.firstname?.[0] || "") + (c.lastname?.[0] || "")).toUpperCase() || "?";
   const orderNumber = order._id.toString().slice(-8).toUpperCase();
 
@@ -134,13 +134,13 @@ export default function AdminOrderDetailPage() {
           )}
         </div>
 
-        {/* ── Résumé ── */}
+        {/* ── R�sum� ── */}
         <div className="od-card">
-          <h2 className="od-card-title">Résumé</h2>
+          <h2 className="od-card-title">R�sum�</h2>
           <div className="od-summary-row">
             <span className="od-summary-label">Paiement</span>
             <span className={`ao-payment ao-payment-${order.payment}`}>
-              {PAYMENT_LABELS[order.payment] || order.payment || "—"}
+              {PAYMENT_LABELS[order.payment] || order.payment || "�"}
             </span>
           </div>
           <div className="od-summary-row">
@@ -149,14 +149,14 @@ export default function AdminOrderDetailPage() {
           </div>
           <div className="od-summary-row od-summary-total">
             <span className="od-summary-label">Total</span>
-            <span className="od-total-value">{(order.total || 0).toLocaleString()} €</span>
+            <span className="od-total-value">{(order.total || 0).toLocaleString()} �</span>
           </div>
         </div>
 
         {/* ── Changer le statut ── */}
         <div className="od-card">
           <h2 className="od-card-title">Changer le statut</h2>
-          <p className="od-status-hint">Un email est envoyé automatiquement au client.</p>
+          <p className="od-status-hint">Un email est envoy� automatiquement au client.</p>
           <div className="od-status-grid">
             {STATUS_OPTIONS.map(s => (
               <button
@@ -177,13 +177,13 @@ export default function AdminOrderDetailPage() {
       {/* ── Produits ── */}
       {order.products?.length > 0 && (
         <div className="od-card od-products-card">
-          <h2 className="od-card-title">Articles commandés</h2>
+          <h2 className="od-card-title">Articles command�s</h2>
           <table className="od-products-table">
             <thead>
               <tr>
                 <th>Produit</th>
-                <th>Référence</th>
-                <th>Quantité</th>
+                <th>R�f�rence</th>
+                <th>Quantit�</th>
               </tr>
             </thead>
             <tbody>
@@ -197,13 +197,13 @@ export default function AdminOrderDetailPage() {
                           ? <img src={p.image} alt={p.name} className="od-product-img" />
                           : <div className="od-product-no-img">👕</div>
                         }
-                        <span className="od-product-name">{p.name || "Produit supprimé"}</span>
+                        <span className="od-product-name">{p.name || "Produit supprim�"}</span>
                       </div>
                     </td>
                     <td className="od-product-ref">
-                      {p._id ? p._id.toString().slice(-8).toUpperCase() : "—"}
+                      {p._id ? p._id.toString().slice(-8).toUpperCase() : "�"}
                     </td>
-                    <td className="od-product-qty">× {item.quantity || 1}</td>
+                    <td className="od-product-qty">� {item.quantity || 1}</td>
                   </tr>
                 );
               })}

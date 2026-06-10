@@ -9,12 +9,12 @@ const VIP_THRESHOLD = 50_000;
 
 const ORDER_STATUS = {
   pending:    { label: "En attente",  cls: "s-pending"    },
-  confirmed:  { label: "Confirmée",   cls: "s-confirmed"  },
+  confirmed:  { label: "Confirm�e",   cls: "s-confirmed"  },
   processing: { label: "En cours",    cls: "s-processing" },
-  paid:       { label: "Payée",       cls: "s-paid"       },
-  shipped:    { label: "Expédiée",    cls: "s-shipped"    },
-  delivered:  { label: "Livrée",      cls: "s-delivered"  },
-  cancelled:  { label: "Annulée",     cls: "s-cancelled"  },
+  paid:       { label: "Pay�e",       cls: "s-paid"       },
+  shipped:    { label: "Exp�di�e",    cls: "s-shipped"    },
+  delivered:  { label: "Livr�e",      cls: "s-delivered"  },
+  cancelled:  { label: "Annul�e",     cls: "s-cancelled"  },
 };
 
 export default function CustomerDetailPage() {
@@ -79,7 +79,7 @@ export default function CustomerDetailPage() {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (data.success) { setCustomer(data.customer); setEditing(false); showToast("Client mis à jour"); }
+      if (data.success) { setCustomer(data.customer); setEditing(false); showToast("Client mis � jour"); }
       else showToast("Erreur de sauvegarde", "error");
     } catch { showToast("Erreur de sauvegarde", "error"); }
     finally { setSaving(false); }
@@ -88,7 +88,7 @@ export default function CustomerDetailPage() {
   const toggleStatus = () => {
     const newStatus = customer.status === "active" ? "blocked" : "active";
     askConfirm(
-      `Voulez-vous vraiment ${newStatus === "blocked" ? "bloquer" : "débloquer"} ${customer.firstname} ${customer.lastname} ?`,
+      `Voulez-vous vraiment ${newStatus === "blocked" ? "bloquer" : "d�bloquer"} ${customer.firstname} ${customer.lastname} ?`,
       async () => {
         const res  = await fetch(`/api/customers/${id}`, {
           method: "PUT",
@@ -96,22 +96,22 @@ export default function CustomerDetailPage() {
           body: JSON.stringify({ status: newStatus }),
         });
         const data = await res.json();
-        if (data.success) { setCustomer(data.customer); showToast(newStatus === "blocked" ? "Client bloqué" : "Client débloqué"); }
+        if (data.success) { setCustomer(data.customer); showToast(newStatus === "blocked" ? "Client bloqu�" : "Client d�bloqu�"); }
       },
-      newStatus === "blocked" ? "Bloquer" : "Débloquer"
+      newStatus === "blocked" ? "Bloquer" : "D�bloquer"
     );
   };
 
   const handleDelete = () => {
     if (orders.length > 0) {
       askConfirm(
-        `Ce client a ${orders.length} commande(s). Il sera anonymisé conformément au RGPD plutôt que supprimé définitivement.`,
+        `Ce client a ${orders.length} commande(s). Il sera anonymis� conform�ment au RGPD plut�t que supprim� d�finitivement.`,
         () => confirmDelete("anonymize"),
         "Anonymiser"
       );
     } else {
       askConfirm(
-        `Supprimer définitivement ${customer.firstname} ${customer.lastname} ? Cette action est irréversible.`,
+        `Supprimer d�finitivement ${customer.firstname} ${customer.lastname} ? Cette action est irr�versible.`,
         () => confirmDelete("delete"),
         "Supprimer"
       );
@@ -122,7 +122,7 @@ export default function CustomerDetailPage() {
     try {
       const res  = await fetch(`/api/customers/${id}?action=${action}`, { method: "DELETE" });
       const data = await res.json();
-      if (data.success) { showToast("Action effectuée"); setTimeout(() => router.push("/admin/customers"), 1500); }
+      if (data.success) { showToast("Action effectu�e"); setTimeout(() => router.push("/admin/customers"), 1500); }
       else showToast("Erreur lors de la suppression", "error");
     } catch { showToast("Erreur lors de la suppression", "error"); }
   };
@@ -132,7 +132,7 @@ export default function CustomerDetailPage() {
     try {
       const res  = await fetch(`/api/orders/${orderId}/resend-email`, { method: "POST" });
       const data = await res.json();
-      if (data.success) showToast("Email de facture renvoyé");
+      if (data.success) showToast("Email de facture renvoy�");
       else showToast("Erreur : " + data.message, "error");
     } catch { showToast("Impossible de contacter le serveur", "error"); }
     finally { setSendingEmail(null); }
@@ -162,12 +162,12 @@ export default function CustomerDetailPage() {
 
   if (loading) return (
     <div className="acd-page">
-      <div className="acd-state">Chargement…</div>
+      <div className="acd-state">Chargement�</div>
     </div>
   );
   if (!customer) return (
     <div className="acd-page">
-      <div className="acd-state">Client non trouvé</div>
+      <div className="acd-state">Client non trouv�</div>
     </div>
   );
 
@@ -211,7 +211,7 @@ export default function CustomerDetailPage() {
               <span className="acd-fullname">{customer.firstname} {customer.lastname}</span>
               {isVip && <span className="acd-vip">VIP</span>}
               <span className={`acd-status-badge ${customer.status === "active" ? "ok" : customer.status === "blocked" ? "blocked" : "anon"}`}>
-                {customer.status === "active" ? "Actif" : customer.status === "blocked" ? "Bloqué" : "Anonymisé"}
+                {customer.status === "active" ? "Actif" : customer.status === "blocked" ? "Bloqu�" : "Anonymis�"}
               </span>
             </div>
             <a href={`mailto:${customer.email}`} className="acd-email-sub">{customer.email}</a>
@@ -223,7 +223,7 @@ export default function CustomerDetailPage() {
             {editing ? (
               <>
                 <button className="acd-btn-primary" onClick={handleSave} disabled={saving}>
-                  {saving ? "Enregistrement…" : "Enregistrer"}
+                  {saving ? "Enregistrement�" : "Enregistrer"}
                 </button>
                 <button className="acd-btn-ghost" onClick={() => setEditing(false)}>Annuler</button>
               </>
@@ -234,7 +234,7 @@ export default function CustomerDetailPage() {
                   className={customer.status === "active" ? "acd-btn-warn" : "acd-btn-success"}
                   onClick={toggleStatus}
                 >
-                  {customer.status === "active" ? "Bloquer" : "Débloquer"}
+                  {customer.status === "active" ? "Bloquer" : "D�bloquer"}
                 </button>
                 <button className="acd-btn-danger" onClick={handleDelete}>Supprimer</button>
               </>
@@ -252,11 +252,11 @@ export default function CustomerDetailPage() {
           {editing ? (
             <div className="acd-form">
               <div className="acd-form-row">
-                {field("firstname", "Prénom")}
+                {field("firstname", "Pr�nom")}
                 {field("lastname",  "Nom")}
               </div>
               {field("email",   "Email",     "email")}
-              {field("phone",   "Téléphone", "tel")}
+              {field("phone",   "T�l�phone", "tel")}
               {field("city",    "Ville")}
               {field("address", "Adresse")}
               <div className="acd-field">
@@ -277,7 +277,7 @@ export default function CustomerDetailPage() {
               </div>
               {customer.phone && (
                 <div className="acd-info-row">
-                  <dt>Téléphone</dt>
+                  <dt>T�l�phone</dt>
                   <dd>{customer.phone}</dd>
                 </div>
               )}
@@ -316,8 +316,8 @@ export default function CustomerDetailPage() {
               <span className="acd-stat-lbl">Commandes</span>
             </div>
             <div className="acd-stat acd-stat--green">
-              <span className="acd-stat-val">{(customer.totalSpent || 0).toLocaleString()} €</span>
-              <span className="acd-stat-lbl">Total dépensé</span>
+              <span className="acd-stat-val">{(customer.totalSpent || 0).toLocaleString()} �</span>
+              <span className="acd-stat-lbl">Total d�pens�</span>
             </div>
             {customer.lastOrderAt && (
               <div className="acd-stat">
@@ -327,7 +327,7 @@ export default function CustomerDetailPage() {
                 >
                   {formatLastOrder(customer.lastOrderAt)}
                 </span>
-                <span className="acd-stat-lbl">Dernière commande</span>
+                <span className="acd-stat-lbl">Derni�re commande</span>
               </div>
             )}
           </div>
@@ -341,13 +341,13 @@ export default function CustomerDetailPage() {
           {orders.length > 0 && <span className="acd-count">{orders.length}</span>}
         </h2>
         {orders.length === 0 ? (
-          <div className="acd-empty">Aucune commande enregistrée</div>
+          <div className="acd-empty">Aucune commande enregistr�e</div>
         ) : (
           <div className="acd-table-wrap">
             <table className="acd-table">
               <thead>
                 <tr>
-                  <th>N° commande</th>
+                  <th>N� commande</th>
                   <th>Date</th>
                   <th>Total</th>
                   <th>Statut</th>
@@ -361,7 +361,7 @@ export default function CustomerDetailPage() {
                     <tr key={order._id}>
                       <td><span className="acd-order-id">#{order._id.slice(-8).toUpperCase()}</span></td>
                       <td>{new Date(order.createdAt).toLocaleDateString("fr-FR")}</td>
-                      <td><span className="acd-order-total">{(order.total || 0).toLocaleString()} €</span></td>
+                      <td><span className="acd-order-total">{(order.total || 0).toLocaleString()} �</span></td>
                       <td><span className={`acd-order-badge ${s.cls}`}>{s.label}</span></td>
                       <td>
                         <div className="acd-actions">
@@ -372,7 +372,7 @@ export default function CustomerDetailPage() {
                             disabled={sendingEmail === order._id}
                             title="Renvoyer la facture par email"
                           >
-                            {sendingEmail === order._id ? "Envoi…" : "Email"}
+                            {sendingEmail === order._id ? "Envoi�" : "Email"}
                           </button>
                         </div>
                       </td>

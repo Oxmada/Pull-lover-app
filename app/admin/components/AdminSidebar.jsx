@@ -97,17 +97,15 @@ export default function AdminSidebar() {
               <span className="admin-nav-label">{label}</span>
             </Link>
           ))}
-        </nav>
 
-        <div className="admin-sidebar-footer">
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="admin-logout-btn"
+            className="admin-nav-item admin-nav-logout"
           >
-            <LogoutIcon />
-            <span>Déconnexion</span>
+            <span className="admin-nav-icon"><LogoutIcon /></span>
+            <span className="admin-nav-label">Déconnexion</span>
           </button>
-        </div>
+        </nav>
       </aside>
 
       {/* Bottom nav mobile */}

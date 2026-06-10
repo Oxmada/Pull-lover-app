@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -46,10 +46,10 @@ export default function AddCategoryPage() {
           onMouseEnter={(e) => { e.currentTarget.style.background = P.text; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = P.text; }}
           onMouseLeave={(e) => { e.currentTarget.style.background = P.card; e.currentTarget.style.color = "#57534e"; e.currentTarget.style.borderColor = P.border; }}
         >
-          â† CatÃ©gories
+          � Catégories
         </Link>
         <h1 style={{ fontSize: "26px", fontWeight: "700", color: P.text, letterSpacing: "-0.5px", margin: 0 }}>
-          Nouvelle catÃ©gorie
+          Nouvelle catégorie
         </h1>
       </div>
 
@@ -64,12 +64,12 @@ export default function AddCategoryPage() {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
             <label style={{ display: "block", fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.08em", color: P.muted, marginBottom: "8px", fontFamily: P.font }}>
-              Nom de la catÃ©gorie
+              Nom de la catégorie
             </label>
             <input
               autoFocus
               type="text"
-              placeholder="Ex : Pulls, Cardigansâ€¦"
+              placeholder="Ex : Pulls, Cardigans…"
               value={name}
               onChange={(e) => setName(e.target.value)}
               style={{
@@ -93,7 +93,7 @@ export default function AddCategoryPage() {
               onMouseEnter={(e) => e.currentTarget.style.background = "#b04d4d"}
               onMouseLeave={(e) => e.currentTarget.style.background = P.accent}
             >
-              CrÃ©er la catÃ©gorie
+              Créer la catégorie
             </button>
             <Link href="/admin/categories" style={{
               padding: "10px 18px", background: "#f5f5f4", color: "#78716c",

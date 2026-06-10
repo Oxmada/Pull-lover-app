@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -53,7 +53,7 @@ export default function CategoriesPage() {
     setNewName("");
     setShowForm(false);
     fetchCategories();
-    showToast("CatÃ©gorie crÃ©Ã©e");
+    showToast("Catégorie créée");
   };
 
   const startEdit = (cat) => { setEditingId(cat._id); setEditName(cat.name); };
@@ -70,7 +70,7 @@ export default function CategoriesPage() {
     if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
     setCategories((prev) => prev.map((c) => c._id === id ? { ...c, name: data.name } : c));
     cancelEdit();
-    showToast("CatÃ©gorie renommÃ©e");
+    showToast("Catégorie renommée");
   };
 
   const handleDelete = async (id, name) => {
@@ -79,7 +79,7 @@ export default function CategoriesPage() {
     const data = await res.json();
     if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
     setCategories((prev) => prev.filter((c) => c._id !== id));
-    showToast("CatÃ©gorie supprimÃ©e");
+    showToast("Catégorie supprimée");
   };
 
   return (
@@ -104,7 +104,7 @@ export default function CategoriesPage() {
       {/* Topbar */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px" }}>
         <h1 style={{ fontSize: "26px", fontWeight: "700", color: P.text, letterSpacing: "-0.5px", flex: 1, margin: 0 }}>
-          CatÃ©gories
+          Catégories
         </h1>
 
         <button
@@ -119,7 +119,7 @@ export default function CategoriesPage() {
           onMouseEnter={(e) => e.currentTarget.style.background = "#b04d4d"}
           onMouseLeave={(e) => e.currentTarget.style.background = P.accent}
         >
-          + Nouvelle catÃ©gorie
+          + Nouvelle catégorie
         </button>
       </div>
 
@@ -133,7 +133,7 @@ export default function CategoriesPage() {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Nom de la catÃ©gorieâ€¦"
+            placeholder="Nom de la catégorie…"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             style={{
@@ -149,7 +149,7 @@ export default function CategoriesPage() {
             border: "none", borderRadius: "8px", fontSize: "13px",
             fontWeight: "600", fontFamily: P.font, cursor: "pointer",
           }}>
-            CrÃ©er
+            Créer
           </button>
           <button type="button" onClick={() => setShowForm(false)} style={{
             padding: "8px 14px", background: "#f5f5f4", color: "#78716c",
@@ -165,17 +165,17 @@ export default function CategoriesPage() {
       <div style={{ background: P.card, border: `1px solid ${P.border}`, borderRadius: "12px", overflow: "hidden" }}>
         {loading ? (
           <div style={{ padding: "60px 24px", textAlign: "center", color: P.muted, fontSize: "15px", fontFamily: P.font }}>
-            Chargementâ€¦
+            Chargement…
           </div>
         ) : categories.length === 0 ? (
           <div style={{ padding: "60px 24px", textAlign: "center", color: P.muted, fontSize: "15px", fontFamily: P.font }}>
-            Aucune catÃ©gorie. CrÃ©ez-en une !
+            Aucune catégorie. Créez-en une !
           </div>
         ) : (
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#fafaf9", borderBottom: `1px solid ${P.border}` }}>
-                {["Nom", "CrÃ©Ã©e le", "Actions"].map((h) => (
+                {["Nom", "Créée le", "Actions"].map((h) => (
                   <th key={h} style={{
                     padding: "11px 18px", textAlign: "left", fontSize: "11px",
                     fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.08em",
@@ -246,7 +246,7 @@ export default function CategoriesPage() {
       {/* Compteur */}
       {!loading && categories.length > 0 && (
         <p style={{ marginTop: "12px", fontSize: "12px", color: P.muted, fontFamily: P.font }}>
-          {categories.length} catÃ©gorie{categories.length > 1 ? "s" : ""}
+          {categories.length} catégorie{categories.length > 1 ? "s" : ""}
         </p>
       )}
     </div>

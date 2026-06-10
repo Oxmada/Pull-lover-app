@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function ProductsManagement() {
 
   useEffect(() => { fetchCategories(); }, []);
 
-  // Fetch immÃ©diat sur tous les filtres sauf search
+  // Fetch immédiat sur tous les filtres sauf search
   useEffect(() => { fetchProducts(); }, [filter, sort, order, categoryFilter, page]);
 
   // Fetch avec debounce sur la recherche textuelle (skip premier rendu)
@@ -61,7 +61,7 @@ export default function ProductsManagement() {
       const data = await res.json();
       setCategories(data.categories || data || []);
     } catch (err) {
-      console.error("Erreur chargement catÃ©gories:", err);
+      console.error("Erreur chargement catégories:", err);
     }
   };
 
@@ -103,21 +103,21 @@ export default function ProductsManagement() {
           prev.map((p) => p._id === product._id ? { ...p, isAvailable: !p.isAvailable } : p)
         );
       } else {
-        showToast("Erreur lors de la mise Ã  jour", "error");
+        showToast("Erreur lors de la mise à jour", "error");
       }
     } catch {
-      showToast("Erreur lors de la mise Ã  jour", "error");
+      showToast("Erreur lors de la mise à jour", "error");
     }
   };
 
   const handleDelete = (productId, productName) => {
-    askConfirm(`Supprimer "${productName}" dÃ©finitivement ?`, async () => {
+    askConfirm(`Supprimer "${productName}" définitivement ?`, async () => {
       try {
         const res  = await fetch(`/api/admin/products?id=${productId}`, { method: "DELETE" });
         const data = await res.json();
         if (data.success) {
           setProducts((prev) => prev.filter((p) => p._id !== productId));
-          showToast("Produit supprimÃ©");
+          showToast("Produit supprimé");
         } else {
           showToast("Erreur lors de la suppression", "error");
         }
@@ -142,7 +142,7 @@ export default function ProductsManagement() {
       if (!res.ok) throw new Error(data.message || "Erreur serveur");
       await fetchProducts();
       closeForm();
-      showToast(editingProduct ? "Produit modifiÃ©" : "Produit ajoutÃ©");
+      showToast(editingProduct ? "Produit modifié" : "Produit ajouté");
     } catch (error) {
       showToast("Erreur : " + error.message, "error");
     }
@@ -161,8 +161,8 @@ export default function ProductsManagement() {
       if (!data.success) return;
 
       const headers = [
-        "Nom", "Marque", "CatÃ©gorie", "Prix (â‚¬)", "Prix promo (â‚¬)",
-        "XS", "S", "M", "L", "XL", "Stock total", "Visible", "AjoutÃ© le",
+        "Nom", "Marque", "Catégorie", "Prix (€)", "Prix promo (€)",
+        "XS", "S", "M", "L", "XL", "Stock total", "Visible", "Ajouté le",
       ];
       const rows = data.products.map(p => [
         p.name,
@@ -178,7 +178,7 @@ export default function ProductsManagement() {
       ].join(";"));
 
       const csv  = [headers.join(";"), ...rows].join("\n");
-      const blob = new Blob(["ï»¿" + csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
@@ -201,7 +201,7 @@ export default function ProductsManagement() {
   ];
 
   const SORT_OPTIONS = [
-    { label: "Date crÃ©ation", value: "createdAt" },
+    { label: "Date création", value: "createdAt" },
     { label: "Nom",           value: "name"      },
     { label: "Prix",          value: "price"     },
     { label: "Stock",         value: "stock"     },
@@ -241,7 +241,7 @@ export default function ProductsManagement() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Produits &amp; Stock</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Exportâ€¦" : "â†“ Export CSV"}
+          {exporting ? "Export…" : "↓ Export CSV"}
         </button>
         <button className="ap-btn-add" onClick={() => { setEditingProduct(null); setShowForm(true); }}>
           + Ajouter un produit
@@ -251,10 +251,10 @@ export default function ProductsManagement() {
       {/* Toolbar */}
       <div className="ap-toolbar">
 
-        {/* Recherche temps rÃ©el */}
+        {/* Recherche temps réel */}
         <input
           type="text"
-          placeholder="Rechercher un produitâ€¦"
+          placeholder="Rechercher un produit…"
           value={search}
           onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
           className="ap-search-input"
@@ -262,13 +262,13 @@ export default function ProductsManagement() {
 
         <div className="ap-divider" />
 
-        {/* Filtre catÃ©gorie */}
+        {/* Filtre catégorie */}
         <select
           value={categoryFilter}
           onChange={(e) => setCatAndReset(e.target.value)}
           className="ap-category-select"
         >
-          <option value="">Toutes catÃ©gories</option>
+          <option value="">Toutes catégories</option>
           {categories.map((c) => (
             <option key={c._id} value={c._id}>{c.name}</option>
           ))}
@@ -295,7 +295,7 @@ export default function ProductsManagement() {
         <div className="ap-sort-wrap" ref={sortRef}>
           <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
             {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>â–¼</span>
+            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>▼</span>
           </button>
           {sortOpen && (
             <ul className="ap-sort-dropdown">
@@ -306,14 +306,14 @@ export default function ProductsManagement() {
                   onClick={() => setSortAndReset(o.value)}
                 >
                   {o.label}
-                  {sort === o.value && <span className="ap-sort-check">âœ“</span>}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
                 </li>
               ))}
             </ul>
           )}
         </div>
         <button onClick={() => setOrder(order === "asc" ? "desc" : "asc")} className="ap-sort-btn">
-          {order === "asc" ? "â†‘" : "â†“"}
+          {order === "asc" ? "↑" : "↓"}
         </button>
 
         {/* Stats inline */}
@@ -343,20 +343,20 @@ export default function ProductsManagement() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">â³</span>Chargementâ€¦</div>
+          <div className="ap-state"><span className="ap-state-icon">��</span>Chargement…</div>
         ) : products.length === 0 ? (
-          <div className="ap-state"><span className="ap-state-icon">ðŸ“­</span>Aucun produit trouvÃ©</div>
+          <div className="ap-state"><span className="ap-state-icon">📭</span>Aucun produit trouvé</div>
         ) : (
           <table className="ap-table">
             <thead>
               <tr>
                 <th>Produit</th>
-                <th>CatÃ©gorie</th>
+                <th>Catégorie</th>
                 <th>Prix</th>
                 <th>Stock par taille</th>
                 <th>Statut</th>
                 <th>Visible</th>
-                <th>AjoutÃ© le</th>
+                <th>Ajouté le</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -367,7 +367,7 @@ export default function ProductsManagement() {
                     <div className="ap-product-cell">
                       {product.image
                         ? <img src={product.image} alt={product.name} className="ap-product-img" />
-                        : <div className="ap-product-no-img">ðŸ‘•</div>
+                        : <div className="ap-product-no-img">👕</div>
                       }
                       <div>
                         <span className="ap-product-name">{product.name}</span>
@@ -375,15 +375,15 @@ export default function ProductsManagement() {
                       </div>
                     </div>
                   </td>
-                  <td>{product.category?.name || <span style={{ color: "#a8a29e" }}>â€”</span>}</td>
+                  <td>{product.category?.name || <span style={{ color: "#a8a29e" }}>—</span>}</td>
                   <td>
                     {product.promoPrice ? (
                       <>
-                        <span className="ap-price-original">{product.price.toLocaleString()} â‚¬</span>
-                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} â‚¬</span>
+                        <span className="ap-price-original">{product.price.toLocaleString()} €</span>
+                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} €</span>
                       </>
                     ) : (
-                      <span className="ap-price">{product.price.toLocaleString()} â‚¬</span>
+                      <span className="ap-price">{product.price.toLocaleString()} €</span>
                     )}
                   </td>
                   <td><StockBySize stocks={product.stocks} /></td>
@@ -392,7 +392,7 @@ export default function ProductsManagement() {
                     <button
                       className={`ap-toggle ${product.isAvailable !== false ? "on" : "off"}`}
                       onClick={() => handleToggleAvailable(product)}
-                      title={product.isAvailable !== false ? "Visible â€” cliquer pour masquer" : "MasquÃ© â€” cliquer pour afficher"}
+                      title={product.isAvailable !== false ? "Visible — cliquer pour masquer" : "Masqué — cliquer pour afficher"}
                     >
                       <span className="ap-toggle-thumb" />
                     </button>
@@ -406,7 +406,7 @@ export default function ProductsManagement() {
                         className="ap-btn-view"
                         title="Voir la fiche produit"
                       >
-                        â†—
+                        ↗
                       </Link>
                       <button className="ap-btn-edit" onClick={() => handleEdit(product)}>Modifier</button>
                       <button className="ap-btn-delete" onClick={() => handleDelete(product._id, product.name)}>Supprimer</button>
@@ -427,18 +427,18 @@ export default function ProductsManagement() {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
           >
-            â† PrÃ©cÃ©dent
+            � Précédent
           </button>
           <span className="ap-page-info">
             Page {pagination.page} / {pagination.pages}
-            <span className="ap-page-total"> â€” {pagination.total} produits</span>
+            <span className="ap-page-total"> — {pagination.total} produits</span>
           </span>
           <button
             className="ap-page-btn"
             onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
             disabled={page === pagination.pages}
           >
-            Suivant â†’
+            Suivant →
           </button>
         </div>
       )}
@@ -454,7 +454,7 @@ export default function ProductsManagement() {
               <h2 className="ap-modal-title">
                 {editingProduct ? "Modifier le produit" : "Ajouter un produit"}
               </h2>
-              <button className="ap-modal-close" onClick={closeForm}>âœ•</button>
+              <button className="ap-modal-close" onClick={closeForm}>✕</button>
             </div>
             <div className="ap-modal-body">
               <ProductForm
@@ -495,7 +495,7 @@ function StockBadge({ stock }) {
 }
 
 function CreatedAt({ date }) {
-  if (!date) return <span style={{ color: "#a8a29e" }}>â€”</span>;
+  if (!date) return <span style={{ color: "#a8a29e" }}>—</span>;
   const d   = new Date(date);
   const day = d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
   return <span className="ap-date">{day}</span>;

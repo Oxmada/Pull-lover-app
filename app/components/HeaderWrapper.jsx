@@ -6,6 +6,9 @@ import HeaderHero from "./HeaderHero";
 
 export default function HeaderWrapper() {
     const pathname = usePathname();
+
+    if (pathname.startsWith("/admin")) return null;
+
     const isHome = pathname === "/";
 
     return (

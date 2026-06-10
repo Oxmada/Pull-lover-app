@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export default function AdminNewsletterPage() {
       body: JSON.stringify({ id }),
     });
     if (res.ok) {
-      showToast("AbonnÃ© supprimÃ©");
+      showToast("Abonné supprimé");
       load();
     } else {
       showToast("Erreur lors de la suppression", "error");
@@ -82,14 +82,14 @@ export default function AdminNewsletterPage() {
       <div className="ap-toolbar">
         <input
           className="ap-search-input"
-          placeholder="Rechercher un emailâ€¦"
+          placeholder="Rechercher un email…"
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
         />
         <div className="ap-stats-inline">
           <div className="ap-stat-chip">
             <span className="ap-stat-chip-value">{total}</span>
-            <span className="ap-stat-chip-label">abonnÃ©s</span>
+            <span className="ap-stat-chip-label">abonnés</span>
           </div>
         </div>
       </div>
@@ -97,9 +97,9 @@ export default function AdminNewsletterPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Chargementâ€¦</p>
+          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Chargement…</p>
         ) : subscribers.length === 0 ? (
-          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Aucun abonnÃ© trouvÃ©.</p>
+          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Aucun abonné trouvé.</p>
         ) : (
           <table className="ap-table">
             <thead>
@@ -142,13 +142,13 @@ export default function AdminNewsletterPage() {
       {totalPages > 1 && (
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
           <button className="ap-filter-btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
-            â† PrÃ©c.
+            � Préc.
           </button>
           <span style={{ padding: "8px 16px", fontSize: 13, color: "#57534e" }}>
             {page} / {totalPages}
           </span>
           <button className="ap-filter-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-            Suiv. â†’
+            Suiv. →
           </button>
         </div>
       )}
