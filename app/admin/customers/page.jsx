@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -30,7 +30,7 @@ export default function CustomersPage() {
   const askConfirm = (message, onConfirm, confirmLabel = "Confirmer") =>
     setConfirmModal({ message, onConfirm, confirmLabel });
 
-  // Debounce search → reset page
+  // Debounce search â†’ reset page
   useEffect(() => {
     const t = setTimeout(() => {
       setPage(1);
@@ -101,19 +101,19 @@ export default function CustomersPage() {
       if (!data.success) return;
 
       const headers = [
-        "Prénom", "Nom", "Email", "Téléphone", "Ville",
-        "Commandes", "Total dépensé (€)", "Dernière commande", "Statut", "Inscrit le",
+        "PrÃ©nom", "Nom", "Email", "TÃ©lÃ©phone", "Ville",
+        "Commandes", "Total dÃ©pensÃ© (â‚¬)", "DerniÃ¨re commande", "Statut", "Inscrit le",
       ];
       const rows = data.customers.map(c => [
         c.firstname, c.lastname, c.email, c.phone || "", c.city || "",
         c.totalOrders, c.totalSpent || 0,
         c.lastOrderAt ? new Date(c.lastOrderAt).toLocaleDateString("fr-FR") : "",
-        c.status === "active" ? "Actif" : "Bloqué",
+        c.status === "active" ? "Actif" : "BloquÃ©",
         new Date(c.createdAt).toLocaleDateString("fr-FR"),
       ].join(";"));
 
       const csv  = [headers.join(";"), ...rows].join("\n");
-      const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob(["ï»¿" + csv], { type: "text/csv;charset=utf-8;" });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
@@ -137,7 +137,7 @@ export default function CustomersPage() {
             body: JSON.stringify({ action: "sync" }),
           });
           const data = await res.json();
-          if (data.success) { showToast(data.message || "Synchronisation terminée"); loadCustomers(); }
+          if (data.success) { showToast(data.message || "Synchronisation terminÃ©e"); loadCustomers(); }
           else showToast("Erreur lors de la synchronisation", "error");
         } catch { showToast("Erreur lors de la synchronisation", "error"); }
         finally { setSyncing(false); }
@@ -156,20 +156,20 @@ export default function CustomersPage() {
       });
       if (res.ok) {
         setCustomers(prev => prev.map(c => c._id === id ? { ...c, status: newStatus } : c));
-        showToast(newStatus === "blocked" ? "Client bloqué" : "Client débloqué");
+        showToast(newStatus === "blocked" ? "Client bloquÃ©" : "Client dÃ©bloquÃ©");
       }
-    } catch { showToast("Erreur lors de la mise à jour", "error"); }
+    } catch { showToast("Erreur lors de la mise Ã  jour", "error"); }
   };
 
   const deleteCustomer = (id, name) => {
     askConfirm(
-      `Supprimer le client "${name}" définitivement ?`,
+      `Supprimer le client "${name}" dÃ©finitivement ?`,
       async () => {
         try {
           const res = await fetch(`/api/customers/${id}`, { method: "DELETE" });
           if (res.ok) {
             setCustomers(prev => prev.filter(c => c._id !== id));
-            showToast("Client supprimé");
+            showToast("Client supprimÃ©");
           } else showToast("Erreur lors de la suppression", "error");
         } catch { showToast("Erreur lors de la suppression", "error"); }
       },
@@ -190,14 +190,14 @@ export default function CustomersPage() {
 
   const SortIcon = ({ field }) =>
     sort === field
-      ? <span className="ac-sort-icon ac-sort-active">{sortDir === "desc" ? " ↓" : " ↑"}</span>
-      : <span className="ac-sort-icon ac-sort-idle"> ⇅</span>;
+      ? <span className="ac-sort-icon ac-sort-active">{sortDir === "desc" ? " â†“" : " â†‘"}</span>
+      : <span className="ac-sort-icon ac-sort-idle"> â‡…</span>;
 
   const STATUS_FILTERS = [
     { label: "Tous",    value: "all"     },
     { label: "Actifs",  value: "active"  },
-    { label: "Bloqués", value: "blocked" },
-    { label: "⭐ VIP",  value: "vip"     },
+    { label: "BloquÃ©s", value: "blocked" },
+    { label: "â­ VIP",  value: "vip"     },
   ];
 
   // Page numbers with ellipsis
@@ -206,7 +206,7 @@ export default function CustomersPage() {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     const set = new Set([1, total, page, page - 1, page + 1].filter(p => p >= 1 && p <= total));
     return [...set].sort((a, b) => a - b).reduce((acc, p, i, arr) => {
-      if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
+      if (i > 0 && p - arr[i - 1] > 1) acc.push("â€¦");
       acc.push(p);
       return acc;
     }, []);
@@ -239,13 +239,13 @@ export default function CustomersPage() {
 
       {/* Topbar */}
       <div className="ap-topbar">
-        <Link href="/admin/dashboard" className="ap-back-btn">← Dashboard</Link>
+        <Link href="/admin/dashboard" className="ap-back-btn">â† Dashboard</Link>
         <h1 className="ap-topbar-title">Utilisateurs</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Export…" : "↓ Export CSV"}
+          {exporting ? "Exportâ€¦" : "â†“ Export CSV"}
         </button>
         <button className="ap-btn-add" onClick={syncFromOrders} disabled={syncing}>
-          {syncing ? "Synchronisation…" : "Sync commandes"}
+          {syncing ? "Synchronisationâ€¦" : "Sync commandes"}
         </button>
       </div>
 
@@ -253,7 +253,7 @@ export default function CustomersPage() {
       <div className="ap-toolbar">
         <input
           type="text"
-          placeholder="Rechercher par nom, email, téléphone…"
+          placeholder="Rechercher par nom, email, tÃ©lÃ©phoneâ€¦"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="ap-search-input"
@@ -274,7 +274,7 @@ export default function CustomersPage() {
         <div className="ap-stats-inline">
           <div className="ap-stat-chip">
             <span className="ap-stat-chip-value">{pagination.total}</span>
-            <span className="ap-stat-chip-label">Résultats</span>
+            <span className="ap-stat-chip-label">RÃ©sultats</span>
           </div>
           <div className="ap-stat-sep" />
           <div className="ap-stat-chip">
@@ -287,11 +287,11 @@ export default function CustomersPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">⏳</span>Chargement…</div>
+          <div className="ap-state"><span className="ap-state-icon">â³</span>Chargementâ€¦</div>
         ) : customers.length === 0 ? (
           <div className="ap-state">
-            <span className="ap-state-icon">📭</span>
-            Aucun client trouvé
+            <span className="ap-state-icon">ðŸ“­</span>
+            Aucun client trouvÃ©
             <button className="ac-sync-empty" onClick={syncFromOrders} disabled={syncing}>
               Importer depuis les commandes
             </button>
@@ -305,13 +305,13 @@ export default function CustomersPage() {
                   <th>Contact</th>
                   <th>Ville</th>
                   <th className="ac-th-sort" onClick={() => handleSort("lastOrderAt")}>
-                    Dernière commande<SortIcon field="lastOrderAt" />
+                    DerniÃ¨re commande<SortIcon field="lastOrderAt" />
                   </th>
                   <th className="ac-th-sort" onClick={() => handleSort("totalOrders")}>
                     Commandes<SortIcon field="totalOrders" />
                   </th>
                   <th className="ac-th-sort" onClick={() => handleSort("totalSpent")}>
-                    Total dépensé<SortIcon field="totalSpent" />
+                    Total dÃ©pensÃ©<SortIcon field="totalSpent" />
                   </th>
                   <th>Statut</th>
                   <th>Actions</th>
@@ -347,7 +347,7 @@ export default function CustomersPage() {
                       </div>
                     </td>
                     <td className="ac-city">
-                      {customer.city || <span className="ac-empty">—</span>}
+                      {customer.city || <span className="ac-empty">â€”</span>}
                     </td>
                     <td>
                       {customer.lastOrderAt ? (
@@ -358,7 +358,7 @@ export default function CustomersPage() {
                           {formatLastOrder(customer.lastOrderAt)}
                         </span>
                       ) : (
-                        <span className="ac-empty">—</span>
+                        <span className="ac-empty">â€”</span>
                       )}
                     </td>
                     <td>
@@ -366,22 +366,22 @@ export default function CustomersPage() {
                     </td>
                     <td>
                       <span className="ac-total-spent">
-                        {(customer.totalSpent || 0).toLocaleString()} €
+                        {(customer.totalSpent || 0).toLocaleString()} â‚¬
                       </span>
                     </td>
                     <td>
                       <span className={`ap-badge ${customer.status === "active" ? "ap-badge-ok" : "ap-badge-out"}`}>
-                        {customer.status === "active" ? "Actif" : "Bloqué"}
+                        {customer.status === "active" ? "Actif" : "BloquÃ©"}
                       </span>
                     </td>
                     <td>
                       <div className="ap-actions">
-                        <Link href={`/admin/customers/${customer._id}`} className="ap-btn-view" title="Voir le profil">↗</Link>
+                        <Link href={`/admin/customers/${customer._id}`} className="ap-btn-view" title="Voir le profil">â†—</Link>
                         <button
                           className={customer.status === "active" ? "ap-btn-edit" : "ac-btn-unblock"}
                           onClick={() => toggleStatus(customer._id, customer.status)}
                         >
-                          {customer.status === "active" ? "Bloquer" : "Débloquer"}
+                          {customer.status === "active" ? "Bloquer" : "DÃ©bloquer"}
                         </button>
                         <button
                           className="ap-btn-delete"
@@ -400,12 +400,12 @@ export default function CustomersPage() {
             {pagination.totalPages > 1 && (
               <div className="ac-pagination">
                 <button className="ac-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                  ← Préc.
+                  â† PrÃ©c.
                 </button>
                 <div className="ac-page-numbers">
                   {pageNumbers.map((item, i) =>
-                    item === "…" ? (
-                      <span key={`el-${i}`} className="ac-page-ellipsis">…</span>
+                    item === "â€¦" ? (
+                      <span key={`el-${i}`} className="ac-page-ellipsis">â€¦</span>
                     ) : (
                       <button
                         key={item}
@@ -418,10 +418,10 @@ export default function CustomersPage() {
                   )}
                 </div>
                 <button className="ac-page-btn" disabled={page === pagination.totalPages} onClick={() => setPage(p => p + 1)}>
-                  Suiv. →
+                  Suiv. â†’
                 </button>
                 <span className="ac-page-info">
-                  {((page - 1) * PER_PAGE) + 1}–{Math.min(page * PER_PAGE, pagination.total)} / {pagination.total}
+                  {((page - 1) * PER_PAGE) + 1}â€“{Math.min(page * PER_PAGE, pagination.total)} / {pagination.total}
                 </span>
               </div>
             )}

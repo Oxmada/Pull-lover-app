@@ -202,7 +202,7 @@ export default function CustomerDetailPage() {
 
       {/* Topbar */}
       <div className="acd-topbar">
-        <Link href="/admin/customers" className="acd-back-btn">← Clients</Link>
+        <Link href="/admin/customers" className="acd-back-btn">← Retour</Link>
 
         <div className="acd-profile">
           <div className="acd-avatar">{initials}</div>

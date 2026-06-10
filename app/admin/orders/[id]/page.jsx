@@ -96,7 +96,7 @@ export default function AdminOrderDetailPage() {
 
       {/* Topbar */}
       <div className="od-topbar">
-        <Link href="/admin/orders" className="od-back-btn">← Commandes</Link>
+        <Link href="/admin/orders" className="od-back-btn">← Retour</Link>
         <div className="od-topbar-center">
           <h1 className="od-title">Commande <span className="od-ref">#{orderNumber}</span></h1>
           {order.createdAt && (

@@ -345,7 +345,6 @@
 
 @media (max-width: 810px) {
     .h-wrapper--transparent .h-burger--open {
-        top: 28px;
         color: #78716c;
     }
 

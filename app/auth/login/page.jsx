@@ -36,59 +36,59 @@ export default function LoginPage() {
       {/* CARD */}
       <div className="login-card">
 
-        {/* INPUTS — Frame 4592 : gap 10px */}
-        <div className="login-inputs">
-          <div className="login-field">
-            <label>Adresse e-mail</label>
-            {/* Frame 4643 : h50px, radius 12px, border #E5E7EB, padding 10px 20px */}
-            <div className="login-input-wrap">
-              <span>@</span>
-              <input
-                type="email"
-                placeholder="Tom.exemple@gmail.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
+        <form onSubmit={handleLogin}>
+          {/* INPUTS — Frame 4592 : gap 10px */}
+          <div className="login-inputs">
+            <div className="login-field">
+              <label>Adresse e-mail</label>
+              <div className="login-input-wrap">
+                <span>@</span>
+                <input
+                  type="email"
+                  placeholder="Tom.exemple@gmail.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="login-field">
+              <label>Mot de passe</label>
+              <div className="login-input-wrap">
+                <span>🔒</span>
+                <input
+                  type={showPwd ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
+                <button type="button" onClick={() => setShowPwd(!showPwd)}>
+                  {showPwd ? "🙈" : "👁"}
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="login-field">
-            <label>Mot de passe</label>
-            <div className="login-input-wrap">
-              <span>🔒</span>
-              <input
-                type={showPwd ? "text" : "password"}
-                placeholder="••••••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-              <button type="button" onClick={() => setShowPwd(!showPwd)}>
-                {showPwd ? "🙈" : "👁"}
-              </button>
+          {/* OPTIONS + BOUTON — Frame 4592 : gap 20px */}
+          <div className="login-actions">
+            <div className="login-options">
+              <label><input type="checkbox" /> Se souvenir de moi</label>
+              <Link href="/auth/forgot-password">Mot de passe oublié</Link>
+            </div>
+
+            {error && <p className="login-error">{error}</p>}
+
+            <ButtonPrimary full type="submit" disabled={loading}>
+              {loading ? "Connexion..." : "Se connecter"}
+            </ButtonPrimary>
+
+            <div className="login-divider">
+              <span /><p>Ou continuer avec</p><span />
             </div>
           </div>
-        </div>
-
-        {/* OPTIONS + BOUTON — Frame 4592 : gap 20px */}
-        <div className="login-actions">
-          {/* Frame 4644 : h30px, space-between */}
-          <div className="login-options">
-            <label><input type="checkbox" /> Se souvenir de moi</label>
-            <Link href="/auth/forgot-password">Mot de passe oublié</Link>
-          </div>
-
-          {error && <p className="login-error">{error}</p>}
-
-          <ButtonPrimary full onClick={handleLogin} disabled={loading}>
-            {loading ? "Connexion..." : "Se connecter"}
-          </ButtonPrimary>
-
-          <div className="login-divider">
-            <span /><p>Ou continuer avec</p><span />
-          </div>
-        </div>
+        </form>
 
         {/* SOCIAL — Frame 4646 : h50px, gap 20px */}
         <div className="login-social">
