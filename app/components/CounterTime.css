@@ -335,7 +335,7 @@
 
     /* Centre */
     .ct-center {
-        padding: 2rem 1.25rem;
+        padding: 2rem 0;
         gap: 20px;
         align-items: stretch;
     }

@@ -176,9 +176,10 @@
         height: 100vh;
         background: #fff;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         gap: 2.5rem;
+        padding-top: 120px;
         transition: right 0.35s ease;
         z-index: 105;
     }

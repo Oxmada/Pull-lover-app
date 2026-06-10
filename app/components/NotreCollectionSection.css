@@ -411,7 +411,7 @@
     }
 
     .ncs-card {
-        flex: 0 0 calc(100% - 3rem);
+        flex: 0 0 100%;
         scroll-snap-align: start;
     }
 
@@ -435,16 +435,18 @@
     /* Slide CTA */
     .ncs-card-cta {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f5f3ef;
-        aspect-ratio: 3 / 4;
+        flex-direction: column;
     }
 
     .ncs-cta-body {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        background: #f5f3ef;
+        border-radius: var(--radius-md);
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 1.5rem;
         padding: 2rem;
         text-align: center;

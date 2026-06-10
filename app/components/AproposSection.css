@@ -172,12 +172,13 @@
 
 @media (max-width: 810px) {
     .apropos-section {
-        padding: 60px 1.5rem;
+        padding: 20px 1.5rem 60px 1.5rem;
     }
 
     .apropos-main-container {
         flex-direction: column;
         min-height: auto;
+        gap: 1.5rem;
     }
 
     .apropos-product-presentation {
