@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { signOut } from "next-auth/react";
 
 const DashboardIcon = () => (
@@ -77,11 +78,29 @@ const NAV_ITEMS = [
   { href: "/admin/promos",    label: "Codes promo",    short: "Promos",     icon: <PromoIcon /> },
 ];
 
+const BOTTOM_PRIMARY = ["/admin/dashboard", "/admin/products", "/admin/orders"];
+
+const PlusIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (href) =>
     href === "/admin/dashboard" ? pathname === href : pathname.startsWith(href);
+
+  const primaryItems = NAV_ITEMS.filter((i) => BOTTOM_PRIMARY.includes(i.href));
+  const secondaryItems = NAV_ITEMS.filter((i) => !BOTTOM_PRIMARY.includes(i.href));
 
   return (
     <>
@@ -117,9 +136,9 @@ export default function AdminSidebar() {
         </nav>
       </aside>
 
-      {/* Bottom nav mobile */}
+      {/* Bottom nav mobile — 3 items fixes + bouton Plus */}
       <nav className="admin-bottom-nav">
-        {NAV_ITEMS.map(({ href, short, icon }) => (
+        {primaryItems.map(({ href, short, icon }) => (
           <Link
             key={href}
             href={href}
@@ -130,13 +149,44 @@ export default function AdminSidebar() {
           </Link>
         ))}
         <button
-          className="admin-bottom-nav-item"
-          onClick={() => signOut({ callbackUrl: "/" })}
+          className={`admin-bottom-nav-item${moreOpen ? " active" : ""}`}
+          onClick={() => setMoreOpen((v) => !v)}
+          aria-label="Plus"
         >
-          <span className="admin-bottom-nav-icon"><LogoutIcon /></span>
-          <span>Sortir</span>
+          <span className="admin-bottom-nav-icon">
+            {moreOpen ? <CloseIcon /> : <PlusIcon />}
+          </span>
+          <span>{moreOpen ? "Fermer" : "Plus"}</span>
         </button>
       </nav>
+
+      {/* Sheet slide-up "Plus" */}
+      {moreOpen && (
+        <>
+          <div className="admin-more-overlay" onClick={() => setMoreOpen(false)} />
+          <div className="admin-more-sheet">
+            <div className="admin-more-sheet-handle" />
+            {secondaryItems.map(({ href, label, icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`admin-more-item${isActive(href) ? " active" : ""}`}
+                onClick={() => setMoreOpen(false)}
+              >
+                <span className="admin-more-item-icon">{icon}</span>
+                <span>{label}</span>
+              </Link>
+            ))}
+            <button
+              className="admin-more-item admin-more-logout"
+              onClick={() => { setMoreOpen(false); signOut({ callbackUrl: "/" }); }}
+            >
+              <span className="admin-more-item-icon"><LogoutIcon /></span>
+              <span>Déconnexion</span>
+            </button>
+          </div>
+        </>
+      )}
     </>
   );
 }

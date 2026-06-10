@@ -197,10 +197,10 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 62px;
     background: #fff;
     border-top: 1px solid #e2e5ea;
-    z-index: 100;
+    z-index: 200;
     align-items: stretch;
   }
 
@@ -210,8 +210,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    font-size: 9px;
+    gap: 4px;
+    font-size: 10px;
     color: #888;
     text-decoration: none;
     font-weight: 500;
@@ -220,6 +220,7 @@
     background: none;
     cursor: pointer;
     font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+    padding: 0 4px;
   }
 
   .admin-bottom-nav-item:hover,
@@ -234,6 +235,91 @@
   }
 
   .admin-main {
-    padding-bottom: 60px;
+    padding-bottom: 62px;
   }
+
+  /* ── Sheet slide-up "Plus" ── */
+  .admin-more-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 300;
+    animation: fade-in 0.2s ease;
+  }
+
+  .admin-more-sheet {
+    position: fixed;
+    bottom: 62px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid #e2e5ea;
+    z-index: 400;
+    padding: 8px 0 16px;
+    animation: sheet-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .admin-more-sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: #e2e5ea;
+    border-radius: 2px;
+    margin: 0 auto 12px;
+  }
+
+  .admin-more-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+    text-decoration: none;
+    font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+    transition: background 0.12s, color 0.12s;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .admin-more-item:hover,
+  .admin-more-item.active {
+    background: #fdf0f1;
+    color: #c0616a;
+  }
+
+  .admin-more-item-icon {
+    width: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: inherit;
+  }
+
+  .admin-more-logout {
+    margin-top: 4px;
+    border-top: 1px solid #f0f0ee;
+    color: #c0616a;
+    font-weight: 600;
+  }
+
+  /* ── KPI cards — 2 colonnes sur mobile ── */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }

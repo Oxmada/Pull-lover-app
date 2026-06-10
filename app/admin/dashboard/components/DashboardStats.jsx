@@ -109,7 +109,7 @@ export default function DashboardStats() {
       </div>
 
       {/* ── KPI Row 1 — métriques principales ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
+      <div className="kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
         <KPICell border small label="Clients"    value={stats.customersCount ?? 0}   sub={`+${stats.newCustomers ?? 0} nouveaux`} />
         <KPICell border small label="Commandes"  value={stats.ordersCount ?? 0}       sub={`${stats.periodOrders ?? 0} / période`} />
         <KPICell border small label="CA période" value={`${parseFloat(stats.periodRevenue || 0).toLocaleString("fr-FR")} €`}
@@ -121,7 +121,7 @@ export default function DashboardStats() {
       </div>
 
       {/* ── KPI Row 2 — métriques secondaires ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
+      <div className="kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", background: N.bg, border: `1px solid ${N.border}`, borderRadius: N.radius, overflow: "hidden" }}>
         <KPICell border small label="Taux d'annulation" value={`${stats.cancellationRate ?? 0}%`}    sub={`${stats.cancelledOrders ?? 0} cmd annulées`} />
         <KPICell border small label="Fidélisation"       value={`${stats.loyaltyRate ?? 0}%`}          sub={`${stats.returningCustomers ?? 0} clients récurrents`} />
         <KPICell border small label="Clients dormants"   value={stats.dormantCustomers ?? 0}            sub="sans achat depuis 30 j" />
