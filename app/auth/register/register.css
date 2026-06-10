@@ -332,6 +332,7 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
+  .register-page { padding: 20px 20px; min-height: auto; }
   .register-card { padding: 24px; }
   .register-social { grid-template-columns: 1fr; }
 }

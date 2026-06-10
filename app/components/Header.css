@@ -80,6 +80,14 @@
     opacity: 0.55;
 }
 
+.h-nav-signout {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #C95D5D;
+}
+
 /* ── Icônes droite ── */
 .h-icons {
     display: flex;

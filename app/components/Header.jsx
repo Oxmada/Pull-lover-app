@@ -115,6 +115,20 @@ export default function Header({ transparent = false }) {
                             </Link>
                         </li>
                     )}
+                    {session && !isAdmin && (
+                        <li>
+                            <Link href="/dashboard" className="h-nav-link" onClick={close}>
+                                Mon espace
+                            </Link>
+                        </li>
+                    )}
+                    {session && (
+                        <li>
+                            <button className="h-nav-link h-nav-signout" onClick={() => { signOut({ callbackUrl: "/" }); close(); }}>
+                                Se déconnecter
+                            </button>
+                        </li>
+                    )}
 
                     {/* Icônes dans le menu mobile */}
                     <li className="h-nav-icons-mobile">
@@ -133,9 +147,9 @@ export default function Header({ transparent = false }) {
                                 <UserIcon />
                             </Link>
                         ) : (
-                            <button className="h-icon-btn" onClick={() => { signOut({ callbackUrl: "/" }); close(); }} aria-label="Déconnexion">
+                            <Link href="/dashboard" className="h-icon-btn" onClick={close} aria-label="Mon espace">
                                 <UserIcon />
-                            </button>
+                            </Link>
                         )}
                     </li>
                 </ul>
