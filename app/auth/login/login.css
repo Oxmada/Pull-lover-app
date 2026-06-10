@@ -135,7 +135,8 @@
 }
 
 .login-input-wrap span {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
   color: #888;
   flex-shrink: 0;
 }
@@ -153,14 +154,18 @@
 .login-input-wrap input::placeholder { color: #aaa; }
 
 .login-input-wrap button {
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
   padding: 0;
   color: #888;
   flex-shrink: 0;
+  transition: color 0.15s;
 }
+
+.login-input-wrap button:hover { color: #555; }
 
 /* ── ACTIONS ── */
 .login-actions {
