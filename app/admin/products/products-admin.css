@@ -5,8 +5,6 @@
    ============================================= */
 
 .ap-page {
-  min-height: 100vh;
-  background: #f5f5f4;
   padding: 28px 36px;
   font-family: var(--font-montserrat), 'Montserrat', sans-serif;
 }
@@ -772,4 +770,8 @@
 @media (max-width: 640px) {
   .ap-topbar   { flex-wrap: wrap; }
   .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
+}
+
+@media (max-width: 768px) {
+  .ap-page { padding-top: 68px; }
 }

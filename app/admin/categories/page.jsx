@@ -103,20 +103,6 @@ export default function CategoriesPage() {
 
       {/* Topbar */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px" }}>
-        <Link href="/admin/dashboard" style={{
-          display: "inline-flex", alignItems: "center", gap: "6px",
-          padding: "7px 14px", background: P.card, color: "#57534e",
-          border: `1.5px solid ${P.border}`, borderRadius: "8px",
-          fontSize: "13px", fontWeight: "600", fontFamily: P.font,
-          cursor: "pointer", textDecoration: "none", transition: "all 0.15s",
-          flexShrink: 0,
-        }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = P.text; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = P.text; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = P.card; e.currentTarget.style.color = "#57534e"; e.currentTarget.style.borderColor = P.border; }}
-        >
-          â† Dashboard
-        </Link>
-
         <h1 style={{ fontSize: "26px", fontWeight: "700", color: P.text, letterSpacing: "-0.5px", flex: 1, margin: 0 }}>
           CatÃ©gories
         </h1>

@@ -239,7 +239,6 @@ export default function ProductsManagement() {
 
       {/* Topbar */}
       <div className="ap-topbar">
-        <Link href="/admin/dashboard" className="ap-back-btn">â† Dashboard</Link>
         <h1 className="ap-topbar-title">Produits &amp; Stock</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
           {exporting ? "Exportâ€¦" : "â†“ Export CSV"}

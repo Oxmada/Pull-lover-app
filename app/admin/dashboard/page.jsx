@@ -22,25 +22,7 @@ export default async function AdminDashboard() {
         <h1 className={styles.title}>Dashboard Admin</h1>
       </div>
 
-      <div className={styles.grid}>
-        <a href="/admin/products" className={styles.card}>
-          Produits & Stock
-        </a>
-        <a href="/admin/categories" className={styles.card}>
-          Catégories
-        </a>
-        <a href="/admin/customers" className={styles.card}>
-          Utilisateurs
-        </a>
-        <a href="/admin/orders" className={styles.card}>
-          Commandes
-        </a>
-        <a href="/admin/newsletter" className={styles.card}>
-          Newsletter
-        </a>
-      </div>
-
-      <DashboardStats />
+<DashboardStats />
     </div>
   );
 }

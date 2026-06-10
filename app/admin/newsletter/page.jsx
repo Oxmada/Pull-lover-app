@@ -72,7 +72,6 @@ export default function AdminNewsletterPage() {
     <div className="ap-page">
       {/* Topbar */}
       <div className="ap-topbar">
-        <Link href="/admin/dashboard" className="ap-back-btn">â† Dashboard</Link>
         <h1 className="ap-topbar-title">Newsletter</h1>
         <button className="ap-btn-add" onClick={exportCSV} disabled={loading || total === 0}>
           Exporter CSV
