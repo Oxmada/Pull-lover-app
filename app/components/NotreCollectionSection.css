@@ -411,7 +411,7 @@
     }
 
     .ncs-card {
-        flex: 0 0 100%;
+        flex: 0 0 calc(100vw - 2.5rem);
         scroll-snap-align: start;
     }
 

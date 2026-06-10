@@ -179,7 +179,7 @@
         justify-content: flex-start;
         align-items: center;
         gap: 2.5rem;
-        padding-top: 120px;
+        padding-top: 140px;
         transition: right 0.35s ease;
         z-index: 105;
     }

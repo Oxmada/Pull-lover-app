@@ -282,7 +282,7 @@
     left: 1.5rem;
     right: 1.5rem;
     width: auto;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .hero-badge {

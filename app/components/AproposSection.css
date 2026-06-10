@@ -178,7 +178,7 @@
     .apropos-main-container {
         flex-direction: column;
         min-height: auto;
-        gap: 1.5rem;
+        gap: calc(1.5rem + 20px);
     }
 
     .apropos-product-presentation {

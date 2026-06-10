@@ -1,36 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ButtonPrimary } from "./ui/Button";
-import { Chip, Eyebrow } from "./ui/Tag";
+import { Eyebrow } from "./ui/Tag";
 import "./AproposSection.css";
 
-const CHIPS = [
-    "Laine mérinos",
-    "Raphia naturel",
-    "Coton bio",
-    "Soie sauvage",
-];
-
 const AproposSection = () => {
-    const chipsRef = useRef(null);
-
-    useEffect(() => {
-        const el = chipsRef.current;
-        if (!el) return;
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    el.classList.add("chips-active");
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.5 }
-        );
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, []);
 
     return (
         <section className="apropos-section">
@@ -70,16 +45,7 @@ const AproposSection = () => {
                             contemporaine.
                         </p>
 
-                        {/* Chips — 20px après la description */}
-                        <div className="apropos-chips" ref={chipsRef}>
-                            {CHIPS.map((chip, i) => (
-                                <Chip key={chip} style={{ animationDelay: `${i * 0.12}s` }}>
-                                    {chip}
-                                </Chip>
-                            ))}
-                        </div>
-
-                        {/* Bouton — 40px après les chips */}
+                        {/* Bouton */}
                         <ButtonPrimary href="/NotreMarque" style={{ marginTop: "40px", alignSelf: "flex-start" }}>En savoir plus</ButtonPrimary>
 
                     </div>

@@ -2,7 +2,7 @@
 
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { ButtonPrimary } from "./ui/Button";
-import { Chip, Eyebrow } from "./ui/Tag";
+import { Eyebrow } from "./ui/Tag";
 import "./NotreMarque.css";
 
 const STATS = [
@@ -12,7 +12,6 @@ const STATS = [
     { value: "2020", label: "Année de création" },
 ];
 
-const CHIPS = ["Laine mérinos", "Raphia naturel", "Coton bio", "Soie sauvage"];
 
 export default function NotreMarque() {
     const introRef = useScrollReveal();
@@ -33,11 +32,6 @@ export default function NotreMarque() {
                             <h1 className="nm-intro__heading">
                                 Pull Lover, une marque, une histoire
                             </h1>
-                            <div className="nm-chips">
-                                {CHIPS.map((c) => (
-                                    <Chip key={c}>{c}</Chip>
-                                ))}
-                            </div>
                         </div>
                         <div className="nm-intro__right">
                             <p>
