@@ -10,7 +10,7 @@ export default function HeaderWrapper() {
 
     return (
         <>
-            <Header transparent={isHome} />
+            <Header />
             {isHome && <HeaderHero />}
         </>
     );

@@ -380,7 +380,7 @@
     .ncs-header {
         flex-direction: column;
         align-items: flex-start;
-        margin-bottom: 24px;
+        margin-bottom: 34px;
         padding: 0 1.5rem;
         gap: 16px;
     }
