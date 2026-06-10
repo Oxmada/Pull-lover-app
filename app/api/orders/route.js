@@ -7,6 +7,7 @@ import Order from "@/app/models/Order";
 import { sendEmail } from "@/app/lib/mailer";
 import { getOrderConfirmationEmailTemplate, getAdminNewOrderEmailTemplate } from "@/app/lib/emailTemplates";
 import Customer from "@/app/models/Customer";
+import Promo from "@/app/models/Promo";
 
 export async function POST(req) {
   console.log("🚀 API /api/order APPELÉE");
@@ -15,7 +16,7 @@ export async function POST(req) {
     await connectDB();
 
     const body = await req.json();
-    const { customer, cartItems, total, payment, delivery } = body;
+    const { customer, cartItems, total, payment, delivery, promoCode, discountAmount } = body;
 
     /* ======================
        VALIDATION CLIENT
@@ -89,6 +90,13 @@ export async function POST(req) {
     });
 
     console.log("✅ Commande créée:", order._id);
+
+    if (promoCode) {
+      await Promo.findOneAndUpdate(
+        { code: promoCode.toUpperCase() },
+        { $inc: { usedCount: 1 } }
+      );
+    }
     /* ======================
    👤 SYNC CUSTOMER (IMPORTANT)
 ====================== */

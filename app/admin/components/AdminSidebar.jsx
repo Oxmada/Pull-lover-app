@@ -51,6 +51,14 @@ const NewsletterIcon = () => (
   </svg>
 );
 
+const PromoIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <line x1="7" y1="7" x2="7.01" y2="7" />
+    <line x1="12" y1="12" x2="18" y2="6" />
+  </svg>
+);
+
 const LogoutIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -66,6 +74,7 @@ const NAV_ITEMS = [
   { href: "/admin/customers",  label: "Utilisateurs",   short: "Users",      icon: <UsersIcon /> },
   { href: "/admin/orders",     label: "Commandes",      short: "Commandes",  icon: <OrdersIcon /> },
   { href: "/admin/newsletter", label: "Newsletter",     short: "News",       icon: <NewsletterIcon /> },
+  { href: "/admin/promos",    label: "Codes promo",    short: "Promos",     icon: <PromoIcon /> },
 ];
 
 export default function AdminSidebar() {

@@ -7,15 +7,57 @@ import { useState } from "react";
 import { ButtonPrimary } from "../components/ui/Button";
 import "./cart.css";
 
+const PROMO_STORAGE_KEY = "pull-lover-promo";
+
 export default function CartPage() {
   const { cartItems, increaseQty, decreaseQty, removeFromCart, cartTotal } = useCart();
   const router = useRouter();
   const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(null);
+  const [promoError, setPromoError] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const TVA_RATE = 0.20;
-  const tva = Math.round(cartTotal * TVA_RATE);
-  const total = cartTotal + tva;
+  const discount = promoApplied?.discount ?? 0;
+  const discountedSubtotal = Math.max(0, cartTotal - discount);
+  const tva = Math.round(discountedSubtotal * TVA_RATE);
+  const total = discountedSubtotal + tva;
   const totalQty = cartItems.reduce((acc, i) => acc + i.quantity, 0);
+
+  async function handleApplyPromo() {
+    const code = promoCode.trim();
+    if (!code) return;
+    setPromoError("");
+    setPromoLoading(true);
+    try {
+      const res = await fetch("/api/promos/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, orderAmount: cartTotal }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPromoError(data.error || "Code invalide");
+        setPromoApplied(null);
+        localStorage.removeItem(PROMO_STORAGE_KEY);
+      } else {
+        setPromoApplied(data);
+        localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify(data));
+        setPromoCode("");
+      }
+    } catch {
+      setPromoError("Erreur réseau");
+    } finally {
+      setPromoLoading(false);
+    }
+  }
+
+  function handleRemovePromo() {
+    setPromoApplied(null);
+    setPromoCode("");
+    setPromoError("");
+    localStorage.removeItem(PROMO_STORAGE_KEY);
+  }
 
   return (
     <div className="cart-page">
@@ -85,15 +127,41 @@ export default function CartPage() {
           <div className="cart-right">
             <div className="cart-promo">
               <h3 className="cart-section-title">Code promo</h3>
-              <div className="promo-input-row">
-                <input
-                  type="text"
-                  placeholder="Entrez votre code"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                />
-                <button>Appliquer</button>
-              </div>
+
+              {promoApplied ? (
+                <div className="promo-applied">
+                  <div className="promo-applied-info">
+                    <span className="promo-applied-code">{promoApplied.code}</span>
+                    <span className="promo-applied-desc">
+                      {promoApplied.type === "percentage"
+                        ? `−${promoApplied.value}%`
+                        : `−${promoApplied.value} €`}
+                      {promoApplied.description ? ` · ${promoApplied.description}` : ""}
+                    </span>
+                  </div>
+                  <button className="promo-remove-btn" onClick={handleRemovePromo} aria-label="Retirer le code promo">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="promo-input-row">
+                    <input
+                      type="text"
+                      placeholder="Entrez votre code"
+                      value={promoCode}
+                      onChange={(e) => { setPromoCode(e.target.value); setPromoError(""); }}
+                      onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                    />
+                    <button onClick={handleApplyPromo} disabled={promoLoading || !promoCode.trim()}>
+                      {promoLoading ? "…" : "Appliquer"}
+                    </button>
+                  </div>
+                  {promoError && <p className="promo-error">{promoError}</p>}
+                </>
+              )}
             </div>
 
             <div className="cart-summary">
@@ -102,6 +170,12 @@ export default function CartPage() {
                 <span>Sous-total ({totalQty} article{totalQty > 1 ? "s" : ""})</span>
                 <span>{cartTotal} €</span>
               </div>
+              {promoApplied && (
+                <div className="summary-row summary-discount">
+                  <span>Remise ({promoApplied.code})</span>
+                  <span>−{discount} €</span>
+                </div>
+              )}
               <div className="summary-row">
                 <span>TVA (20%)</span>
                 <span>{tva} €</span>

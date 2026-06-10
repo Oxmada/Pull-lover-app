@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -40,11 +40,21 @@ function CheckoutInner() {
   const [shipping, setShipping] = useState("colissimo");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("pull-lover-promo");
+      if (stored) setAppliedPromo(JSON.parse(stored));
+    } catch {}
+  }, []);
 
   const TVA_RATE = 0.20;
-  const tva = Math.round(cartTotal * TVA_RATE);
+  const promoDiscount = appliedPromo?.discount ?? 0;
+  const discountedSubtotal = Math.max(0, cartTotal - promoDiscount);
+  const tva = Math.round(discountedSubtotal * TVA_RATE);
   const livraison = 25;
-  const total = cartTotal + tva + livraison;
+  const total = discountedSubtotal + tva + livraison;
   const totalQty = cartItems.reduce((acc, i) => acc + i.quantity, 0);
 
   const handleSubmit = async (e) => {
@@ -112,6 +122,8 @@ function CheckoutInner() {
           payment: "card",
           delivery: shipping,
           stripePaymentId: paymentIntent.id,
+          promoCode: appliedPromo?.code || null,
+          discountAmount: promoDiscount || 0,
         }),
       });
       const orderData = await orderRes.json();
@@ -121,6 +133,7 @@ function CheckoutInner() {
       }
 
       clearCart();
+      localStorage.removeItem("pull-lover-promo");
       router.push("/success");
 
     } catch (err) {
@@ -298,6 +311,12 @@ function CheckoutInner() {
                 <span>Sous-total ({totalQty})</span>
                 <span>{cartTotal} €</span>
               </div>
+              {appliedPromo && (
+                <div className="checkout-summary-row" style={{ color: "#15803d", fontWeight: 600 }}>
+                  <span>Remise ({appliedPromo.code})</span>
+                  <span>−{promoDiscount} €</span>
+                </div>
+              )}
               <div className="checkout-summary-row">
                 <span>TVA (20%)</span>
                 <span>{tva} €</span>

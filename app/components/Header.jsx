@@ -122,14 +122,6 @@ export default function Header({ transparent = false }) {
                             </Link>
                         </li>
                     )}
-                    {session && (
-                        <li>
-                            <button className="h-nav-link h-nav-signout" onClick={() => { signOut({ callbackUrl: "/" }); close(); }}>
-                                Se déconnecter
-                            </button>
-                        </li>
-                    )}
-
                     {/* Icônes dans le menu mobile */}
                     <li className="h-nav-icons-mobile">
                         <Link href="/favoris" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Favoris">

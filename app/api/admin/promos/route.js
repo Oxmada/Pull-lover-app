@@ -1,0 +1,74 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { connectDB } from "@/app/lib/db";
+import Promo from "@/app/models/Promo";
+
+async function requireAdmin() {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+  }
+  return null;
+}
+
+export async function GET(req) {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
+  await connectDB();
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get("search") || "";
+  const query = search ? { code: { $regex: search, $options: "i" } } : {};
+  const promos = await Promo.find(query).sort({ createdAt: -1 }).lean();
+  return NextResponse.json({ promos });
+}
+
+export async function POST(req) {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
+  await connectDB();
+  const body = await req.json();
+  try {
+    const promo = await Promo.create({
+      code: body.code.toUpperCase().trim(),
+      description: body.description || "",
+      type: body.type,
+      value: Number(body.value),
+      minOrderAmount: Number(body.minOrderAmount) || 0,
+      maxUses: body.maxUses ? Number(body.maxUses) : null,
+      expiresAt: body.expiresAt || null,
+      isActive: body.isActive !== false,
+    });
+    return NextResponse.json({ promo }, { status: 201 });
+  } catch (err) {
+    if (err.code === 11000) {
+      return NextResponse.json({ error: "Ce code existe déjà" }, { status: 409 });
+    }
+    return NextResponse.json({ error: err.message }, { status: 400 });
+  }
+}
+
+export async function PATCH(req) {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
+  await connectDB();
+  const { id, ...updates } = await req.json();
+  if (updates.code) updates.code = updates.code.toUpperCase().trim();
+  const promo = await Promo.findByIdAndUpdate(id, updates, { new: true });
+  if (!promo) return NextResponse.json({ error: "Promo introuvable" }, { status: 404 });
+  return NextResponse.json({ promo });
+}
+
+export async function DELETE(req) {
+  const deny = await requireAdmin();
+  if (deny) return deny;
+
+  await connectDB();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  await Promo.findByIdAndDelete(id);
+  return NextResponse.json({ success: true });
+}

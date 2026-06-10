@@ -375,6 +375,64 @@
   color: #C95D5D;
 }
 
+/* ── PROMO APPLIQUÉE ── */
+.promo-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.promo-applied-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.promo-applied-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: #15803d;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.promo-applied-desc {
+  font-size: 11px;
+  color: #166534;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.promo-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.promo-remove-btn:hover { background: #dcfce7; }
+
+.promo-error {
+  margin: 6px 0 0 0;
+  font-size: 12px;
+  color: #C95D5D;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.summary-discount {
+  color: #15803d !important;
+  font-weight: 600;
+}
+
 /* ── RÉSUMÉ ── */
 .cart-summary {
   background: #ffffff;
