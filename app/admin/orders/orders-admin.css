@@ -64,31 +64,38 @@
 .ac-btn-export:hover:not(:disabled) { border-color: #0f172a; background: #f5f5f4; }
 .ac-btn-export:disabled { color: #a8a29e; cursor: not-allowed; }
 
-/* ── Toolbar ligne 1 — recherche + tri ── */
+/* ── Toolbar — chips + recherche + tri sur une ligne ── */
 .ao-toolbar-top {
   display: flex;
   gap: 6px;
   align-items: center;
-  margin-bottom: 8px;
-  padding: 2px 2px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .ao-toolbar-top .ap-search-input {
-  flex: none;
-  width: 260px;
+  flex: 1;
+  min-width: 160px;
+  width: auto;
 }
 
-/* ── Toolbar ligne 2 — chips filtres ── */
-.ao-filter-chips {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-  overflow-x: auto;
-  padding: 2px 2px 6px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+.ao-toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: #e7e5e4;
+  flex-shrink: 0;
+  margin: 0 2px;
 }
-.ao-filter-chips::-webkit-scrollbar { display: none; }
+
+.ap-sort-dropdown-title {
+  padding: 7px 15px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a8a29e;
+  pointer-events: none;
+}
 
 .ao-chip {
   display: inline-flex;
