@@ -24,9 +24,11 @@ export default function ProductsManagement() {
   const [exporting, setExporting]           = useState(false);
   const [showForm, setShowForm]             = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [filterOpen, setFilterOpen]         = useState(false);
   const [sortOpen, setSortOpen]             = useState(false);
   const [catOpen, setCatOpen]               = useState(false);
   const [confirmModal, setConfirmModal]     = useState(null);
+  const filterRef      = useRef(null);
   const sortRef        = useRef(null);
   const catRef         = useRef(null);
   const searchFirstRef = useRef(true);
@@ -52,8 +54,9 @@ export default function ProductsManagement() {
 
   useEffect(() => {
     const close = (e) => {
-      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
-      if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false);
+      if (sortRef.current   && !sortRef.current.contains(e.target))   setSortOpen(false);
+      if (catRef.current    && !catRef.current.contains(e.target))    setCatOpen(false);
+      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
@@ -256,86 +259,97 @@ export default function ProductsManagement() {
         </button>
       </div>
 
-      {/* Toolbar — ligne 1 : recherche + tri / ligne 2 : chips */}
+      {/* Toolbar — recherche + filtres + catégorie + tri */}
       <div className="ao-toolbar-top">
-        <div className="ao-toolbar-controls">
-          <input
-            type="text"
-            placeholder="Rechercher un produit…"
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
-            className="ap-search-input"
-          />
-          <div className="ap-sort-wrap" ref={catRef}>
-            <button className="ap-sort-trigger" onClick={() => setCatOpen((o) => !o)}>
-              {categories.find((c) => c._id === categoryFilter)?.name || "Catégories"}
-              <svg className={`ap-sort-trigger-arrow ${catOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            {catOpen && (
-              <ul className="ap-sort-dropdown">
-                <li
-                  className={`ap-sort-option ${categoryFilter === "" ? "selected" : ""}`}
-                  onClick={() => { setCatAndReset(""); setCatOpen(false); }}
-                >
-                  Toutes catégories
-                  {categoryFilter === "" && <span className="ap-sort-check">✓</span>}
-                </li>
-                {categories.map((c) => (
+        <input
+          type="text"
+          placeholder="Rechercher un produit…"
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
+          className="ap-search-input"
+        />
+        <div className="ap-sort-wrap" ref={filterRef}>
+          <button className="ap-sort-trigger" onClick={() => setFilterOpen((o) => !o)}>
+            <span className="ao-filter-dot" style={{ background: CHIP_FILTERS.find((f) => f.value === filter)?.color }} />
+            {CHIP_FILTERS.find((f) => f.value === filter)?.label}
+            <svg className={`ap-sort-trigger-arrow ${filterOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {filterOpen && (
+            <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Filtrer par stock</li>
+              {CHIP_FILTERS.map((f) => {
+                const count = stats ? stats[f.statsKey] : null;
+                return (
                   <li
-                    key={c._id}
-                    className={`ap-sort-option ${categoryFilter === c._id ? "selected" : ""}`}
-                    onClick={() => { setCatAndReset(c._id); setCatOpen(false); }}
+                    key={f.value}
+                    className={`ap-sort-option ${filter === f.value ? "selected" : ""}`}
+                    onClick={() => { setFilterAndReset(f.value); setFilterOpen(false); }}
                   >
-                    {c.name}
-                    {categoryFilter === c._id && <span className="ap-sort-check">✓</span>}
+                    <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="ao-filter-dot" style={{ background: f.color }} />
+                      {f.label}
+                      {count !== null && <span style={{ color: "#a8a29e", fontSize: "11px" }}>({count})</span>}
+                    </span>
+                    {filter === f.value && <span className="ap-sort-check">✓</span>}
                   </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="ap-sort-wrap" ref={sortRef}>
-            <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
-              {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-              <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            {sortOpen && (
-              <ul className="ap-sort-dropdown">
-                <li className="ap-sort-dropdown-title">Trier par</li>
-                {SORT_OPTIONS.map((o) => (
-                  <li
-                    key={o.value}
-                    className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
-                    onClick={() => setSortAndReset(o.value)}
-                  >
-                    {o.label}
-                    {sort === o.value && <span className="ap-sort-check">✓</span>}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                );
+              })}
+            </ul>
+          )}
         </div>
-        <div className="ao-toolbar-chips">
-          {CHIP_FILTERS.map((f) => {
-            const count = stats ? stats[f.statsKey] : null;
-            const active = filter === f.value;
-            return (
-              <button
-                key={f.value}
-                onClick={() => setFilterAndReset(f.value)}
-                className={`ao-chip${active ? " ao-chip-active" : ""}`}
-                style={{ "--chip-color": f.color }}
+        <div className="ap-sort-wrap" ref={catRef}>
+          <button className="ap-sort-trigger" onClick={() => setCatOpen((o) => !o)}>
+            {categories.find((c) => c._id === categoryFilter)?.name || "Catégories"}
+            <svg className={`ap-sort-trigger-arrow ${catOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {catOpen && (
+            <ul className="ap-sort-dropdown">
+              <li
+                className={`ap-sort-option ${categoryFilter === "" ? "selected" : ""}`}
+                onClick={() => { setCatAndReset(""); setCatOpen(false); }}
               >
-                <span className="ao-chip-dot" />
-                {count !== null && <span className="ao-chip-count">{count}</span>}
-                <span className="ao-chip-label">{f.label}</span>
-              </button>
-            );
-          })}
+                Toutes catégories
+                {categoryFilter === "" && <span className="ap-sort-check">✓</span>}
+              </li>
+              {categories.map((c) => (
+                <li
+                  key={c._id}
+                  className={`ap-sort-option ${categoryFilter === c._id ? "selected" : ""}`}
+                  onClick={() => { setCatAndReset(c._id); setCatOpen(false); }}
+                >
+                  {c.name}
+                  {categoryFilter === c._id && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="ap-sort-wrap" ref={sortRef}>
+          <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
+            {SORT_OPTIONS.find((o) => o.value === sort)?.label}
+            <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {sortOpen && (
+            <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Trier par</li>
+              {SORT_OPTIONS.map((o) => (
+                <li
+                  key={o.value}
+                  className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
+                  onClick={() => setSortAndReset(o.value)}
+                >
+                  {o.label}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 

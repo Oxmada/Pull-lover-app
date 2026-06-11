@@ -64,40 +64,25 @@
 .ac-btn-export:hover:not(:disabled) { border-color: #0f172a; background: #f5f5f4; }
 .ac-btn-export:disabled { color: #a8a29e; cursor: not-allowed; }
 
-/* ── Toolbar — 2 lignes : contrôles + chips ── */
+/* ── Toolbar — recherche + filtres + tri ── */
 .ao-toolbar-top {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.ao-toolbar-controls {
   display: flex;
   gap: 6px;
   align-items: center;
-}
-
-.ao-toolbar-controls .ap-search-input {
-  flex: 1;
-  min-width: 0;
-}
-
-.ao-toolbar-chips {
-  display: flex;
-  gap: 6px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
-  .ao-toolbar-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-  .ao-toolbar-chips::-webkit-scrollbar { display: none; }
+.ao-toolbar-top .ap-search-input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.ao-filter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .ap-sort-dropdown-title {

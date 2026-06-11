@@ -54,8 +54,10 @@ export default function AdminOrdersPage() {
   const [exporting, setExporting]             = useState(false);
   const [toast, setToast]                     = useState(null);
   const [confirmModal, setConfirmModal]       = useState(null);
+  const [filterOpen, setFilterOpen]           = useState(false);
   const [sortOpen, setSortOpen]               = useState(false);
-  const sortRef = useRef(null);
+  const filterRef = useRef(null);
+  const sortRef   = useRef(null);
 
   const showToast = (msg, type = "success") => {
     setToast({ message: msg, type });
@@ -74,7 +76,8 @@ export default function AdminOrdersPage() {
 
   useEffect(() => {
     const close = (e) => {
-      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+      if (sortRef.current   && !sortRef.current.contains(e.target))   setSortOpen(false);
+      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
@@ -209,57 +212,68 @@ export default function AdminOrdersPage() {
         </button>
       </div>
 
-      {/* Toolbar — ligne 1 : recherche + tri / ligne 2 : chips */}
+      {/* Toolbar — recherche + filtres + tri */}
       <div className="ao-toolbar-top">
-        <div className="ao-toolbar-controls">
-          <input
-            type="text"
-            placeholder="Rechercher par nom, email, ville…"
-            value={search}
-            onChange={e => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
-            className="ap-search-input"
-          />
-          <div className="ap-sort-wrap" ref={sortRef}>
-            <button className="ap-sort-trigger" onClick={() => setSortOpen(o => !o)}>
-              {SORT_OPTIONS.find(o => o.value === sort)?.label}
-              <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            {sortOpen && (
-              <ul className="ap-sort-dropdown">
-                <li className="ap-sort-dropdown-title">Trier par</li>
-                {SORT_OPTIONS.map(o => (
+        <input
+          type="text"
+          placeholder="Rechercher par nom, email, ville…"
+          value={search}
+          onChange={e => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
+          className="ap-search-input"
+        />
+        <div className="ap-sort-wrap" ref={filterRef}>
+          <button className="ap-sort-trigger" onClick={() => setFilterOpen(o => !o)}>
+            <span className="ao-filter-dot" style={{ background: CHIP_FILTERS.find(f => f.value === statusFilter)?.color }} />
+            {CHIP_FILTERS.find(f => f.value === statusFilter)?.label}
+            <svg className={`ap-sort-trigger-arrow ${filterOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {filterOpen && (
+            <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Filtrer par statut</li>
+              {CHIP_FILTERS.map(f => {
+                const count = stats ? (f.statsKey === "total" ? stats.total : stats[f.statsKey] ?? 0) : null;
+                return (
                   <li
-                    key={o.value}
-                    className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
-                    onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
+                    key={f.value}
+                    className={`ap-sort-option ${statusFilter === f.value ? "selected" : ""}`}
+                    onClick={() => { setStatusFilter(f.value); setPage(1); setFilterOpen(false); }}
                   >
-                    {o.label}
-                    {sort === o.value && <span className="ap-sort-check">✓</span>}
+                    <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="ao-filter-dot" style={{ background: f.color }} />
+                      {f.label}
+                      {count !== null && <span style={{ color: "#a8a29e", fontSize: "11px" }}>({count})</span>}
+                    </span>
+                    {statusFilter === f.value && <span className="ap-sort-check">✓</span>}
                   </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                );
+              })}
+            </ul>
+          )}
         </div>
-        <div className="ao-toolbar-chips">
-          {CHIP_FILTERS.map(f => {
-            const count = stats ? (f.statsKey === "total" ? stats.total : stats[f.statsKey] ?? 0) : null;
-            const active = statusFilter === f.value;
-            return (
-              <button
-                key={f.value}
-                onClick={() => { setStatusFilter(f.value); setPage(1); }}
-                className={`ao-chip${active ? " ao-chip-active" : ""}`}
-                style={{ "--chip-color": f.color }}
-              >
-                <span className="ao-chip-dot" />
-                {count !== null && <span className="ao-chip-count">{count}</span>}
-                <span className="ao-chip-label">{f.label}</span>
-              </button>
-            );
-          })}
+        <div className="ap-sort-wrap" ref={sortRef}>
+          <button className="ap-sort-trigger" onClick={() => setSortOpen(o => !o)}>
+            {SORT_OPTIONS.find(o => o.value === sort)?.label}
+            <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {sortOpen && (
+            <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Trier par</li>
+              {SORT_OPTIONS.map(o => (
+                <li
+                  key={o.value}
+                  className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
+                  onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
+                >
+                  {o.label}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
