@@ -26,7 +26,7 @@ function NosMaillesContent() {
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(search);
 
-  const productsPerPage = 9;
+  const productsPerPage = 6;
 
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef(null);
