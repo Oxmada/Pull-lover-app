@@ -256,25 +256,8 @@ export default function ProductsManagement() {
         </button>
       </div>
 
-      {/* Toolbar — recherche + chips + tri */}
+      {/* Toolbar — recherche + tri + chips */}
       <div className="ao-toolbar-top">
-        {CHIP_FILTERS.map((f) => {
-          const count = stats ? stats[f.statsKey] : null;
-          const active = filter === f.value;
-          return (
-            <button
-              key={f.value}
-              onClick={() => setFilterAndReset(f.value)}
-              className={`ao-chip${active ? " ao-chip-active" : ""}`}
-              style={{ "--chip-color": f.color }}
-            >
-              <span className="ao-chip-dot" />
-              {count !== null && <span className="ao-chip-count">{count}</span>}
-              <span className="ao-chip-label">{f.label}</span>
-            </button>
-          );
-        })}
-        <div className="ao-toolbar-sep" />
         <input
           type="text"
           placeholder="Rechercher un produit…"
@@ -334,6 +317,23 @@ export default function ProductsManagement() {
             </ul>
           )}
         </div>
+        <div className="ao-toolbar-sep" />
+        {CHIP_FILTERS.map((f) => {
+          const count = stats ? stats[f.statsKey] : null;
+          const active = filter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => setFilterAndReset(f.value)}
+              className={`ao-chip${active ? " ao-chip-active" : ""}`}
+              style={{ "--chip-color": f.color }}
+            >
+              <span className="ao-chip-dot" />
+              {count !== null && <span className="ao-chip-count">{count}</span>}
+              <span className="ao-chip-label">{f.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Table */}

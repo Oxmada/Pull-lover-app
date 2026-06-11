@@ -342,21 +342,6 @@
   color: #C95D5D;
 }
 
-/* Bouton ordre ↑↓ */
-.ap-sort-btn {
-  padding: 8px 13px;
-  border: 1.5px solid #e7e5e4;
-  border-radius: var(--radius-sm);
-  background: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  color: #57534e;
-  cursor: pointer;
-  transition: all 0.15s;
-  line-height: 1;
-}
-
-.ap-sort-btn:hover { border-color: #0f172a; color: #0f172a; }
 
 /* Stats inline */
 .ap-stats-inline {

@@ -209,25 +209,8 @@ export default function AdminOrdersPage() {
         </button>
       </div>
 
-      {/* Toolbar — chips + recherche + tri sur une ligne */}
+      {/* Toolbar — recherche + tri + chips */}
       <div className="ao-toolbar-top">
-        {CHIP_FILTERS.map(f => {
-          const count = stats ? (f.statsKey === "total" ? stats.total : stats[f.statsKey] ?? 0) : null;
-          const active = statusFilter === f.value;
-          return (
-            <button
-              key={f.value}
-              onClick={() => { setStatusFilter(f.value); setPage(1); }}
-              className={`ao-chip${active ? " ao-chip-active" : ""}`}
-              style={{ "--chip-color": f.color }}
-            >
-              <span className="ao-chip-dot" />
-              {count !== null && <span className="ao-chip-count">{count}</span>}
-              <span className="ao-chip-label">{f.label}</span>
-            </button>
-          );
-        })}
-        <div className="ao-toolbar-sep" />
         <input
           type="text"
           placeholder="Rechercher par nom, email, ville…"
@@ -258,9 +241,23 @@ export default function AdminOrdersPage() {
             </ul>
           )}
         </div>
-        <button onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")} className="ap-sort-btn">
-          {sortDir === "asc" ? "↑" : "↓"}
-        </button>
+        <div className="ao-toolbar-sep" />
+        {CHIP_FILTERS.map(f => {
+          const count = stats ? (f.statsKey === "total" ? stats.total : stats[f.statsKey] ?? 0) : null;
+          const active = statusFilter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => { setStatusFilter(f.value); setPage(1); }}
+              className={`ao-chip${active ? " ao-chip-active" : ""}`}
+              style={{ "--chip-color": f.color }}
+            >
+              <span className="ao-chip-dot" />
+              {count !== null && <span className="ao-chip-count">{count}</span>}
+              <span className="ao-chip-label">{f.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Table */}
