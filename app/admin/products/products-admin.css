@@ -547,8 +547,22 @@
 }
 
 /* États table */
-.ap-state      { padding: 60px 24px; text-align: center; color: #a8a29e; font-size: 15px; }
-.ap-state-icon { font-size: 34px; display: block; margin-bottom: 10px; }
+.ap-state      { padding: 60px 24px; text-align: center; color: #a8a29e; font-size: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ap-state-icon { font-size: 34px; }
+.ap-state-error { color: #be123c; }
+.ap-state-retry {
+  margin-top: 4px;
+  padding: 7px 18px;
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ap-state-retry:hover { background: #C95D5D; }
 
 /* Toast */
 .ap-toast {

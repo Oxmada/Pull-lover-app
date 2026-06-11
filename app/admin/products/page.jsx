@@ -13,6 +13,7 @@ export default function ProductsManagement() {
   const [stats, setStats]                   = useState(null);
   const [pagination, setPagination]         = useState(null);
   const [loading, setLoading]               = useState(true);
+  const [fetchError, setFetchError]         = useState(null);
   const [filter, setFilter]                 = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [search, setSearch]                 = useState("");
@@ -70,6 +71,7 @@ export default function ProductsManagement() {
 
   const fetchProducts = async () => {
     setLoading(true);
+    setFetchError(null);
     try {
       const params = new URLSearchParams({
         filter, sort, order, page,
@@ -82,9 +84,12 @@ export default function ProductsManagement() {
         setProducts(data.products);
         setStats(data.stats);
         setPagination(data.pagination);
+      } else {
+        setFetchError(data.message || "Erreur serveur");
       }
     } catch (error) {
       console.error("Erreur:", error);
+      setFetchError("Impossible de contacter le serveur");
     } finally {
       setLoading(false);
     }
@@ -262,19 +267,18 @@ export default function ProductsManagement() {
         />
         <div className="ap-sort-wrap" ref={catRef}>
           <button className="ap-sort-trigger" onClick={() => setCatOpen((o) => !o)}>
-            {categories.find((c) => c._id === categoryFilter)?.name || "Catégories"}
+            {categories.find((c) => c._id === categoryFilter)?.name || "All"}
             <svg className={`ap-sort-trigger-arrow ${catOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           {catOpen && (
             <ul className="ap-sort-dropdown">
-              <li className="ap-sort-dropdown-title">Catégories</li>
               <li
                 className={`ap-sort-option ${categoryFilter === "" ? "selected" : ""}`}
                 onClick={() => { setCatAndReset(""); setCatOpen(false); }}
               >
-                Toutes catégories
+                All
                 {categoryFilter === "" && <span className="ap-sort-check">✓</span>}
               </li>
               {categories.map((c) => (
@@ -339,6 +343,12 @@ export default function ProductsManagement() {
       <div className="ap-table-wrap">
         {loading ? (
           <div className="ap-state"><span className="ap-state-icon">⏳</span>Chargement…</div>
+        ) : fetchError ? (
+          <div className="ap-state ap-state-error">
+            <span className="ap-state-icon">⚠️</span>
+            {fetchError}
+            <button className="ap-state-retry" onClick={fetchProducts}>Réessayer</button>
+          </div>
         ) : products.length === 0 ? (
           <div className="ap-state"><span className="ap-state-icon">📭</span>Aucun produit trouvé</div>
         ) : (
