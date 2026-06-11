@@ -377,57 +377,80 @@
 
 /* ── SECTION AVIS ── */
 .product-detail-page .reviews-section {
-  max-width: 800px;
-  margin: 0 auto 80px;
+  margin-bottom: 80px;
 }
 
 .product-detail-page .reviews-title {
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--dark);
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.product-detail-page .reviews-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.product-detail-page .reviews-left {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-detail-page .reviews-right {
+  min-width: 0;
 }
 
 .product-detail-page .no-reviews {
   color: var(--gray);
   font-size: 14px;
-  margin-bottom: 20px;
 }
 
 .product-detail-page .rating-summary {
   display: flex;
-  gap: 28px;
+  flex-direction: column;
+  gap: 16px;
   padding: 20px;
-  background: white;
+  background: var(--gray-light);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  margin-bottom: 28px;
 }
 
 .product-detail-page .average-score {
-  text-align: center;
-  min-width: 80px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .product-detail-page .average-score .big-number {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
   color: var(--dark);
-  display: block;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+.product-detail-page .average-score .score-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .product-detail-page .average-score .stars {
   color: var(--gold);
-  font-size: 0.85rem;
-  margin-top: 6px;
+  font-size: 0.9rem;
 }
 
 .product-detail-page .average-score .total-reviews {
   color: var(--gray);
   font-size: 0.75rem;
-  margin-top: 4px;
-  display: block;
 }
 
 .product-detail-page .rating-bars {
@@ -779,13 +802,12 @@
     gap: 16px;
   }
 
-  .product-detail-page .rating-summary {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .product-detail-page .reviews-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 
-  .product-detail-page .rating-bars {
-    width: 100%;
+  .product-detail-page .reviews-left {
+    position: static;
   }
 }

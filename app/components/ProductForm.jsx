@@ -19,6 +19,8 @@ export default function ProductForm({
   const [brand, setBrand] = useState(editingProduct?.brand || "");
   const [stocksBySize, setStocksBySize] = useState(initStocksBySize);
   const [description, setDescription] = useState(editingProduct?.description || "");
+  const [details, setDetails] = useState(editingProduct?.details || "");
+  const [careInstructions, setCareInstructions] = useState(editingProduct?.careInstructions || "");
   const [price, setPrice] = useState(editingProduct?.price || "");
   const [promoPrice, setPromoPrice] = useState(editingProduct?.promoPrice || "");
   const [category, setCategory] = useState(editingProduct?.category?._id || "");
@@ -114,6 +116,8 @@ export default function ProductForm({
         stocks,
         stock,
         description,
+        details,
+        careInstructions,
         price: Number(price),
         promoPrice: promoPrice ? Number(promoPrice) : null,
         category: category || null,
@@ -191,6 +195,26 @@ export default function ProductForm({
           placeholder="Décrivez le produit…"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+        />
+      </div>
+
+      <div className="form-field">
+        <label className="form-label">Détails du produit</label>
+        <textarea
+          placeholder="Composition, matières, coupe…"
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
+          rows={3}
+        />
+      </div>
+
+      <div className="form-field">
+        <label className="form-label">Entretien et lavage</label>
+        <textarea
+          placeholder="Lavage à 30°C, ne pas sécher en machine…"
+          value={careInstructions}
+          onChange={(e) => setCareInstructions(e.target.value)}
           rows={3}
         />
       </div>

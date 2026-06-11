@@ -82,7 +82,7 @@ export async function POST(req) {
     console.log("🟢 Body reçu:", { name: body.name, images: body.images?.length });
 
     const {
-      name, brand, size, sizes, condition, description,
+      name, brand, size, sizes, condition, description, details, careInstructions,
       price, promoPrice, stock, category,
       images, image, imagePublicIds,
     } = body;
@@ -101,6 +101,8 @@ export async function POST(req) {
       sizes: sizes || [],
       condition: condition || "",
       description: description || "",
+      details: details || "",
+      careInstructions: careInstructions || "",
       price: Number(price) || 0,
       promoPrice: promoPrice || null,
       stock: Number(stock) || 0,
@@ -133,7 +135,7 @@ export async function PUT(req) {
     // ✅ JSON au lieu de FormData
     const body = await req.json();
     const {
-      _id, name, brand, size, sizes, condition, description,
+      _id, name, brand, size, sizes, condition, description, details, careInstructions,
       price, promoPrice, stock, category,
       images, image, imagePublicIds,
     } = body;
@@ -149,6 +151,8 @@ export async function PUT(req) {
       sizes: sizes || [],
       condition: condition || "",
       description: description || "",
+      details: details || "",
+      careInstructions: careInstructions || "",
       price: Number(price) || 0,
       promoPrice: promoPrice || null,
       stock: Number(stock) || 0,

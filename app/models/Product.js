@@ -63,6 +63,14 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    details: {
+      type: String,
+      default: "",
+    },
+    careInstructions: {
+      type: String,
+      default: "",
+    },
     specifications: [{
       label: String,
       value: String,

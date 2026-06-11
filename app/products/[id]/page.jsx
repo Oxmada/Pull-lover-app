@@ -293,20 +293,7 @@ export default function ProductDetailPage() {
                 </button>
                 {detailsOpen && (
                   <div className="accordion-body">
-                    {product.specifications?.length > 0 ? (
-                      <table className="specs-table">
-                        <tbody>
-                          {product.specifications.map((spec, i) => (
-                            <tr key={i}>
-                              <td>{spec.label}</td>
-                              <td>{spec.value}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    ) : (
-                      <p>Aucun détail disponible.</p>
-                    )}
+                    <p>{product.details || "Aucun détail disponible."}</p>
                   </div>
                 )}
               </div>
@@ -318,7 +305,7 @@ export default function ProductDetailPage() {
                 </button>
                 {careOpen && (
                   <div className="accordion-body">
-                    <p>Lavage à la main ou en machine à 30°C. Ne pas utiliser de sèche-linge. Repassage à basse température. Ne pas utiliser de produits chlorés.</p>
+                    <p>{product.careInstructions || "Aucune information disponible."}</p>
                   </div>
                 )}
               </div>
@@ -383,85 +370,97 @@ export default function ProductDetailPage() {
         <div className="reviews-section">
           <h2 className="reviews-title">Avis clients</h2>
 
-          {reviews.length > 0 && (
-            <div className="rating-summary">
-              <div className="average-score">
-                <span className="big-number">{averageRating.toFixed(1)}</span>
-                <div className="stars">{renderStars(averageRating)}</div>
-                <span className="total-reviews">{reviews.length} avis</span>
-              </div>
-              <div className="rating-bars">
-                {[5, 4, 3, 2, 1].map((star) => {
-                  const count = getRatingDistribution()[star];
-                  const percent = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+          <div className="reviews-layout">
+
+            {/* Colonne gauche — résumé + action */}
+            <div className="reviews-left">
+              {reviews.length > 0 ? (
+                <div className="rating-summary">
+                  <div className="average-score">
+                    <span className="big-number">{averageRating.toFixed(1)}</span>
+                    <div className="score-details">
+                      <div className="stars">{renderStars(averageRating)}</div>
+                      <span className="total-reviews">{reviews.length} avis</span>
+                    </div>
+                  </div>
+                  <div className="rating-bars">
+                    {[5, 4, 3, 2, 1].map((star) => {
+                      const count = getRatingDistribution()[star];
+                      const percent = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                      return (
+                        <div key={star} className="rating-bar">
+                          <span className="star-label">{star}★</span>
+                          <div className="bar-bg">
+                            <div className="bar-fill" style={{ width: `${percent}%` }}></div>
+                          </div>
+                          <span className="bar-count">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <p className="no-reviews">Aucun avis pour le moment. Soyez le premier !</p>
+              )}
+
+              {reviewSuccess && <div className="review-success">Merci pour votre avis !</div>}
+
+              <ButtonSecondary onClick={() => setShowReviewForm(!showReviewForm)}>
+                Écrire un avis
+              </ButtonSecondary>
+
+              {showReviewForm && (
+                <div className="review-form">
+                  <input type="text" placeholder="Votre nom" value={reviewName} onChange={(e) => setReviewName(e.target.value)} />
+                  <textarea placeholder="Votre avis" value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} />
+                  <div className="star-selector">
+                    <span>Votre note :</span>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`clickable-star ${star <= reviewRating ? "selected" : ""}`}
+                        onClick={() => setReviewRating(star)}
+                      >
+                        {star <= reviewRating ? "★" : "☆"}
+                      </span>
+                    ))}
+                  </div>
+                  <ButtonPrimary onClick={submitReview}>Envoyer mon avis</ButtonPrimary>
+                </div>
+              )}
+            </div>
+
+            {/* Colonne droite — liste des avis */}
+            <div className="reviews-right">
+              <div className="reviews-list-compact">
+                {reviews.map((review) => {
+                  const isExpanded = expandedReviews[review._id];
+                  const isLongComment = review.comment.length > 150;
                   return (
-                    <div key={star} className="rating-bar">
-                      <span className="star-label">{star}★</span>
-                      <div className="bar-bg">
-                        <div className="bar-fill" style={{ width: `${percent}%` }}></div>
+                    <div key={review._id} className="review-card">
+                      <div className="review-meta">
+                        <span className="review-stars-inline">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                        <span className="review-author">{review.name}</span>
+                        <span className="review-separator">·</span>
+                        <span className="review-date-inline">
+                          {new Date(review.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                        </span>
                       </div>
-                      <span className="bar-count">{count}</span>
+                      <p className="review-text">
+                        {isLongComment && !isExpanded ? review.comment.substring(0, 150) + "..." : review.comment}
+                      </p>
+                      {isLongComment && (
+                        <button className="see-more-btn" onClick={() => toggleExpandReview(review._id)}>
+                          {isExpanded ? "Voir moins" : "Voir plus"}
+                        </button>
+                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
-          )}
 
-          {reviewSuccess && <div className="review-success">Merci pour votre avis !</div>}
-
-          {reviews.length === 0 && <p className="no-reviews">Aucun avis pour le moment. Soyez le premier !</p>}
-
-          <div className="reviews-list-compact">
-            {reviews.map((review) => {
-              const isExpanded = expandedReviews[review._id];
-              const isLongComment = review.comment.length > 150;
-              return (
-                <div key={review._id} className="review-card">
-                  <div className="review-meta">
-                    <span className="review-stars-inline">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
-                    <span className="review-author">{review.name}</span>
-                    <span className="review-separator">·</span>
-                    <span className="review-date-inline">
-                      {new Date(review.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
-                    </span>
-                  </div>
-                  <p className="review-text">
-                    {isLongComment && !isExpanded ? review.comment.substring(0, 150) + "..." : review.comment}
-                  </p>
-                  {isLongComment && (
-                    <button className="see-more-btn" onClick={() => toggleExpandReview(review._id)}>
-                      {isExpanded ? "Voir moins" : "Voir plus"}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
           </div>
-
-          <ButtonSecondary onClick={() => setShowReviewForm(!showReviewForm)}>
-            Écrire un avis
-          </ButtonSecondary>
-
-          {showReviewForm && (
-            <div className="review-form">
-              <input type="text" placeholder="Votre nom" value={reviewName} onChange={(e) => setReviewName(e.target.value)} />
-              <textarea placeholder="Votre avis" value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} />
-              <div className="star-selector">
-                <span>Votre note :</span>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={`clickable-star ${star <= reviewRating ? "selected" : ""}`}
-                    onClick={() => setReviewRating(star)}
-                  >
-                    {star <= reviewRating ? "★" : "☆"}
-                  </span>
-                ))}
-              </div>
-              <ButtonPrimary onClick={submitReview}>Envoyer mon avis</ButtonPrimary>
-            </div>
-          )}
         </div>
 
         {/* Produits similaires */}
