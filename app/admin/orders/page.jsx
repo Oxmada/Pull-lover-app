@@ -23,13 +23,15 @@ const PAYMENT_LABELS = {
   bank_transfer: "Virement",
 };
 
-const STATUS_FILTERS = [
-  { label: "Toutes",      value: ""           },
-  { label: "En attente",  value: "pending"    },
-  { label: "Préparation", value: "processing" },
-  { label: "Expédiées",   value: "shipped"    },
-  { label: "Livrées",     value: "delivered"  },
-  { label: "Annulées",    value: "cancelled"  },
+const CHIP_FILTERS = [
+  { value: "",            label: "Toutes",      statsKey: "total",      color: "#0f172a" },
+  { value: "pending",     label: "En attente",  statsKey: "pending",    color: "#b45309" },
+  { value: "confirmed",   label: "Confirmées",  statsKey: "confirmed",  color: "#C95D5D" },
+  { value: "processing",  label: "Préparation", statsKey: "processing", color: "#6d28d9" },
+  { value: "paid",        label: "Payées",      statsKey: "paid",       color: "#15803d" },
+  { value: "shipped",     label: "Expédiées",   statsKey: "shipped",    color: "#0e7490" },
+  { value: "delivered",   label: "Livrées",     statsKey: "delivered",  color: "#15803d" },
+  { value: "cancelled",   label: "Annulées",    statsKey: "cancelled",  color: "#be123c" },
 ];
 
 const SORT_OPTIONS = [
@@ -207,8 +209,8 @@ export default function AdminOrdersPage() {
         </button>
       </div>
 
-      {/* Toolbar */}
-      <div className="ap-toolbar">
+      {/* Toolbar — ligne 1 : recherche + tri */}
+      <div className="ao-toolbar-top">
         <input
           type="text"
           placeholder="Rechercher par nom, email, ville…"
@@ -216,23 +218,6 @@ export default function AdminOrdersPage() {
           onChange={e => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
           className="ap-search-input"
         />
-
-        <div className="ap-divider" />
-
-        <div className="ap-filters">
-          {STATUS_FILTERS.map(f => (
-            <button
-              key={f.value}
-              onClick={() => { setStatusFilter(f.value); setPage(1); }}
-              className={`ap-filter-btn ${statusFilter === f.value ? "active" : ""}`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="ap-divider" />
-
         <div className="ap-sort-wrap" ref={sortRef}>
           <button className="ap-sort-trigger" onClick={() => setSortOpen(o => !o)}>
             {SORT_OPTIONS.find(o => o.value === sort)?.label}
@@ -256,33 +241,26 @@ export default function AdminOrdersPage() {
         <button onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")} className="ap-sort-btn">
           {sortDir === "asc" ? "↑" : "↓"}
         </button>
+      </div>
 
-        {stats && (
-          <>
-            <div className="ap-divider" />
-            <div className="ap-stats-inline">
-              <div className="ap-stat-chip">
-                <span className="ap-stat-chip-value">{stats.total}</span>
-                <span className="ap-stat-chip-label">Total</span>
-              </div>
-              <div className="ap-stat-sep" />
-              <div className="ap-stat-chip warn">
-                <span className="ap-stat-chip-value">{stats.pending}</span>
-                <span className="ap-stat-chip-label">En attente</span>
-              </div>
-              <div className="ap-stat-sep" />
-              <div className="ap-stat-chip ok">
-                <span className="ap-stat-chip-value">{stats.delivered}</span>
-                <span className="ap-stat-chip-label">Livrées</span>
-              </div>
-              <div className="ap-stat-sep" />
-              <div className="ap-stat-chip danger">
-                <span className="ap-stat-chip-value">{stats.cancelled}</span>
-                <span className="ap-stat-chip-label">Annulées</span>
-              </div>
-            </div>
-          </>
-        )}
+      {/* Toolbar — ligne 2 : chips filtres + compteurs */}
+      <div className="ao-filter-chips">
+        {CHIP_FILTERS.map(f => {
+          const count = stats ? (f.statsKey === "total" ? stats.total : stats[f.statsKey] ?? 0) : null;
+          const active = statusFilter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => { setStatusFilter(f.value); setPage(1); }}
+              className={`ao-chip${active ? " ao-chip-active" : ""}`}
+              style={{ "--chip-color": f.color }}
+            >
+              <span className="ao-chip-dot" />
+              {count !== null && <span className="ao-chip-count">{count}</span>}
+              <span className="ao-chip-label">{f.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Table */}
