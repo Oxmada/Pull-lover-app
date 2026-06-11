@@ -194,10 +194,10 @@ export default function ProductsManagement() {
   const setCatAndReset    = (val) => { setCategoryFilter(val); setPage(1); };
   const setSortAndReset   = (val) => { setSort(val); setPage(1); setSortOpen(false); };
 
-  const FILTERS = [
-    { label: "Tous",         value: "all" },
-    { label: "Stock faible", value: "low" },
-    { label: "Rupture",      value: "out" },
+  const CHIP_FILTERS = [
+    { value: "all", label: "Tous",         statsKey: "total",      color: "#0f172a" },
+    { value: "low", label: "Stock faible", statsKey: "lowStock",   color: "#b45309" },
+    { value: "out", label: "Rupture",      statsKey: "outOfStock", color: "#be123c" },
   ];
 
   const SORT_OPTIONS = [
@@ -248,10 +248,8 @@ export default function ProductsManagement() {
         </button>
       </div>
 
-      {/* Toolbar */}
-      <div className="ap-toolbar">
-
-        {/* Recherche temps réel */}
+      {/* Toolbar — ligne 1 : recherche + catégorie + tri */}
+      <div className="ao-toolbar-top">
         <input
           type="text"
           placeholder="Rechercher un produit…"
@@ -259,10 +257,6 @@ export default function ProductsManagement() {
           onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
           className="ap-search-input"
         />
-
-        <div className="ap-divider" />
-
-        {/* Filtre catégorie */}
         <select
           value={categoryFilter}
           onChange={(e) => setCatAndReset(e.target.value)}
@@ -273,25 +267,6 @@ export default function ProductsManagement() {
             <option key={c._id} value={c._id}>{c.name}</option>
           ))}
         </select>
-
-        <div className="ap-divider" />
-
-        {/* Filtres stock */}
-        <div className="ap-filters">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setFilterAndReset(f.value)}
-              className={`ap-filter-btn ${filter === f.value ? "active" : ""}`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="ap-divider" />
-
-        {/* Tri */}
         <div className="ap-sort-wrap" ref={sortRef}>
           <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
             {SORT_OPTIONS.find((o) => o.value === sort)?.label}
@@ -315,35 +290,32 @@ export default function ProductsManagement() {
         <button onClick={() => setOrder(order === "asc" ? "desc" : "asc")} className="ap-sort-btn">
           {order === "asc" ? "↑" : "↓"}
         </button>
+      </div>
 
-        {/* Stats inline */}
-        {stats && (
-          <>
-            <div className="ap-divider" />
-            <div className="ap-stats-inline">
-              <div className="ap-stat-chip">
-                <span className="ap-stat-chip-value">{stats.total}</span>
-                <span className="ap-stat-chip-label">Total</span>
-              </div>
-              <div className="ap-stat-sep" />
-              <div className="ap-stat-chip warn">
-                <span className="ap-stat-chip-value">{stats.lowStock}</span>
-                <span className="ap-stat-chip-label">Faible</span>
-              </div>
-              <div className="ap-stat-sep" />
-              <div className="ap-stat-chip danger">
-                <span className="ap-stat-chip-value">{stats.outOfStock}</span>
-                <span className="ap-stat-chip-label">Rupture</span>
-              </div>
-            </div>
-          </>
-        )}
+      {/* Toolbar — ligne 2 : chips filtres stock */}
+      <div className="ao-filter-chips">
+        {CHIP_FILTERS.map((f) => {
+          const count = stats ? stats[f.statsKey] : null;
+          const active = filter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => setFilterAndReset(f.value)}
+              className={`ao-chip${active ? " ao-chip-active" : ""}`}
+              style={{ "--chip-color": f.color }}
+            >
+              <span className="ao-chip-dot" />
+              {count !== null && <span className="ao-chip-count">{count}</span>}
+              <span className="ao-chip-label">{f.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">��</span>Chargement…</div>
+          <div className="ap-state"><span className="ap-state-icon">⏳</span>Chargement…</div>
         ) : products.length === 0 ? (
           <div className="ap-state"><span className="ap-state-icon">📭</span>Aucun produit trouvé</div>
         ) : (
@@ -427,7 +399,7 @@ export default function ProductsManagement() {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
           >
-            � Précédent
+            ← Précédent
           </button>
           <span className="ap-page-info">
             Page {pagination.page} / {pagination.pages}

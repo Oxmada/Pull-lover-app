@@ -151,6 +151,166 @@
 
 .ap-stat-sep { width: 1px; height: 28px; background: #e7e5e4; }
 
+/* ── Toolbar ligne 1 — recherche + tri ── */
+.ao-toolbar-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 2px 2px;
+}
+
+.ao-toolbar-top .ap-search-input {
+  flex: none;
+  width: 280px;
+}
+
+/* ── Toolbar ligne 2 — chips filtres ── */
+.ao-filter-chips {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding: 2px 2px 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.ao-filter-chips::-webkit-scrollbar { display: none; }
+
+.ao-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e7e5e4;
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.ao-chip:hover { border-color: var(--chip-color, #0f172a); }
+
+.ao-chip-active {
+  background: var(--chip-color, #0f172a);
+  border-color: var(--chip-color, #0f172a);
+  color: #fff;
+}
+
+.ao-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--chip-color, #0f172a);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.ao-chip-active .ao-chip-dot { background: rgba(255, 255, 255, 0.6); }
+
+.ao-chip-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1;
+  min-width: 14px;
+  text-align: center;
+}
+
+.ao-chip-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+.ao-chip:not(.ao-chip-active) .ao-chip-count { color: var(--chip-color, #0f172a); }
+.ao-chip:not(.ao-chip-active) .ao-chip-label  { color: #57534e; }
+
+/* ── Sort dropdown ── */
+.ap-sort-wrap { position: relative; }
+
+.ap-sort-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 1.5px solid #e7e5e4;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s;
+}
+.ap-sort-trigger:hover { border-color: #0f172a; }
+
+.ap-sort-trigger-arrow {
+  font-size: 10px;
+  color: #a8a29e;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  line-height: 1;
+}
+.ap-sort-trigger-arrow.open { transform: rotate(180deg); }
+
+.ap-sort-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+  background: #fff;
+  border: 1px solid #e7e5e4;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  min-width: 190px;
+  animation: ac-drop-fade 0.15s ease;
+}
+
+@keyframes ac-drop-fade {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ap-sort-option {
+  padding: 9px 15px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.12s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ap-sort-option:hover    { background: #f5f5f4; }
+.ap-sort-option.selected { font-weight: 700; }
+.ap-sort-check { font-size: 11px; color: #C95D5D; }
+
+.ap-sort-btn {
+  padding: 8px 13px;
+  border: 1.5px solid #e7e5e4;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #57534e;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+  font-family: inherit;
+}
+.ap-sort-btn:hover { border-color: #0f172a; color: #0f172a; }
+
 /* ── Table ── */
 .ap-table-wrap {
   background: #fff;
@@ -597,6 +757,8 @@
 }
 
 @media (max-width: 640px) {
-  .ap-topbar  { flex-wrap: wrap; }
-  .ap-btn-add { width: 100%; justify-content: center; order: 3; }
+  .ap-topbar   { flex-wrap: wrap; }
+  .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
+  .ao-toolbar-top { flex-wrap: wrap; }
+  .ao-toolbar-top .ap-search-input { flex: 1; width: auto; min-width: 0; }
 }

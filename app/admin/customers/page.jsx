@@ -1,11 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import "./customers.css";
 
 const VIP_THRESHOLD = 50_000;
 const PER_PAGE = 25;
+
+const CHIP_FILTERS = [
+  { value: "all",     label: "Tous",    color: "#0f172a" },
+  { value: "active",  label: "Actifs",  color: "#15803d" },
+  { value: "blocked", label: "Bloqués", color: "#be123c" },
+  { value: "vip",     label: "VIP",     color: "#f59e0b" },
+];
+
+const SORT_OPTIONS = [
+  { label: "Date inscription",  value: "createdAt"   },
+  { label: "Dernière commande", value: "lastOrderAt" },
+  { label: "Commandes",         value: "totalOrders" },
+  { label: "Total dépensé",     value: "totalSpent"  },
+];
 
 export default function CustomersPage() {
   const [customers, setCustomers]           = useState([]);
@@ -21,6 +35,8 @@ export default function CustomersPage() {
   const [exporting, setExporting]           = useState(false);
   const [toast, setToast]                   = useState(null);
   const [confirmModal, setConfirmModal]     = useState(null);
+  const [sortOpen, setSortOpen]             = useState(false);
+  const sortRef = useRef(null);
 
   const showToast = (msg, type = "success") => {
     setToast({ message: msg, type });
@@ -39,11 +55,18 @@ export default function CustomersPage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  // Reload whenever any filter/sort/page param changes
   useEffect(() => {
     loadCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, statusFilter, sort, sortDir, page]);
+
+  useEffect(() => {
+    const close = (e) => {
+      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
 
   const loadCustomers = async () => {
     try {
@@ -70,20 +93,6 @@ export default function CustomersPage() {
     }
   };
 
-  const handleSort = (field) => {
-    if (sort === field) {
-      setSortDir(d => d === "desc" ? "asc" : "desc");
-    } else {
-      setSort(field);
-      setSortDir("desc");
-    }
-    setPage(1);
-  };
-
-  const handleFilter = (value) => {
-    setStatusFilter(value);
-    setPage(1);
-  };
 
   const exportCSV = async () => {
     setExporting(true);
@@ -188,17 +197,6 @@ export default function CustomersPage() {
     return new Date(date).toLocaleDateString("fr-FR");
   };
 
-  const SortIcon = ({ field }) =>
-    sort === field
-      ? <span className="ac-sort-icon ac-sort-active">{sortDir === "desc" ? " ↓" : " ↑"}</span>
-      : <span className="ac-sort-icon ac-sort-idle"> ⇅</span>;
-
-  const STATUS_FILTERS = [
-    { label: "Tous",    value: "all"     },
-    { label: "Actifs",  value: "active"  },
-    { label: "Bloqués", value: "blocked" },
-    { label: "� VIP",  value: "vip"     },
-  ];
 
   // Page numbers with ellipsis
   const pageNumbers = (() => {
@@ -248,8 +246,8 @@ export default function CustomersPage() {
         </button>
       </div>
 
-      {/* Toolbar */}
-      <div className="ap-toolbar">
+      {/* Toolbar — ligne 1 : recherche + tri */}
+      <div className="ao-toolbar-top">
         <input
           type="text"
           placeholder="Rechercher par nom, email, téléphone…"
@@ -257,30 +255,49 @@ export default function CustomersPage() {
           onChange={e => setSearch(e.target.value)}
           className="ap-search-input"
         />
-        <div className="ap-divider" />
-        <div className="ap-filters">
-          {STATUS_FILTERS.map(f => (
+        <div className="ap-sort-wrap" ref={sortRef}>
+          <button className="ap-sort-trigger" onClick={() => setSortOpen(o => !o)}>
+            {SORT_OPTIONS.find(o => o.value === sort)?.label}
+            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>▼</span>
+          </button>
+          {sortOpen && (
+            <ul className="ap-sort-dropdown">
+              {SORT_OPTIONS.map(o => (
+                <li
+                  key={o.value}
+                  className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
+                  onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
+                >
+                  {o.label}
+                  {sort === o.value && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <button onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")} className="ap-sort-btn">
+          {sortDir === "asc" ? "↑" : "↓"}
+        </button>
+      </div>
+
+      {/* Toolbar — ligne 2 : chips filtres */}
+      <div className="ao-filter-chips">
+        {CHIP_FILTERS.map(f => {
+          const active = statusFilter === f.value;
+          const count = active ? pagination.total : null;
+          return (
             <button
               key={f.value}
-              onClick={() => handleFilter(f.value)}
-              className={`ap-filter-btn ${statusFilter === f.value ? "active" : ""} ${f.value === "vip" ? "ac-filter-vip" : ""}`}
+              onClick={() => { setStatusFilter(f.value); setPage(1); }}
+              className={`ao-chip${active ? " ao-chip-active" : ""}`}
+              style={{ "--chip-color": f.color }}
             >
-              {f.label}
+              <span className="ao-chip-dot" />
+              {count !== null && <span className="ao-chip-count">{count}</span>}
+              <span className="ao-chip-label">{f.label}</span>
             </button>
-          ))}
-        </div>
-        <div className="ap-divider" />
-        <div className="ap-stats-inline">
-          <div className="ap-stat-chip">
-            <span className="ap-stat-chip-value">{pagination.total}</span>
-            <span className="ap-stat-chip-label">Résultats</span>
-          </div>
-          <div className="ap-stat-sep" />
-          <div className="ap-stat-chip">
-            <span className="ap-stat-chip-value">{pagination.totalPages}</span>
-            <span className="ap-stat-chip-label">Pages</span>
-          </div>
-        </div>
+          );
+        })}
       </div>
 
       {/* Table */}
@@ -303,15 +320,9 @@ export default function CustomersPage() {
                   <th>Client</th>
                   <th>Contact</th>
                   <th>Ville</th>
-                  <th className="ac-th-sort" onClick={() => handleSort("lastOrderAt")}>
-                    Dernière commande<SortIcon field="lastOrderAt" />
-                  </th>
-                  <th className="ac-th-sort" onClick={() => handleSort("totalOrders")}>
-                    Commandes<SortIcon field="totalOrders" />
-                  </th>
-                  <th className="ac-th-sort" onClick={() => handleSort("totalSpent")}>
-                    Total dépensé<SortIcon field="totalSpent" />
-                  </th>
+                  <th>Dernière commande</th>
+                  <th>Commandes</th>
+                  <th>Total dépensé</th>
                   <th>Statut</th>
                   <th>Actions</th>
                 </tr>

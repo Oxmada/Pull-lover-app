@@ -92,6 +92,87 @@
 .ac-btn-export:hover:not(:disabled) { border-color: #0f172a; background: #f5f5f4; }
 .ac-btn-export:disabled { color: #a8a29e; cursor: not-allowed; }
 
+/* ── Toolbar ligne 1 — recherche + catégorie + tri ── */
+.ao-toolbar-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 2px 2px;
+  flex-wrap: wrap;
+}
+
+.ao-toolbar-top .ap-search-input {
+  flex: 1;
+  min-width: 180px;
+  width: auto;
+}
+
+/* ── Toolbar ligne 2 — chips filtres stock ── */
+.ao-filter-chips {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding: 2px 2px 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.ao-filter-chips::-webkit-scrollbar { display: none; }
+
+.ao-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e7e5e4;
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.ao-chip:hover { border-color: var(--chip-color, #0f172a); }
+
+.ao-chip-active {
+  background: var(--chip-color, #0f172a);
+  border-color: var(--chip-color, #0f172a);
+  color: #fff;
+}
+
+.ao-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--chip-color, #0f172a);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.ao-chip-active .ao-chip-dot { background: rgba(255, 255, 255, 0.6); }
+
+.ao-chip-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1;
+  min-width: 14px;
+  text-align: center;
+}
+
+.ao-chip-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+.ao-chip:not(.ao-chip-active) .ao-chip-count { color: var(--chip-color, #0f172a); }
+.ao-chip:not(.ao-chip-active) .ao-chip-label  { color: #57534e; }
+
 /* ── Toolbar ── */
 .ap-toolbar {
   background: #fff;
