@@ -286,11 +286,10 @@
 .ap-sort-trigger:hover { border-color: #0f172a; }
 
 .ap-sort-trigger-arrow {
-  font-size: 10px;
   color: #a8a29e;
   transition: transform 0.2s ease;
   display: inline-block;
-  line-height: 1;
+  flex-shrink: 0;
 }
 
 .ap-sort-trigger-arrow.open { transform: rotate(180deg); }
@@ -316,6 +315,17 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.ap-sort-dropdown-title {
+  padding: 8px 15px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a8a29e;
+  list-style: none;
+  pointer-events: none;
+}
+
 .ap-sort-option {
   padding: 9px 15px;
   font-size: 13px;
@@ -326,6 +336,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  list-style: none;
 }
 
 .ap-sort-option:hover    { background: #f5f5f4; }

@@ -24,8 +24,10 @@ export default function ProductsManagement() {
   const [showForm, setShowForm]             = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [sortOpen, setSortOpen]             = useState(false);
+  const [catOpen, setCatOpen]               = useState(false);
   const [confirmModal, setConfirmModal]     = useState(null);
   const sortRef        = useRef(null);
+  const catRef         = useRef(null);
   const searchFirstRef = useRef(true);
 
   const showToast = (message, type = "success") => {
@@ -50,6 +52,7 @@ export default function ProductsManagement() {
   useEffect(() => {
     const close = (e) => {
       if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+      if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
@@ -257,23 +260,46 @@ export default function ProductsManagement() {
           onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
           className="ap-search-input"
         />
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCatAndReset(e.target.value)}
-          className="ap-category-select"
-        >
-          <option value="">Toutes catégories</option>
-          {categories.map((c) => (
-            <option key={c._id} value={c._id}>{c.name}</option>
-          ))}
-        </select>
+        <div className="ap-sort-wrap" ref={catRef}>
+          <button className="ap-sort-trigger" onClick={() => setCatOpen((o) => !o)}>
+            {categories.find((c) => c._id === categoryFilter)?.name || "Catégories"}
+            <svg className={`ap-sort-trigger-arrow ${catOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {catOpen && (
+            <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Catégories</li>
+              <li
+                className={`ap-sort-option ${categoryFilter === "" ? "selected" : ""}`}
+                onClick={() => { setCatAndReset(""); setCatOpen(false); }}
+              >
+                Toutes catégories
+                {categoryFilter === "" && <span className="ap-sort-check">✓</span>}
+              </li>
+              {categories.map((c) => (
+                <li
+                  key={c._id}
+                  className={`ap-sort-option ${categoryFilter === c._id ? "selected" : ""}`}
+                  onClick={() => { setCatAndReset(c._id); setCatOpen(false); }}
+                >
+                  {c.name}
+                  {categoryFilter === c._id && <span className="ap-sort-check">✓</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <div className="ap-sort-wrap" ref={sortRef}>
           <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
             {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-            <span className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`}>▼</span>
+            <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
           {sortOpen && (
             <ul className="ap-sort-dropdown">
+              <li className="ap-sort-dropdown-title">Filtres</li>
               {SORT_OPTIONS.map((o) => (
                 <li
                   key={o.value}
@@ -287,9 +313,6 @@ export default function ProductsManagement() {
             </ul>
           )}
         </div>
-        <button onClick={() => setOrder(order === "asc" ? "desc" : "asc")} className="ap-sort-btn">
-          {order === "asc" ? "↑" : "↓"}
-        </button>
       </div>
 
       {/* Toolbar — ligne 2 : chips filtres stock */}
