@@ -66,14 +66,16 @@
 
 /* ── Toolbar ligne 1 — recherche + tri ── */
 .ao-toolbar-top {
-  background: #fff;
-  border: 1px solid #e7e5e4;
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  margin-bottom: 8px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
+  margin-bottom: 8px;
+  padding: 2px 2px;
+}
+
+.ao-toolbar-top .ap-search-input {
+  flex: none;
+  width: 260px;
 }
 
 /* ── Toolbar ligne 2 — chips filtres ── */
@@ -618,5 +620,5 @@
 @media (max-width: 640px) {
   .ap-topbar { flex-wrap: wrap; }
   .ao-toolbar-top { flex-wrap: wrap; }
-  .ao-toolbar-top .ap-search-input { min-width: 0; }
+  .ao-toolbar-top .ap-search-input { flex: 1; width: auto; min-width: 0; }
 }
