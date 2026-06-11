@@ -33,6 +33,25 @@ export async function GET(req) {
   return NextResponse.json({ subscribers, total, totalPages: Math.ceil(total / limit) });
 }
 
+export async function POST(req) {
+  const deny = await requireAdmin(req);
+  if (deny) return deny;
+
+  const { email } = await req.json();
+  if (!email) return NextResponse.json({ error: "Email requis" }, { status: 400 });
+
+  await connectDB();
+  try {
+    const subscriber = await NewsletterSubscriber.create({ email });
+    return NextResponse.json({ subscriber }, { status: 201 });
+  } catch (err) {
+    if (err.code === 11000) {
+      return NextResponse.json({ error: "Cet email est déjà abonné" }, { status: 409 });
+    }
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
+}
+
 export async function DELETE(req) {
   const deny = await requireAdmin(req);
   if (deny) return deny;

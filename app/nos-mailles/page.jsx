@@ -66,7 +66,7 @@ function NosMaillesContent() {
       try {
         setLoading(true);
         setError("");
-        const query = new URLSearchParams();
+        const query = new URLSearchParams({ limit: "100" });
         if (search) query.append("search", search);
         if (category) query.append("category", category);
         const res = await fetch(`/api/products?${query.toString()}`);

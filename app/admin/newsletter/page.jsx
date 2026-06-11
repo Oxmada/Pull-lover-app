@@ -14,6 +14,9 @@ export default function AdminNewsletterPage() {
   const [search, setSearch]           = useState("");
   const [page, setPage]               = useState(1);
   const [toast, setToast]             = useState(null);
+  const [addModal, setAddModal]        = useState(false);
+  const [addEmail, setAddEmail]        = useState("");
+  const [addLoading, setAddLoading]    = useState(false);
 
   const showToast = (msg, type = "success") => {
     setToast({ message: msg, type });
@@ -36,6 +39,26 @@ export default function AdminNewsletterPage() {
     setTotal(data.total || 0);
     setTotalPages(data.totalPages || 1);
     setLoading(false);
+  }
+
+  async function handleAdd(e) {
+    e.preventDefault();
+    setAddLoading(true);
+    const res = await fetch("/api/admin/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: addEmail.trim() }),
+    });
+    const data = await res.json();
+    setAddLoading(false);
+    if (res.ok) {
+      showToast("Abonné ajouté avec succès");
+      setAddModal(false);
+      setAddEmail("");
+      load();
+    } else {
+      showToast(data.error || "Erreur lors de l'ajout", "error");
+    }
   }
 
   async function handleDelete(id, email) {
@@ -73,9 +96,15 @@ export default function AdminNewsletterPage() {
       {/* Topbar */}
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Newsletter</h1>
-        <button className="ap-btn-add" onClick={exportCSV} disabled={loading || total === 0}>
-          Exporter CSV
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="ap-btn-add" onClick={() => setAddModal(true)}>
+            + Ajouter
+          </button>
+          <button className="ap-btn-add" onClick={exportCSV} disabled={loading || total === 0}
+            style={{ background: "#fff", color: "#0f172a", border: "1.5px solid #e7e5e4" }}>
+            Exporter CSV
+          </button>
+        </div>
       </div>
 
       {/* Toolbar */}
@@ -150,6 +179,63 @@ export default function AdminNewsletterPage() {
           <button className="ap-filter-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
             Suiv. →
           </button>
+        </div>
+      )}
+
+      {/* Modal ajout */}
+      {addModal && (
+        <div
+          onClick={() => { setAddModal(false); setAddEmail(""); }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 1000,
+            background: "rgba(0,0,0,0.4)", display: "flex",
+            alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff", borderRadius: 14, padding: "32px 28px",
+              width: "100%", maxWidth: 420, boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+            }}
+          >
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 20, color: "#0f172a" }}>
+              Ajouter un abonné
+            </h2>
+            <form onSubmit={handleAdd}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: "#57534e", display: "block", marginBottom: 6 }}>
+                Adresse email
+              </label>
+              <input
+                type="email"
+                required
+                autoFocus
+                className="ap-search-input"
+                style={{ width: "100%", marginBottom: 20 }}
+                placeholder="exemple@email.com"
+                value={addEmail}
+                onChange={(e) => setAddEmail(e.target.value)}
+              />
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                <button
+                  type="button"
+                  onClick={() => { setAddModal(false); setAddEmail(""); }}
+                  className="ap-filter-btn"
+                  style={{ minWidth: 90 }}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="ap-btn-add"
+                  disabled={addLoading}
+                  style={{ minWidth: 90 }}
+                >
+                  {addLoading ? "Ajout…" : "Ajouter"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
