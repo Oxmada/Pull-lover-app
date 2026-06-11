@@ -25,13 +25,20 @@
   margin: 0;
 }
 
+/* ── Bottom grid (dernières commandes + top clients) ── */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 12px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .container { padding: 16px; }
   .title     { font-size: 20px; }
 }
 
-
 @media (max-width: 640px) {
-  .container { padding: 12px; }
+  .container  { padding: 12px; }
+  .bottomGrid { grid-template-columns: 1fr; }
 }

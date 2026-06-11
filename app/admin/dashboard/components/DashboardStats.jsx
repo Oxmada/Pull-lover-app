@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "../dashboard.module.css";
 import {
   BarChart, Bar, LineChart, Line,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
@@ -197,7 +198,7 @@ export default function DashboardStats() {
       </MiniCard>
 
       {/* ── Dernières commandes + Top clients ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: "12px" }}>
+      <div className={styles.bottomGrid}>
 
         <TableCard label="Dernières commandes">
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
