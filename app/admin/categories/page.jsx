@@ -21,6 +21,7 @@ export default function CategoriesPage() {
   const [editingId, setEditingId]   = useState(null);
   const [editName, setEditName]     = useState("");
   const [toast, setToast]           = useState(null);
+  const [confirmModal, setConfirmModal] = useState(null);
   const inputRef = useRef(null);
 
   const showToast = (message, type = "success") => {
@@ -73,8 +74,13 @@ export default function CategoriesPage() {
     showToast("Catégorie renommée");
   };
 
-  const handleDelete = async (id, name) => {
-    if (!confirm(`Supprimer "${name}" ?`)) return;
+  const handleDelete = (id, name) => {
+    setConfirmModal({ id, name });
+  };
+
+  const confirmDelete = async () => {
+    const { id } = confirmModal;
+    setConfirmModal(null);
     const res  = await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
     const data = await res.json();
     if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
@@ -99,7 +105,61 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      <style>{`@keyframes cat-slide-in { from { opacity:0; transform:translateX(12px) } to { opacity:1; transform:translateX(0) } }`}</style>
+      <style>{`
+        @keyframes cat-slide-in { from { opacity:0; transform:translateX(12px) } to { opacity:1; transform:translateX(0) } }
+        @keyframes cat-modal-in { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+      `}</style>
+
+      {/* Modal de confirmation suppression */}
+      {confirmModal && (
+        <div
+          onClick={() => setConfirmModal(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9998,
+            background: "rgba(0,0,0,0.35)", display: "flex",
+            alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff", borderRadius: "14px", padding: "32px 28px",
+              width: "100%", maxWidth: "400px", fontFamily: P.font,
+              boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+              animation: "cat-modal-in 0.2s ease",
+            }}
+          >
+            <h2 style={{ fontSize: "17px", fontWeight: "700", color: P.text, marginBottom: "8px" }}>
+              Supprimer la catégorie
+            </h2>
+            <p style={{ fontSize: "14px", color: "#57534e", marginBottom: "24px", lineHeight: 1.5 }}>
+              Voulez-vous supprimer <strong>"{confirmModal.name}"</strong> ? Cette action est irréversible.
+            </p>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setConfirmModal(null)}
+                style={{
+                  padding: "9px 20px", background: "#f5f5f4", color: "#78716c",
+                  border: `1.5px solid ${P.border}`, borderRadius: "8px",
+                  fontSize: "13px", fontWeight: "600", fontFamily: P.font, cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmDelete}
+                style={{
+                  padding: "9px 20px", background: P.accent, color: "#fff",
+                  border: "none", borderRadius: "8px",
+                  fontSize: "13px", fontWeight: "600", fontFamily: P.font, cursor: "pointer",
+                }}
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Topbar */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px" }}>
@@ -119,7 +179,7 @@ export default function CategoriesPage() {
           onMouseEnter={(e) => e.currentTarget.style.background = "#b04d4d"}
           onMouseLeave={(e) => e.currentTarget.style.background = P.accent}
         >
-          + Nouvelle catégorie
+          Nouvelle catégorie
         </button>
       </div>
 
@@ -164,9 +224,7 @@ export default function CategoriesPage() {
       {/* Table */}
       <div style={{ background: P.card, border: `1px solid ${P.border}`, borderRadius: "12px", overflow: "hidden" }}>
         {loading ? (
-          <div style={{ padding: "60px 24px", textAlign: "center", color: P.muted, fontSize: "15px", fontFamily: P.font }}>
-            Chargement…
-          </div>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : categories.length === 0 ? (
           <div style={{ padding: "60px 24px", textAlign: "center", color: P.muted, fontSize: "15px", fontFamily: P.font }}>
             Aucune catégorie. Créez-en une !

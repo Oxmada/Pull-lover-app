@@ -37,8 +37,14 @@
 .h-logo {
     text-decoration: none;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 2px;
+    flex-shrink: 0;
+}
+
+.h-logo-coeur {
+    display: block;
+    margin-right: 8px;
     flex-shrink: 0;
 }
 

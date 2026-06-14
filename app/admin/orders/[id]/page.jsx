@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -73,7 +73,7 @@ export default function AdminOrderDetailPage() {
   if (loading) {
     return (
       <div className="od-page">
-        <div className="od-loading">Chargement�</div>
+        <div className="admin-loading-wrap"><span className="admin-loader" /></div>
       </div>
     );
   }

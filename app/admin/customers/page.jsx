@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -242,7 +242,7 @@ export default function CustomersPage() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Utilisateurs</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Export…" : "↓ Export CSV"}
+          {exporting ? "Export…" : "Export CSV"}
         </button>
         <button className="ap-btn-add" onClick={syncFromOrders} disabled={syncing}>
           {syncing ? "Synchronisation…" : "Sync commandes"}
@@ -316,7 +316,7 @@ export default function CustomersPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">��</span>Chargement…</div>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : customers.length === 0 ? (
           <div className="ap-state">
             <span className="ap-state-icon">📭</span>
@@ -423,7 +423,7 @@ export default function CustomersPage() {
             {pagination.totalPages > 1 && (
               <div className="ac-pagination">
                 <button className="ac-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                  � Préc.
+                  Préc.
                 </button>
                 <div className="ac-page-numbers">
                   {pageNumbers.map((item, i) =>
@@ -441,7 +441,7 @@ export default function CustomersPage() {
                   )}
                 </div>
                 <button className="ac-page-btn" disabled={page === pagination.totalPages} onClick={() => setPage(p => p + 1)}>
-                  Suiv. →
+                  Suiv.
                 </button>
                 <span className="ac-page-info">
                   {((page - 1) * PER_PAGE) + 1}–{Math.min(page * PER_PAGE, pagination.total)} / {pagination.total}

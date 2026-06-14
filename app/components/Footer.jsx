@@ -52,9 +52,6 @@ const navLinks = [
   { label: "Accueil",      href: "/" },
   { label: "Nos mailles",  href: "/nos-mailles" },
   { label: "Notre marque", href: "/NotreMarque" },
-  { label: "Boutique",     href: "/boutique" },
-  { label: "Mon espace",   href: "/dashboard" },
-  { label: "Favoris",      href: "/favoris" },
   { label: "Contact",      href: "/contact" },
 ];
 

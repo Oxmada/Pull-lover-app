@@ -252,10 +252,10 @@ export default function ProductsManagement() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Produits &amp; Stock</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Export…" : "↓ Export CSV"}
+          {exporting ? "Export…" : "Export CSV"}
         </button>
         <button className="ap-btn-add" onClick={() => { setEditingProduct(null); setShowForm(true); }}>
-          + Ajouter un produit
+          Ajouter un produit
         </button>
       </div>
 
@@ -356,7 +356,7 @@ export default function ProductsManagement() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">⏳</span>Chargement…</div>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : fetchError ? (
           <div className="ap-state ap-state-error">
             <span className="ap-state-icon">⚠️</span>

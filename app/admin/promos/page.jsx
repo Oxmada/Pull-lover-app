@@ -103,7 +103,7 @@ export default function AdminPromosPage() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Codes promo</h1>
         <button className="ap-btn-add" onClick={() => { setShowForm(true); setForm(EMPTY_FORM); setFormError(""); }}>
-          + Nouveau code
+          Nouveau code
         </button>
       </div>
 
@@ -254,7 +254,7 @@ export default function AdminPromosPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Chargement…</p>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : promos.length === 0 ? (
           <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Aucun code promo trouvé.</p>
         ) : (

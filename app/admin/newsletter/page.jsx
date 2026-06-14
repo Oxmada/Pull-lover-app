@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -98,7 +98,7 @@ export default function AdminNewsletterPage() {
         <h1 className="ap-topbar-title">Newsletter</h1>
         <div style={{ display: "flex", gap: 8 }}>
           <button className="ap-btn-add" onClick={() => setAddModal(true)}>
-            + Ajouter
+            Ajouter
           </button>
           <button className="ap-btn-add" onClick={exportCSV} disabled={loading || total === 0}
             style={{ background: "#fff", color: "#0f172a", border: "1.5px solid #e7e5e4" }}>
@@ -126,7 +126,7 @@ export default function AdminNewsletterPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Chargement…</p>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : subscribers.length === 0 ? (
           <p style={{ padding: "32px", textAlign: "center", color: "#a8a29e" }}>Aucun abonné trouvé.</p>
         ) : (
@@ -171,13 +171,13 @@ export default function AdminNewsletterPage() {
       {totalPages > 1 && (
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 16 }}>
           <button className="ap-filter-btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
-            � Préc.
+            Préc.
           </button>
           <span style={{ padding: "8px 16px", fontSize: 13, color: "#57534e" }}>
             {page} / {totalPages}
           </span>
           <button className="ap-filter-btn" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-            Suiv. →
+            Suiv.
           </button>
         </div>
       )}

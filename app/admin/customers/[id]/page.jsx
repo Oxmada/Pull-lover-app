@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -162,7 +162,7 @@ export default function CustomerDetailPage() {
 
   if (loading) return (
     <div className="acd-page">
-      <div className="acd-state">Chargement�</div>
+      <div className="admin-loading-wrap"><span className="admin-loader" /></div>
     </div>
   );
   if (!customer) return (

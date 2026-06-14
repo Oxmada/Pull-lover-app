@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -208,7 +208,7 @@ export default function AdminOrdersPage() {
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Commandes</h1>
         <button className="ac-btn-export" onClick={exportCSV} disabled={exporting}>
-          {exporting ? "Export…" : "↓ Export CSV"}
+          {exporting ? "Export…" : "Export CSV"}
         </button>
       </div>
 
@@ -280,7 +280,7 @@ export default function AdminOrdersPage() {
       {/* Table */}
       <div className="ap-table-wrap">
         {loading ? (
-          <div className="ap-state"><span className="ap-state-icon">��</span>Chargement…</div>
+          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
         ) : orders.length === 0 ? (
           <div className="ap-state"><span className="ap-state-icon">📭</span>Aucune commande trouvée</div>
         ) : (
@@ -368,14 +368,14 @@ export default function AdminOrdersPage() {
       {pagination.totalPages > 1 && (
         <div className="ap-pagination">
           <button className="ap-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-            � Préc.
+            Préc.
           </button>
           <span className="ap-page-info">
             Page {page} / {pagination.totalPages}
             <span className="ap-page-total"> — {pagination.total} commandes</span>
           </span>
           <button className="ap-page-btn" disabled={page === pagination.totalPages} onClick={() => setPage(p => p + 1)}>
-            Suiv. →
+            Suiv.
           </button>
         </div>
       )}
