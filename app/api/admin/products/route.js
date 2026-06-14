@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/db";
 import Product from "@/app/models/Product";
+import "@/app/models/Category";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
