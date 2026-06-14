@@ -23,6 +23,7 @@ export default function AdminPromosPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(null);
 
   const showToast = (msg, type = "success") => {
     setToast({ message: msg, type });
@@ -82,8 +83,13 @@ export default function AdminPromosPage() {
     }
   }
 
-  async function handleDelete(promo) {
-    if (!confirm(`Supprimer le code "${promo.code}" ?`)) return;
+  function handleDelete(promo) {
+    setConfirmModal(promo);
+  }
+
+  async function confirmDelete() {
+    const promo = confirmModal;
+    setConfirmModal(null);
     const res = await fetch(`/api/admin/promos?id=${promo._id}`, { method: "DELETE" });
     if (res.ok) {
       showToast("Code supprimé");
@@ -98,6 +104,61 @@ export default function AdminPromosPage() {
 
   return (
     <div className="ap-page">
+
+      <style>{`
+        @keyframes promo-modal-in { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+      `}</style>
+
+      {/* Modal confirmation suppression */}
+      {confirmModal && (
+        <div
+          onClick={() => setConfirmModal(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9998,
+            background: "rgba(0,0,0,0.35)", display: "flex",
+            alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff", borderRadius: 14, padding: "32px 28px",
+              width: "100%", maxWidth: 400,
+              boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+              animation: "promo-modal-in 0.2s ease",
+            }}
+          >
+            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>
+              Supprimer le code promo
+            </h2>
+            <p style={{ fontSize: 14, color: "#57534e", marginBottom: 24, lineHeight: 1.5 }}>
+              Voulez-vous supprimer <strong>"{confirmModal.code}"</strong> ? Cette action est irréversible.
+            </p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setConfirmModal(null)}
+                style={{
+                  padding: "9px 20px", background: "#f5f5f4", color: "#78716c",
+                  border: "1.5px solid #e7e5e4", borderRadius: 8,
+                  fontSize: 13, fontWeight: 600, cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmDelete}
+                style={{
+                  padding: "9px 20px", background: "#C95D5D", color: "#fff",
+                  border: "none", borderRadius: 8,
+                  fontSize: 13, fontWeight: 600, cursor: "pointer",
+                }}
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Topbar */}
       <div className="ap-topbar">

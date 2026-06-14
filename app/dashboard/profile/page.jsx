@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 export default function ProfilePage() {
@@ -19,6 +19,50 @@ export default function ProfilePage() {
   const [pwMsg, setPwMsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
+  const [avatar, setAvatar] = useState("");
+  const [avatarLoading, setAvatarLoading] = useState(false);
+  const [avatarMsg, setAvatarMsg] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/user/me")
+      .then(r => r.json())
+      .then(data => { if (data.avatar) setAvatar(data.avatar); })
+      .catch(() => {});
+  }, []);
+
+  async function handleAvatarUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarLoading(true);
+    setAvatarMsg(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "avatar");
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) {
+        setAvatarMsg({ type: "error", text: uploadData.message || "Erreur lors de l'upload" });
+        return;
+      }
+      const saveRes = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatar: uploadData.url, avatarPublicId: uploadData.publicId }),
+      });
+      if (saveRes.ok) {
+        setAvatar(uploadData.url);
+        setAvatarMsg({ type: "success", text: "Photo de profil mise à jour." });
+      } else {
+        const saveData = await saveRes.json();
+        setAvatarMsg({ type: "error", text: saveData.message || "Erreur lors de la sauvegarde" });
+      }
+    } catch {
+      setAvatarMsg({ type: "error", text: "Erreur réseau." });
+    } finally {
+      setAvatarLoading(false);
+    }
+  }
 
   async function handleInfoSave(e) {
     e.preventDefault();
@@ -80,7 +124,54 @@ export default function ProfilePage() {
       <h1 className="db-page-title">Mon profil</h1>
       <div className="db-wrapper">
 
-        {/* ── Informations ── */}
+        {/* ── Photo de profil (admin uniquement) ── */}
+      {session?.user?.role === "admin" && (
+        <div className="db-card">
+          <p className="db-section-title">Photo de profil</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <div style={{
+              width: 80, height: 80, borderRadius: "50%",
+              overflow: "hidden", background: "#f5f5f4",
+              border: "2px solid #e7e5e4", flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              {avatar ? (
+                <img src={avatar} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <span style={{ fontSize: 32, color: "#a8a29e" }}>
+                  {session.user.name?.[0]?.toUpperCase() || "A"}
+                </span>
+              )}
+            </div>
+            <div>
+              <label style={{
+                display: "inline-block", padding: "9px 18px",
+                background: "#0f172a", color: "#fff", borderRadius: 8,
+                fontSize: 13, fontWeight: 600,
+                cursor: avatarLoading ? "not-allowed" : "pointer",
+                opacity: avatarLoading ? 0.6 : 1,
+              }}>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  style={{ display: "none" }}
+                  onChange={handleAvatarUpload}
+                  disabled={avatarLoading}
+                />
+                {avatarLoading ? "Upload…" : "Choisir une image"}
+              </label>
+              <p style={{ fontSize: 12, color: "#a8a29e", marginTop: 6 }}>JPG, PNG ou WEBP · max 5 Mo</p>
+            </div>
+          </div>
+          {avatarMsg && (
+            <p className={avatarMsg.type === "success" ? "db-form-success" : "db-form-error"} style={{ marginTop: 12 }}>
+              {avatarMsg.text}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* ── Informations ── */}
         <div className="db-card">
           <p className="db-section-title">Informations personnelles</p>
           <form onSubmit={handleInfoSave} className="db-form">

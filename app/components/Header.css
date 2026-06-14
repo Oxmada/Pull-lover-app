@@ -170,7 +170,7 @@
 
 @media (max-width: 810px) {
     .h-navbar {
-        padding: 0 1.5rem;
+        padding: 0 1rem;
     }
 
     .h-burger {
@@ -210,7 +210,7 @@
     .h-burger--open {
         position: fixed;
         top: 69px; /* bandeau (~41px) + centre navbar (88px / 2) - moitié bouton (16px) */
-        right: 1.5rem;
+        right: 1rem;
         z-index: 110;
         width: 32px;
         height: 32px;

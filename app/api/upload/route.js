@@ -19,6 +19,13 @@ export async function POST(req) {
     const file = formData.get("file");
     const type = formData.get("type"); // "avatar" ou "product"
 
+    if (type === "avatar" && session.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "Réservé aux administrateurs" },
+        { status: 403 }
+      );
+    }
+
     if (!file) {
       return NextResponse.json(
         { message: "Aucun fichier reçu" },

@@ -38,7 +38,7 @@
 .product-detail-page .product-gallery {
   position: sticky;
   top: 100px;
-  height: fit-content;
+  align-self: start;
 }
 
 .product-detail-page .main-image {
@@ -391,8 +391,8 @@
 
 .product-detail-page .reviews-layout {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 56px;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
   align-items: start;
 }
 

@@ -11,7 +11,7 @@ export async function PATCH(request) {
     if (!session) return NextResponse.json({ message: "Non autorisé" }, { status: 401 });
 
     const body = await request.json();
-    const { name, phone, currentPassword, newPassword } = body;
+    const { name, phone, currentPassword, newPassword, avatar, avatarPublicId } = body;
 
     await connectDB();
     const user = await User.findOne({ email: session.user.email });
@@ -19,6 +19,11 @@ export async function PATCH(request) {
 
     if (name?.trim()) user.name = name.trim();
     if (phone !== undefined) user.phone = phone.trim() || null;
+
+    if (avatar !== undefined && session.user.role === "admin") {
+      user.avatar = avatar || null;
+      if (avatarPublicId !== undefined) user.avatarPublicId = avatarPublicId || null;
+    }
 
     if (newPassword) {
       if (!currentPassword) {
