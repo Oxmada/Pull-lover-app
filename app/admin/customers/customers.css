@@ -754,7 +754,7 @@
 
 @media (max-width: 640px) {
   .ap-topbar   { flex-wrap: wrap; }
-  .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
+  .ap-topbar .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
   .ao-toolbar-top { flex-wrap: wrap; }
   .ao-toolbar-top .ap-search-input { flex: 1; width: auto; min-width: 0; }
 }

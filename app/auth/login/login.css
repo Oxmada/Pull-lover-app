@@ -305,6 +305,6 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  .login-page { padding: 60px 20px; }
+  .login-page { padding: 20px 20px; }
   .login-card { padding: 28px 20px; }
 }
