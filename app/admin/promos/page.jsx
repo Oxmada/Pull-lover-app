@@ -107,6 +107,10 @@ export default function AdminPromosPage() {
 
       <style>{`
         @keyframes promo-modal-in { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+        @media (max-width: 810px) {
+          .promo-form-wrap  { padding: 16px !important; }
+          .promo-form-grid  { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       {/* Modal confirmation suppression */}
@@ -190,7 +194,7 @@ export default function AdminPromosPage() {
 
       {/* Formulaire création */}
       {showForm && (
-        <div style={{
+        <div className="promo-form-wrap" style={{
           background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10,
           padding: "24px 28px", marginBottom: 20,
         }}>
@@ -198,7 +202,7 @@ export default function AdminPromosPage() {
             Nouveau code promo
           </h2>
           <form onSubmit={handleCreate} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div className="promo-form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
                 <label style={labelStyle}>Code *</label>
                 <input
@@ -293,7 +297,7 @@ export default function AdminPromosPage() {
               <p style={{ fontSize: 13, color: "#C95D5D", margin: 0 }}>{formError}</p>
             )}
 
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button type="submit" className="ap-btn-add" disabled={formLoading}>
                 {formLoading ? "Création…" : "Créer le code"}
               </button>
