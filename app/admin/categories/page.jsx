@@ -89,7 +89,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: P.bg, padding: "28px 36px", fontFamily: P.font }}>
+    <div style={{ minHeight: "100vh", background: P.bg, padding: "40px 36px 28px", fontFamily: P.font }}>
 
       {/* Toast */}
       {toast && (

@@ -608,6 +608,10 @@
   .ap-topbar-title { font-size: 20px; }
 }
 
+@media (max-width: 810px) {
+  .ap-page { padding-top: 40px; }
+}
+
 @media (max-width: 640px) {
   .ap-topbar { flex-wrap: wrap; }
   .ao-toolbar-top { flex-wrap: wrap; }

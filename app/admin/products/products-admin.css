@@ -851,6 +851,10 @@
   .ap-stats-inline { display: none; }
 }
 
+@media (max-width: 810px) {
+  .ap-page { padding-top: 40px; }
+}
+
 @media (max-width: 640px) {
   .ap-topbar   { flex-wrap: wrap; }
   .ap-btn-add  { width: 100%; justify-content: center; order: 3; }

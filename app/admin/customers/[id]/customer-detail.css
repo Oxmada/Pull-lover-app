@@ -511,6 +511,10 @@
   .acd-page  { padding: 16px; }
   .acd-grid  { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 810px) {
+  .acd-page { padding-top: 40px; }
+}
 @media (max-width: 640px) {
   .acd-topbar     { flex-wrap: wrap; }
   .acd-header-btns { width: 100%; }
