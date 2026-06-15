@@ -78,7 +78,7 @@ export default function HomePage() {
                   )}
                   <div className="product-image-pro">
                     <img src={product.image || "/no-image.png"} alt={product.name} />
-                    <div className="product-overlay">Voir le produit →</div>
+                    <div className="product-overlay" aria-hidden="true">Voir le produit →</div>
                   </div>
                   <div className="product-details-pro">
                     <h3>{product.name}</h3>
@@ -166,6 +166,7 @@ export default function HomePage() {
                     type="email"
                     className="vn-nl-input"
                     placeholder="Votre adresse email"
+                    aria-label="Votre adresse email"
                     value={nlEmail}
                     onChange={(e) => setNlEmail(e.target.value)}
                     required

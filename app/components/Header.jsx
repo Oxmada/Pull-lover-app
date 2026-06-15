@@ -95,6 +95,7 @@ export default function Header({ transparent = false }) {
                       <img
                         src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
                         alt=""
+                        aria-hidden="true"
                         width={34}
                         height={34}
                         className="h-logo-coeur"

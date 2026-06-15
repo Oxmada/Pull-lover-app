@@ -237,8 +237,8 @@ export default function ProductDetailPage() {
 
               {images.length > 1 && (
                 <>
-                  <button className="nav-arrow prev" onClick={() => setSelectedImage((i) => (i > 0 ? i - 1 : images.length - 1))}>‹</button>
-                  <button className="nav-arrow next" onClick={() => setSelectedImage((i) => (i < images.length - 1 ? i + 1 : 0))}>›</button>
+                  <button className="nav-arrow prev" aria-label="Image précédente" onClick={() => setSelectedImage((i) => (i > 0 ? i - 1 : images.length - 1))}>‹</button>
+                  <button className="nav-arrow next" aria-label="Image suivante" onClick={() => setSelectedImage((i) => (i < images.length - 1 ? i + 1 : 0))}>›</button>
                 </>
               )}
             </div>
@@ -344,6 +344,8 @@ export default function ProductDetailPage() {
                       className={`color-btn ${selectedColor === color.name ? "active" : ""}`}
                       style={{ backgroundColor: color.code }}
                       onClick={() => setSelectedColor(color.name)}
+                      aria-label={color.name}
+                      aria-pressed={selectedColor === color.name}
                       title={color.name}
                     />
                   ))}
@@ -412,15 +414,20 @@ export default function ProductDetailPage() {
 
               {showReviewForm && (
                 <div className="review-form">
-                  <input type="text" placeholder="Votre nom" value={reviewName} onChange={(e) => setReviewName(e.target.value)} />
-                  <textarea placeholder="Votre avis" value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} />
-                  <div className="star-selector">
-                    <span>Votre note :</span>
+                  <input type="text" placeholder="Votre nom" aria-label="Votre nom" value={reviewName} onChange={(e) => setReviewName(e.target.value)} />
+                  <textarea placeholder="Votre avis" aria-label="Votre avis" value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} />
+                  <div className="star-selector" role="radiogroup" aria-label="Votre note">
+                    <span aria-hidden="true">Votre note :</span>
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
                         key={star}
+                        role="radio"
+                        tabIndex={0}
+                        aria-checked={star <= reviewRating}
+                        aria-label={`${star} étoile${star > 1 ? "s" : ""}`}
                         className={`clickable-star ${star <= reviewRating ? "selected" : ""}`}
                         onClick={() => setReviewRating(star)}
+                        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setReviewRating(star)}
                       >
                         {star <= reviewRating ? "★" : "☆"}
                       </span>

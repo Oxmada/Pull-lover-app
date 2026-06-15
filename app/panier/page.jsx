@@ -104,9 +104,9 @@ export default function CartPage() {
                       </p>
                     )}
                     <div className="qty-controls">
-                      <button onClick={() => decreaseQty(item.cartKey)} disabled={item.quantity === 0}>−</button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => increaseQty(item.cartKey)}>+</button>
+                      <button aria-label={`Diminuer la quantité de ${item.name}`} onClick={() => decreaseQty(item.cartKey)} disabled={item.quantity === 0}>−</button>
+                      <span aria-live="polite">{item.quantity}</span>
+                      <button aria-label={`Augmenter la quantité de ${item.name}`} onClick={() => increaseQty(item.cartKey)}>+</button>
                     </div>
                   </div>
 
@@ -164,6 +164,7 @@ export default function CartPage() {
                     <input
                       type="text"
                       placeholder="Entrez votre code"
+                      aria-label="Code promo"
                       value={promoCode}
                       onChange={(e) => { setPromoCode(e.target.value); setPromoError(""); }}
                       onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}

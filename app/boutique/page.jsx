@@ -132,6 +132,7 @@ function BoutiqueContent() {
           <input
             type="text"
             placeholder="Rechercher..."
+            aria-label="Rechercher un produit"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="search-input"
@@ -223,7 +224,7 @@ function BoutiqueContent() {
                         className="product-img"
                       />
                       {product.stock === 0 && (
-                        <div className="stock-overlay">Rupture de stock</div>
+                        <div className="stock-overlay" aria-hidden="true">Rupture de stock</div>
                       )}
                     </div>
                   </Link>

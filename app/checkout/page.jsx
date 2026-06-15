@@ -168,6 +168,7 @@ function CheckoutInner() {
               <input
                 type="email"
                 placeholder="Tom.exemple@gmail.com"
+                aria-label="Adresse e-mail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="checkout-input"
@@ -181,6 +182,7 @@ function CheckoutInner() {
               <input
                 type="text"
                 placeholder="Pays / région"
+                aria-label="Pays ou région"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 className="checkout-input"
@@ -189,6 +191,7 @@ function CheckoutInner() {
                 <input
                   type="text"
                   placeholder="Prénom"
+                  aria-label="Prénom"
                   value={firstname}
                   onChange={(e) => setFirstname(e.target.value)}
                   className="checkout-input"
@@ -197,6 +200,7 @@ function CheckoutInner() {
                 <input
                   type="text"
                   placeholder="Nom"
+                  aria-label="Nom"
                   value={lastname}
                   onChange={(e) => setLastname(e.target.value)}
                   className="checkout-input"
@@ -206,6 +210,7 @@ function CheckoutInner() {
               <input
                 type="text"
                 placeholder="Entreprise (optionnel)"
+                aria-label="Entreprise (optionnel)"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 className="checkout-input"
@@ -213,6 +218,7 @@ function CheckoutInner() {
               <input
                 type="text"
                 placeholder="Adresse"
+                aria-label="Adresse"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 className="checkout-input"
@@ -222,6 +228,7 @@ function CheckoutInner() {
                 <input
                   type="text"
                   placeholder="Code postal"
+                  aria-label="Code postal"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
                   className="checkout-input"
@@ -229,6 +236,7 @@ function CheckoutInner() {
                 <input
                   type="text"
                   placeholder="Ville"
+                  aria-label="Ville"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   className="checkout-input"

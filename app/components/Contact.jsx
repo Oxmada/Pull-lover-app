@@ -148,7 +148,7 @@ export default function Contact() {
                     <img
                         className="contact__image"
                         src="https://res.cloudinary.com/dewstflqp/image/upload/v1780126255/pull-over-polo-vert-olive-homme-malgache-chemin-sable_js6kmt.jpg"
-                        alt="Pull Lover"
+                        alt="Homme portant un pull-over vert olive sur un chemin de sable"
                     />
                 </div>
 
