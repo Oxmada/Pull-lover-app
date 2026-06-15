@@ -1,111 +1,71 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import ProductForm from "@/app/components/ProductForm";
 import { useToast } from "@/app/hooks/useToast";
 import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
-import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { usePaginatedFetch } from "@/app/hooks/usePaginatedFetch";
 import { Toast } from "@/app/components/ui/Toast";
 import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
+import { ProductsFilters } from "./ProductsFilters";
+import { ProductsTable } from "./ProductsTable";
 import "./products-admin.css";
 
-const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
-
 export default function ProductsManagement() {
-  const [products, setProducts]             = useState([]);
   const [categories, setCategories]         = useState([]);
   const [stats, setStats]                   = useState(null);
-  const [pagination, setPagination]         = useState(null);
-  const [loading, setLoading]               = useState(true);
-  const [fetchError, setFetchError]         = useState(null);
   const [filter, setFilter]                 = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [search, setSearch]                 = useState("");
   const [sort, setSort]                     = useState("createdAt");
-  const [order, setOrder]                   = useState("desc");
-  const [page, setPage]                     = useState(1);
+  const [order]                             = useState("desc");
+  const [search, setSearch]                 = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [exporting, setExporting]           = useState(false);
   const [showForm, setShowForm]             = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [filterOpen, setFilterOpen]         = useState(false);
-  const [sortOpen, setSortOpen]             = useState(false);
-  const [catOpen, setCatOpen]               = useState(false);
-  const filterRef      = useRef(null);
-  const sortRef        = useRef(null);
-  const catRef         = useRef(null);
-  const searchFirstRef = useRef(true);
 
-  const { toast, showToast }                   = useToast();
+  const { toast, showToast }                    = useToast();
   const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
-  useClickOutside([
-    [sortRef,   () => setSortOpen(false)],
-    [catRef,    () => setCatOpen(false)],
-    [filterRef, () => setFilterOpen(false)],
-  ]);
 
-  useEffect(() => { fetchCategories(); }, []);
-
-  // Fetch immédiat sur tous les filtres sauf search
-  useEffect(() => { fetchProducts(); }, [filter, sort, order, categoryFilter, page]);
-
-  // Fetch avec debounce sur la recherche textuelle (skip premier rendu)
   useEffect(() => {
-    if (searchFirstRef.current) { searchFirstRef.current = false; return; }
-    const t = setTimeout(fetchProducts, 400);
+    fetch("/api/categories")
+      .then(r => r.json())
+      .then(d => setCategories(d.categories || d || []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(t);
   }, [search]);
 
-  const fetchCategories = async () => {
-    try {
-      const res  = await fetch("/api/categories");
-      const data = await res.json();
-      setCategories(data.categories || data || []);
-    } catch (err) {
-      console.error("Erreur chargement catégories:", err);
-    }
+  const queryParams = {
+    filter, sort, order,
+    ...(debouncedSearch  && { search: debouncedSearch }),
+    ...(categoryFilter   && { category: categoryFilter }),
   };
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    setFetchError(null);
-    try {
-      const params = new URLSearchParams({
-        filter, sort, order, page,
-        ...(search         && { search }),
-        ...(categoryFilter && { category: categoryFilter }),
-      });
-      const res  = await fetch(`/api/admin/products?${params}`);
-      const data = await res.json();
-      if (data.success) {
-        setProducts(data.products);
-        setStats(data.stats);
-        setPagination(data.pagination);
-      } else {
-        setFetchError(data.message || "Erreur serveur");
-      }
-    } catch (error) {
-      console.error("Erreur:", error);
-      setFetchError("Impossible de contacter le serveur");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { items: products, pagination, loading, error, page, setPage } =
+    usePaginatedFetch("/api/admin/products", queryParams, {
+      itemsKey: "products",
+      onData:   (data) => setStats(data.stats ?? null),
+    });
+
+  // Mutations locales optimistes
+  const [localProducts, setLocalProducts] = useState([]);
+  useEffect(() => { setLocalProducts(products); }, [products]);
 
   const handleToggleAvailable = async (product) => {
     try {
       const res = await fetch("/api/admin/products", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product._id,
-          updates: { isAvailable: !product.isAvailable },
-        }),
+        body: JSON.stringify({ productId: product._id, updates: { isAvailable: !product.isAvailable } }),
       });
       const data = await res.json();
       if (data.success) {
-        setProducts((prev) =>
-          prev.map((p) => p._id === product._id ? { ...p, isAvailable: !p.isAvailable } : p)
+        setLocalProducts(prev =>
+          prev.map(p => p._id === product._id ? { ...p, isAvailable: !p.isAvailable } : p)
         );
       } else {
         showToast("Erreur lors de la mise à jour", "error");
@@ -121,7 +81,7 @@ export default function ProductsManagement() {
         const res  = await fetch(`/api/admin/products?id=${productId}`, { method: "DELETE" });
         const data = await res.json();
         if (data.success) {
-          setProducts((prev) => prev.filter((p) => p._id !== productId));
+          setLocalProducts(prev => prev.filter(p => p._id !== productId));
           showToast("Produit supprimé");
         } else {
           showToast("Erreur lors de la suppression", "error");
@@ -132,8 +92,8 @@ export default function ProductsManagement() {
     });
   };
 
-  const handleEdit = (product) => { setEditingProduct(product); setShowForm(true); };
-  const closeForm  = ()        => { setShowForm(false); setEditingProduct(null); };
+  const handleEdit  = (product) => { setEditingProduct(product); setShowForm(true); };
+  const closeForm   = ()        => { setShowForm(false); setEditingProduct(null); };
 
   const handleSave = async (productData) => {
     try {
@@ -145,23 +105,22 @@ export default function ProductsManagement() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Erreur serveur");
-      await fetchProducts();
+      setPage(1);
       closeForm();
       showToast(editingProduct ? "Produit modifié" : "Produit ajouté");
-    } catch (error) {
-      showToast("Erreur : " + error.message, "error");
+    } catch (err) {
+      showToast("Erreur : " + err.message, "error");
     }
   };
 
   const exportCSV = async () => {
     setExporting(true);
     try {
-      const params = new URLSearchParams({
-        filter, sort, order, export: "true",
-        ...(search         && { search }),
-        ...(categoryFilter && { category: categoryFilter }),
-      });
-      const res  = await fetch(`/api/admin/products?${params}`);
+      const p = new URLSearchParams({ filter, sort, order, export: "true" });
+      if (debouncedSearch) p.set("search", debouncedSearch);
+      if (categoryFilter)  p.set("category", categoryFilter);
+
+      const res  = await fetch(`/api/admin/products?${p}`);
       const data = await res.json();
       if (!data.success) return;
 
@@ -170,11 +129,8 @@ export default function ProductsManagement() {
         "XS", "S", "M", "L", "XL", "Stock total", "Visible", "Ajouté le",
       ];
       const rows = data.products.map(p => [
-        p.name,
-        p.brand || "",
-        p.category?.name || "",
-        p.price,
-        p.promoPrice || "",
+        p.name, p.brand || "", p.category?.name || "",
+        p.price, p.promoPrice || "",
         p.stocks?.XS ?? 0, p.stocks?.S ?? 0, p.stocks?.M ?? 0,
         p.stocks?.L ?? 0, p.stocks?.XL ?? 0,
         p.stock ?? 0,
@@ -195,23 +151,6 @@ export default function ProductsManagement() {
     }
   };
 
-  const setFilterAndReset = (val) => { setFilter(val); setPage(1); };
-  const setCatAndReset    = (val) => { setCategoryFilter(val); setPage(1); };
-  const setSortAndReset   = (val) => { setSort(val); setPage(1); setSortOpen(false); };
-
-  const CHIP_FILTERS = [
-    { value: "all", label: "Tous",         statsKey: "total",      color: "#0f172a" },
-    { value: "low", label: "Stock faible", statsKey: "lowStock",   color: "#b45309" },
-    { value: "out", label: "Rupture",      statsKey: "outOfStock", color: "#be123c" },
-  ];
-
-  const SORT_OPTIONS = [
-    { label: "Date création", value: "createdAt" },
-    { label: "Nom",           value: "name"      },
-    { label: "Prix",          value: "price"     },
-    { label: "Stock",         value: "stock"     },
-  ];
-
   return (
     <div className="ap-page">
 
@@ -229,214 +168,33 @@ export default function ProductsManagement() {
         </button>
       </div>
 
-      {/* Toolbar — recherche + filtres + catégorie + tri */}
-      <div className="ao-toolbar-top">
-        <input
-          type="text"
-          placeholder="Rechercher un produit…"
-          value={search}
-          onChange={(e) => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
-          className="ap-search-input"
-        />
-        <div className="ap-sort-wrap" ref={filterRef}>
-          <button className="ap-sort-trigger" onClick={() => setFilterOpen((o) => !o)}>
-            <span className="ao-filter-dot" style={{ background: CHIP_FILTERS.find((f) => f.value === filter)?.color }} />
-            {CHIP_FILTERS.find((f) => f.value === filter)?.label}
-            <svg className={`ap-sort-trigger-arrow ${filterOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          {filterOpen && (
-            <ul className="ap-sort-dropdown">
-              <li className="ap-sort-dropdown-title">Filtrer par stock</li>
-              {CHIP_FILTERS.map((f) => {
-                const count = stats ? stats[f.statsKey] : null;
-                return (
-                  <li
-                    key={f.value}
-                    className={`ap-sort-option ${filter === f.value ? "selected" : ""}`}
-                    onClick={() => { setFilterAndReset(f.value); setFilterOpen(false); }}
-                  >
-                    <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="ao-filter-dot" style={{ background: f.color }} />
-                      {f.label}
-                      {count !== null && <span style={{ color: "#a8a29e", fontSize: "11px" }}>({count})</span>}
-                    </span>
-                    {filter === f.value && <span className="ap-sort-check">✓</span>}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-        <div className="ap-sort-wrap" ref={catRef}>
-          <button className="ap-sort-trigger" onClick={() => setCatOpen((o) => !o)}>
-            {categories.find((c) => c._id === categoryFilter)?.name || "Catégories"}
-            <svg className={`ap-sort-trigger-arrow ${catOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          {catOpen && (
-            <ul className="ap-sort-dropdown">
-              <li
-                className={`ap-sort-option ${categoryFilter === "" ? "selected" : ""}`}
-                onClick={() => { setCatAndReset(""); setCatOpen(false); }}
-              >
-                Toutes catégories
-                {categoryFilter === "" && <span className="ap-sort-check">✓</span>}
-              </li>
-              {categories.map((c) => (
-                <li
-                  key={c._id}
-                  className={`ap-sort-option ${categoryFilter === c._id ? "selected" : ""}`}
-                  onClick={() => { setCatAndReset(c._id); setCatOpen(false); }}
-                >
-                  {c.name}
-                  {categoryFilter === c._id && <span className="ap-sort-check">✓</span>}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="ap-sort-wrap" ref={sortRef}>
-          <button className="ap-sort-trigger" onClick={() => setSortOpen((o) => !o)}>
-            {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-            <svg className={`ap-sort-trigger-arrow ${sortOpen ? "open" : ""}`} width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M1.5 3.5L5 7L8.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          {sortOpen && (
-            <ul className="ap-sort-dropdown">
-              <li className="ap-sort-dropdown-title">Trier par</li>
-              {SORT_OPTIONS.map((o) => (
-                <li
-                  key={o.value}
-                  className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
-                  onClick={() => setSortAndReset(o.value)}
-                >
-                  {o.label}
-                  {sort === o.value && <span className="ap-sort-check">✓</span>}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+      <ProductsFilters
+        search={search}         onSearchChange={setSearch}
+        filter={filter}         onFilterChange={setFilter}
+        categoryFilter={categoryFilter} onCategoryChange={setCategoryFilter}
+        sort={sort}             onSortChange={setSort}
+        categories={categories}
+        stats={stats}
+      />
 
-      {/* Table */}
-      <div className="ap-table-wrap">
-        {loading ? (
-          <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
-        ) : fetchError ? (
-          <div className="ap-state ap-state-error">
-            <span className="ap-state-icon">⚠️</span>
-            {fetchError}
-            <button className="ap-state-retry" onClick={fetchProducts}>Réessayer</button>
-          </div>
-        ) : products.length === 0 ? (
-          <div className="ap-state"><span className="ap-state-icon">📭</span>Aucun produit trouvé</div>
-        ) : (
-          <table className="ap-table">
-            <thead>
-              <tr>
-                <th>Produit</th>
-                <th>Catégorie</th>
-                <th>Prix</th>
-                <th>Stock par taille</th>
-                <th>Statut</th>
-                <th>Visible</th>
-                <th>Ajouté le</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>
-                    <div className="ap-product-cell">
-                      {product.image
-                        ? <img src={product.image} alt={product.name} className="ap-product-img" />
-                        : <div className="ap-product-no-img">👕</div>
-                      }
-                      <div>
-                        <span className="ap-product-name">{product.name}</span>
-                        {product.brand && <span className="ap-product-brand">{product.brand}</span>}
-                      </div>
-                    </div>
-                  </td>
-                  <td>{product.category?.name || <span style={{ color: "#a8a29e" }}>—</span>}</td>
-                  <td>
-                    {product.promoPrice ? (
-                      <>
-                        <span className="ap-price-original">{product.price.toLocaleString()} €</span>
-                        <span className="ap-price-promo">{product.promoPrice.toLocaleString()} €</span>
-                      </>
-                    ) : (
-                      <span className="ap-price">{product.price.toLocaleString()} €</span>
-                    )}
-                  </td>
-                  <td><StockBySize stocks={product.stocks} /></td>
-                  <td><StockBadge stock={product.stock} /></td>
-                  <td>
-                    <button
-                      className={`ap-toggle ${product.isAvailable !== false ? "on" : "off"}`}
-                      onClick={() => handleToggleAvailable(product)}
-                      title={product.isAvailable !== false ? "Visible — cliquer pour masquer" : "Masqué — cliquer pour afficher"}
-                    >
-                      <span className="ap-toggle-thumb" />
-                    </button>
-                  </td>
-                  <td><CreatedAt date={product.createdAt} /></td>
-                  <td>
-                    <div className="ap-actions">
-                      <Link
-                        href={`/products/${product._id}`}
-                        target="_blank"
-                        className="ap-btn-view"
-                        title="Voir la fiche produit"
-                      >
-                        ↗
-                      </Link>
-                      <button className="ap-btn-edit" onClick={() => handleEdit(product)}>Modifier</button>
-                      <button className="ap-btn-delete" onClick={() => handleDelete(product._id, product.name)}>Supprimer</button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Pagination */}
-      {pagination && pagination.pages > 1 && (
-        <div className="ap-pagination">
-          <button
-            className="ap-page-btn"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-          >
-            ← Précédent
-          </button>
-          <span className="ap-page-info">
-            Page {pagination.page} / {pagination.pages}
-            <span className="ap-page-total"> — {pagination.total} produits</span>
-          </span>
-          <button
-            className="ap-page-btn"
-            onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
-            disabled={page === pagination.pages}
-          >
-            Suivant →
-          </button>
-        </div>
-      )}
+      <ProductsTable
+        products={localProducts}
+        loading={loading}
+        error={error}
+        onRetry={() => setPage(p => p)}
+        pagination={pagination}
+        page={page}
+        onPageChange={setPage}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onToggle={handleToggleAvailable}
+      />
 
       {/* Modal formulaire */}
       {showForm && (
         <div
           className="ap-modal-overlay"
-          onClick={(e) => { if (e.target === e.currentTarget) closeForm(); }}
+          onClick={e => { if (e.target === e.currentTarget) closeForm(); }}
         >
           <div className="ap-modal">
             <div className="ap-modal-header">
@@ -458,34 +216,4 @@ export default function ProductsManagement() {
       )}
     </div>
   );
-}
-
-function StockBySize({ stocks }) {
-  const stockMap = stocks || {};
-  return (
-    <div className="ap-stocks-by-size">
-      {ALL_SIZES.map((size) => {
-        const qty = stockMap[size] ?? 0;
-        return (
-          <span key={size} className={`ap-size-chip ${qty === 0 ? "empty" : ""}`}>
-            <span className="ap-size-label">{size}</span>
-            <span className="ap-size-qty">{qty}</span>
-          </span>
-        );
-      })}
-    </div>
-  );
-}
-
-function StockBadge({ stock }) {
-  if (stock === 0) return <span className="ap-badge ap-badge-out">Rupture</span>;
-  if (stock < 5)   return <span className="ap-badge ap-badge-low">Stock faible</span>;
-  return <span className="ap-badge ap-badge-ok">Disponible</span>;
-}
-
-function CreatedAt({ date }) {
-  if (!date) return <span style={{ color: "#a8a29e" }}>—</span>;
-  const d   = new Date(date);
-  const day = d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
-  return <span className="ap-date">{day}</span>;
 }

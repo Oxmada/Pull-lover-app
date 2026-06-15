@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useToast } from "@/app/hooks/useToast";
 import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { usePaginatedFetch } from "@/app/hooks/usePaginatedFetch";
 import { Toast } from "@/app/components/ui/Toast";
 import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "./customers.css";
@@ -27,19 +28,15 @@ const SORT_OPTIONS = [
 ];
 
 export default function CustomersPage() {
-  const [customers, setCustomers]           = useState([]);
-  const [loading, setLoading]               = useState(true);
-  const [search, setSearch]                 = useState("");
+  const [search, setSearch]                   = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter]     = useState("all");
-  const [sort, setSort]                     = useState("createdAt");
-  const [sortDir, setSortDir]               = useState("desc");
-  const [page, setPage]                     = useState(1);
-  const [pagination, setPagination]         = useState({ total: 0, totalPages: 1 });
-  const [syncing, setSyncing]               = useState(false);
-  const [exporting, setExporting]           = useState(false);
-  const [filterOpen, setFilterOpen]         = useState(false);
-  const [sortOpen, setSortOpen]             = useState(false);
+  const [statusFilter, setStatusFilter]       = useState("all");
+  const [sort, setSort]                       = useState("createdAt");
+  const [sortDir, setSortDir]                 = useState("desc");
+  const [syncing, setSyncing]                 = useState(false);
+  const [exporting, setExporting]             = useState(false);
+  const [filterOpen, setFilterOpen]           = useState(false);
+  const [sortOpen, setSortOpen]               = useState(false);
   const filterRef = useRef(null);
   const sortRef   = useRef(null);
 
@@ -50,58 +47,34 @@ export default function CustomersPage() {
     [filterRef, () => setFilterOpen(false)],
   ]);
 
-  // Debounce search → reset page
   useEffect(() => {
-    const t = setTimeout(() => {
-      setPage(1);
-      setDebouncedSearch(search);
-    }, 400);
+    const t = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(t);
   }, [search]);
 
-  useEffect(() => {
-    loadCustomers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, statusFilter, sort, sortDir, page]);
-
-  const loadCustomers = async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (statusFilter === "vip") params.append("vip", "true");
-      else if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
-      params.append("sort", sort);
-      params.append("order", sortDir);
-      params.append("page", page);
-      params.append("limit", PER_PAGE);
-
-      const res  = await fetch(`/api/customers?${params}`);
-      const data = await res.json();
-      if (data.success) {
-        setCustomers(data.customers);
-        setPagination(data.pagination);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const queryParams = {
+    sort, order: sortDir,
+    ...(debouncedSearch && { search: debouncedSearch }),
+    ...(statusFilter === "vip"                        && { vip: "true" }),
+    ...(statusFilter !== "all" && statusFilter !== "vip" && { status: statusFilter }),
   };
 
+  const { items: customers, pagination, loading, page, setPage } =
+    usePaginatedFetch("/api/customers", queryParams, { itemsKey: "customers", perPage: PER_PAGE });
+
+  // Mutation locale sur les customers (toggle statut, suppression)
+  const [localCustomers, setLocalCustomers] = useState([]);
+  useEffect(() => { setLocalCustomers(customers); }, [customers]);
 
   const exportCSV = async () => {
     setExporting(true);
     try {
-      const params = new URLSearchParams();
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (statusFilter === "vip") params.append("vip", "true");
-      else if (statusFilter && statusFilter !== "all") params.append("status", statusFilter);
-      params.append("sort", sort);
-      params.append("order", sortDir);
-      params.append("limit", "9999");
+      const p = new URLSearchParams({ sort, order: sortDir, limit: "9999" });
+      if (debouncedSearch) p.append("search", debouncedSearch);
+      if (statusFilter === "vip") p.append("vip", "true");
+      else if (statusFilter && statusFilter !== "all") p.append("status", statusFilter);
 
-      const res  = await fetch(`/api/customers?${params}`);
+      const res  = await fetch(`/api/customers?${p}`);
       const data = await res.json();
       if (!data.success) return;
 
@@ -142,7 +115,7 @@ export default function CustomersPage() {
             body: JSON.stringify({ action: "sync" }),
           });
           const data = await res.json();
-          if (data.success) { showToast(data.message || "Synchronisation terminée"); loadCustomers(); }
+          if (data.success) { showToast(data.message || "Synchronisation terminée"); setPage(1); }
           else showToast("Erreur lors de la synchronisation", "error");
         } catch { showToast("Erreur lors de la synchronisation", "error"); }
         finally { setSyncing(false); }
@@ -160,7 +133,7 @@ export default function CustomersPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        setCustomers(prev => prev.map(c => c._id === id ? { ...c, status: newStatus } : c));
+        setLocalCustomers(prev => prev.map(c => c._id === id ? { ...c, status: newStatus } : c));
         showToast(newStatus === "blocked" ? "Client bloqué" : "Client débloqué");
       }
     } catch { showToast("Erreur lors de la mise à jour", "error"); }
@@ -173,7 +146,7 @@ export default function CustomersPage() {
         try {
           const res = await fetch(`/api/customers/${id}`, { method: "DELETE" });
           if (res.ok) {
-            setCustomers(prev => prev.filter(c => c._id !== id));
+            setLocalCustomers(prev => prev.filter(c => c._id !== id));
             showToast("Client supprimé");
           } else showToast("Erreur lors de la suppression", "error");
         } catch { showToast("Erreur lors de la suppression", "error"); }
@@ -193,8 +166,6 @@ export default function CustomersPage() {
     return new Date(date).toLocaleDateString("fr-FR");
   };
 
-
-  // Page numbers with ellipsis
   const pageNumbers = (() => {
     const total = pagination.totalPages;
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -247,7 +218,7 @@ export default function CustomersPage() {
                 <li
                   key={f.value}
                   className={`ap-sort-option ${statusFilter === f.value ? "selected" : ""}`}
-                  onClick={() => { setStatusFilter(f.value); setPage(1); setFilterOpen(false); }}
+                  onClick={() => { setStatusFilter(f.value); setFilterOpen(false); }}
                 >
                   <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <span className="ao-filter-dot" style={{ background: f.color }} />
@@ -276,7 +247,7 @@ export default function CustomersPage() {
                 <li
                   key={o.value}
                   className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
-                  onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
+                  onClick={() => { setSort(o.value); setSortOpen(false); }}
                 >
                   {o.label}
                   {sort === o.value && <span className="ap-sort-check">✓</span>}
@@ -291,7 +262,7 @@ export default function CustomersPage() {
       <div className="ap-table-wrap">
         {loading ? (
           <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
-        ) : customers.length === 0 ? (
+        ) : localCustomers.length === 0 ? (
           <div className="ap-state">
             <span className="ap-state-icon">📭</span>
             Aucun client trouvé
@@ -315,7 +286,7 @@ export default function CustomersPage() {
                 </tr>
               </thead>
               <tbody>
-                {customers.map(customer => (
+                {localCustomers.map(customer => (
                   <tr key={customer._id}>
                     <td>
                       <div className="ac-customer-cell">

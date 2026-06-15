@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useToast } from "@/app/hooks/useToast";
 import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { usePaginatedFetch } from "@/app/hooks/usePaginatedFetch";
 import { Toast } from "@/app/components/ui/Toast";
 import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "./orders-admin.css";
@@ -45,17 +46,13 @@ const SORT_OPTIONS = [
 ];
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders]                   = useState([]);
-  const [loading, setLoading]                 = useState(true);
-  const [updatingId, setUpdatingId]           = useState(null);
   const [search, setSearch]                   = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter]       = useState("");
   const [sort, setSort]                       = useState("createdAt");
   const [sortDir, setSortDir]                 = useState("desc");
-  const [page, setPage]                       = useState(1);
-  const [pagination, setPagination]           = useState({ total: 0, totalPages: 1 });
   const [stats, setStats]                     = useState(null);
+  const [updatingId, setUpdatingId]           = useState(null);
   const [exporting, setExporting]             = useState(false);
   const [filterOpen, setFilterOpen]           = useState(false);
   const [sortOpen, setSortOpen]               = useState(false);
@@ -70,32 +67,26 @@ export default function AdminOrdersPage() {
   ]);
 
   useEffect(() => {
-    const t = setTimeout(() => { setPage(1); setDebouncedSearch(search); }, 400);
+    const t = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(t);
   }, [search]);
 
-  useEffect(() => { fetchOrders(); }, [debouncedSearch, statusFilter, sort, sortDir, page]);
-
-  const fetchOrders = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({ sort, order: sortDir, page, limit: PER_PAGE });
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (statusFilter)    params.append("status", statusFilter);
-
-      const res  = await fetch(`/api/admin/orders?${params}`);
-      const data = await res.json();
-      if (data.orders) {
-        setOrders(data.orders);
-        setPagination(data.pagination);
-        setStats(data.stats);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const queryParams = {
+    sort, order: sortDir,
+    ...(debouncedSearch && { search: debouncedSearch }),
+    ...(statusFilter    && { status: statusFilter }),
   };
+
+  const { items: orders, pagination, loading, page, setPage } =
+    usePaginatedFetch("/api/admin/orders", queryParams, {
+      itemsKey: "orders",
+      perPage:  PER_PAGE,
+      onData:   (data) => setStats(data.stats ?? null),
+    });
+
+  // Mutations locales (update statut, suppression)
+  const [localOrders, setLocalOrders] = useState([]);
+  useEffect(() => { setLocalOrders(orders); }, [orders]);
 
   const updateStatus = async (orderId, newStatus) => {
     setUpdatingId(orderId);
@@ -107,7 +98,7 @@ export default function AdminOrdersPage() {
       });
       const data = await res.json();
       if (!res.ok) { showToast(data.message || "Erreur lors du changement de statut", "error"); return; }
-      setOrders(prev => prev.map(o => o._id === data._id ? data : o));
+      setLocalOrders(prev => prev.map(o => o._id === data._id ? data : o));
       showToast("Statut mis à jour");
     } catch {
       showToast("Erreur serveur", "error");
@@ -124,7 +115,7 @@ export default function AdminOrdersPage() {
           const res  = await fetch(`/api/admin/orders/${id}`, { method: "DELETE" });
           const data = await res.json();
           if (res.ok) {
-            setOrders(prev => prev.filter(o => o._id !== id));
+            setLocalOrders(prev => prev.filter(o => o._id !== id));
             showToast("Commande supprimée");
           } else {
             showToast(data.message || "Impossible de supprimer", "error");
@@ -140,11 +131,11 @@ export default function AdminOrdersPage() {
   const exportCSV = async () => {
     setExporting(true);
     try {
-      const params = new URLSearchParams({ sort, order: sortDir, limit: 9999 });
-      if (debouncedSearch) params.append("search", debouncedSearch);
-      if (statusFilter)    params.append("status", statusFilter);
+      const p = new URLSearchParams({ sort, order: sortDir, limit: 9999 });
+      if (debouncedSearch) p.append("search", debouncedSearch);
+      if (statusFilter)    p.append("status", statusFilter);
 
-      const res  = await fetch(`/api/admin/orders?${params}`);
+      const res  = await fetch(`/api/admin/orders?${p}`);
       const data = await res.json();
       if (!data.orders) return;
 
@@ -194,7 +185,7 @@ export default function AdminOrdersPage() {
           type="text"
           placeholder="Rechercher par nom, email, ville…"
           value={search}
-          onChange={e => { setSearch(e.target.value); if (page !== 1) setPage(1); }}
+          onChange={e => setSearch(e.target.value)}
           className="ap-search-input"
         />
         <div className="ap-sort-wrap" ref={filterRef}>
@@ -214,7 +205,7 @@ export default function AdminOrdersPage() {
                   <li
                     key={f.value}
                     className={`ap-sort-option ${statusFilter === f.value ? "selected" : ""}`}
-                    onClick={() => { setStatusFilter(f.value); setPage(1); setFilterOpen(false); }}
+                    onClick={() => { setStatusFilter(f.value); setFilterOpen(false); }}
                   >
                     <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                       <span className="ao-filter-dot" style={{ background: f.color }} />
@@ -242,7 +233,7 @@ export default function AdminOrdersPage() {
                 <li
                   key={o.value}
                   className={`ap-sort-option ${sort === o.value ? "selected" : ""}`}
-                  onClick={() => { setSort(o.value); setPage(1); setSortOpen(false); }}
+                  onClick={() => { setSort(o.value); setSortOpen(false); }}
                 >
                   {o.label}
                   {sort === o.value && <span className="ap-sort-check">✓</span>}
@@ -257,7 +248,7 @@ export default function AdminOrdersPage() {
       <div className="ap-table-wrap">
         {loading ? (
           <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
-        ) : orders.length === 0 ? (
+        ) : localOrders.length === 0 ? (
           <div className="ap-state"><span className="ap-state-icon">📭</span>Aucune commande trouvée</div>
         ) : (
           <table className="ap-table">
@@ -274,7 +265,7 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map(o => {
+              {localOrders.map(o => {
                 const c        = o.customer || {};
                 const fullName = [c.firstname, c.lastname].filter(Boolean).join(" ") || c.name || "—";
                 const initials = ((c.firstname?.[0] || "") + (c.lastname?.[0] || "")).toUpperCase() || "?";

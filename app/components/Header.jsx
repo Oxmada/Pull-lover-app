@@ -6,38 +6,8 @@ import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useFavorites } from "./FavoritesContext";
 import { useSession, signOut } from "next-auth/react";
+import { HeartIcon, BagIcon, UserIcon, BurgerIcon } from "@/app/components/icons";
 import "./Header.css";
-
-// ── Icons ──────────────────────────────────────────────────────────
-
-const HeartIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-);
-
-const BagIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <path d="M16 10a4 4 0 0 1-8 0" />
-    </svg>
-);
-
-const UserIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-    </svg>
-);
-
-const BurgerIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-);
 
 // ── Data ───────────────────────────────────────────────────────────
 
@@ -143,14 +113,14 @@ export default function Header({ transparent = false }) {
                             {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                         </Link>
                         {status === "loading" ? (
-                            <span className="h-icon-btn" aria-hidden="true"><UserIcon /></span>
+                            <span className="h-icon-btn" aria-hidden="true"><UserIcon size={22} /></span>
                         ) : !session ? (
                             <Link href="/auth/login" className="h-icon-btn" onClick={close} aria-label="Connexion">
-                                <UserIcon />
+                                <UserIcon size={22} />
                             </Link>
                         ) : (
                             <Link href="/dashboard" className="h-icon-btn" onClick={close} aria-label="Mon espace">
-                                <UserIcon />
+                                <UserIcon size={22} />
                             </Link>
                         )}
                     </li>
@@ -167,10 +137,10 @@ export default function Header({ transparent = false }) {
                         {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                     </Link>
                     {status === "loading" ? (
-                        <span className="h-icon-btn" aria-hidden="true"><UserIcon /></span>
+                        <span className="h-icon-btn" aria-hidden="true"><UserIcon size={22} /></span>
                     ) : !session ? (
                         <Link href="/auth/login" className="h-icon-btn" aria-label="Connexion">
-                            <UserIcon />
+                            <UserIcon size={22} />
                         </Link>
                     ) : (
                         <div className="h-user-menu" ref={userMenuRef}>
@@ -179,7 +149,7 @@ export default function Header({ transparent = false }) {
                                 onClick={() => setUserMenuOpen((prev) => !prev)}
                                 aria-label="Mon compte"
                             >
-                                <UserIcon />
+                                <UserIcon size={22} />
                             </button>
                             {userMenuOpen && (
                                 <div className="h-user-dropdown">
