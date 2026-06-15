@@ -91,13 +91,15 @@ export default function Header({ transparent = false }) {
             {/* Navbar */}
             <nav className="h-navbar">
                 <Link href="/" className="h-logo">
-                    <img
-                      src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
-                      alt=""
-                      width={34}
-                      height={34}
-                      className="h-logo-coeur"
-                    />
+                    {transparent && (
+                      <img
+                        src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
+                        alt=""
+                        width={34}
+                        height={34}
+                        className="h-logo-coeur"
+                      />
+                    )}
                     <span className="h-logo-bold">Pull</span>
                     <span className="h-logo-script">Lover</span>
                 </Link>
