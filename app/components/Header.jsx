@@ -11,7 +11,7 @@ import "./Header.css";
 // ── Icons ──────────────────────────────────────────────────────────
 
 const HeartIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
 );
@@ -94,8 +94,8 @@ export default function Header({ transparent = false }) {
                     <img
                       src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
                       alt=""
-                      width={22}
-                      height={22}
+                      width={34}
+                      height={34}
                       className="h-logo-coeur"
                     />
                     <span className="h-logo-bold">Pull</span>
