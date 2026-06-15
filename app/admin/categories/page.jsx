@@ -230,7 +230,8 @@ export default function CategoriesPage() {
             Aucune catégorie. Créez-en une !
           </div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "480px" }}>
             <thead>
               <tr style={{ background: "#fafaf9", borderBottom: `1px solid ${P.border}` }}>
                 {["Nom", "Créée le", "Actions"].map((h) => (
@@ -298,6 +299,7 @@ export default function CategoriesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

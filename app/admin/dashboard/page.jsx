@@ -19,7 +19,7 @@ export default async function AdminDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.topbar}>
-        <h1 className={styles.title}>Dashboard Admin</h1>
+        <h1 className={styles.title}>Dashboard admin</h1>
       </div>
 
 <DashboardStats />

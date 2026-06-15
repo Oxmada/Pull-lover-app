@@ -35,7 +35,7 @@
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .container { padding: 16px; }
-  .title     { font-size: 20px; }
+  .title     { font-size: 20px; margin-top: 40px; }
 }
 
 @media (max-width: 640px) {
