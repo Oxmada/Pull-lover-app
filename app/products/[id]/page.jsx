@@ -135,7 +135,8 @@ export default function ProductDetailPage() {
     addToCart({
       _id: product._id,
       name: product.name,
-      price: product.promoPrice ?? product.price,
+      price: product.price,
+      promoPrice: product.promoPrice || null,
       image: product.image,
       quantity: 1,
       size: selectedSize,
