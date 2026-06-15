@@ -270,29 +270,6 @@
 .od-product-ref  { font-size: 12px; color: #a8a29e; font-family: monospace; }
 .od-product-qty  { font-size: 14px; font-weight: 700; color: #C95D5D; white-space: nowrap; }
 
-/* Toast (shared) */
-.ap-toast {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 9999;
-  padding: 12px 20px;
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
-  animation: od-slide-in 0.25s ease;
-}
-.ap-toast-success { background: #0f172a; }
-.ap-toast-error   { background: #C95D5D; }
-
-@keyframes od-slide-in {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .od-page  { padding: 16px; }

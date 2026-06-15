@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useToast } from "@/app/hooks/useToast";
+import { Toast } from "@/app/components/ui/Toast";
 import "../customers/customers.css";
 
 const PER_PAGE = 50;
@@ -13,15 +15,10 @@ export default function AdminNewsletterPage() {
   const [loading, setLoading]         = useState(true);
   const [search, setSearch]           = useState("");
   const [page, setPage]               = useState(1);
-  const [toast, setToast]             = useState(null);
   const [addModal, setAddModal]        = useState(false);
   const [addEmail, setAddEmail]        = useState("");
   const [addLoading, setAddLoading]    = useState(false);
-
-  const showToast = (msg, type = "success") => {
-    setToast({ message: msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     const t = setTimeout(() => load(), 300);
@@ -239,17 +236,7 @@ export default function AdminNewsletterPage() {
         </div>
       )}
 
-      {/* Toast */}
-      {toast && (
-        <div style={{
-          position: "fixed", bottom: 24, right: 24, zIndex: 9999,
-          background: toast.type === "error" ? "#C95D5D" : "#0f172a",
-          color: "#fff", padding: "12px 20px", borderRadius: 10,
-          fontSize: 14, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-        }}>
-          {toast.message}
-        </div>
-      )}
+      <Toast toast={toast} />
     </div>
   );
 }

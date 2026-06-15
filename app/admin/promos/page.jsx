@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
+import { Toast } from "@/app/components/ui/Toast";
+import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "../customers/customers.css";
 
 const EMPTY_FORM = {
@@ -18,17 +22,12 @@ export default function AdminPromosPage() {
   const [promos, setPromos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [toast, setToast] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
-  const [confirmModal, setConfirmModal] = useState(null);
-
-  const showToast = (msg, type = "success") => {
-    setToast({ message: msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { toast, showToast }                    = useToast();
+  const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
 
   useEffect(() => {
     const t = setTimeout(() => load(), 300);
@@ -84,17 +83,13 @@ export default function AdminPromosPage() {
   }
 
   function handleDelete(promo) {
-    setConfirmModal(promo);
-  }
-
-  async function confirmDelete() {
-    const promo = confirmModal;
-    setConfirmModal(null);
-    const res = await fetch(`/api/admin/promos?id=${promo._id}`, { method: "DELETE" });
-    if (res.ok) {
-      showToast("Code supprimé");
-      load();
-    }
+    askConfirm(`Supprimer "${promo.code}" ? Cette action est irréversible.`, async () => {
+      const res = await fetch(`/api/admin/promos?id=${promo._id}`, { method: "DELETE" });
+      if (res.ok) {
+        showToast("Code supprimé");
+        load();
+      }
+    });
   }
 
   function formatDate(d) {
@@ -106,63 +101,14 @@ export default function AdminPromosPage() {
     <div className="ap-page">
 
       <style>{`
-        @keyframes promo-modal-in { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
         @media (max-width: 810px) {
           .promo-form-wrap  { padding: 16px !important; }
           .promo-form-grid  { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
-      {/* Modal confirmation suppression */}
-      {confirmModal && (
-        <div
-          onClick={() => setConfirmModal(null)}
-          style={{
-            position: "fixed", inset: 0, zIndex: 9998,
-            background: "rgba(0,0,0,0.35)", display: "flex",
-            alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff", borderRadius: 14, padding: "32px 28px",
-              width: "100%", maxWidth: 400,
-              boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
-              animation: "promo-modal-in 0.2s ease",
-            }}
-          >
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>
-              Supprimer le code promo
-            </h2>
-            <p style={{ fontSize: 14, color: "#57534e", marginBottom: 24, lineHeight: 1.5 }}>
-              Voulez-vous supprimer <strong>"{confirmModal.code}"</strong> ? Cette action est irréversible.
-            </p>
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <button
-                onClick={() => setConfirmModal(null)}
-                style={{
-                  padding: "9px 20px", background: "#f5f5f4", color: "#78716c",
-                  border: "1.5px solid #e7e5e4", borderRadius: 8,
-                  fontSize: 13, fontWeight: 600, cursor: "pointer",
-                }}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmDelete}
-                style={{
-                  padding: "9px 20px", background: "#C95D5D", color: "#fff",
-                  border: "none", borderRadius: 8,
-                  fontSize: 13, fontWeight: 600, cursor: "pointer",
-                }}
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Toast toast={toast} />
+      <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
 
       {/* Topbar */}
       <div className="ap-topbar">
@@ -404,17 +350,6 @@ export default function AdminPromosPage() {
         )}
       </div>
 
-      {/* Toast */}
-      {toast && (
-        <div style={{
-          position: "fixed", bottom: 24, right: 24, zIndex: 9999,
-          background: toast.type === "error" ? "#C95D5D" : "#0f172a",
-          color: "#fff", padding: "12px 20px", borderRadius: 10,
-          fontSize: 14, fontWeight: 600, boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-        }}>
-          {toast.message}
-        </div>
-      )}
     </div>
   );
 }

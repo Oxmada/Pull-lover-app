@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/app/hooks/useToast";
+import { Toast } from "@/app/components/ui/Toast";
 import "./order-detail.css";
 
 const STATUS_OPTIONS = [
@@ -28,12 +30,7 @@ export default function AdminOrderDetailPage() {
   const [order, setOrder]       = useState(null);
   const [loading, setLoading]   = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [toast, setToast]       = useState(null);
-
-  const showToast = (msg, type = "success") => {
-    setToast({ message: msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -88,11 +85,7 @@ export default function AdminOrderDetailPage() {
   return (
     <div className="od-page">
 
-      {toast && (
-        <div className={`ap-toast ${toast.type === "error" ? "ap-toast-error" : "ap-toast-success"}`}>
-          {toast.message}
-        </div>
-      )}
+      <Toast toast={toast} />
 
       {/* Topbar */}
       <div className="od-topbar">

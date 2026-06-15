@@ -2,6 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { Toast } from "@/app/components/ui/Toast";
+import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "./customers.css";
 
 const VIP_THRESHOLD = 50_000;
@@ -33,20 +38,17 @@ export default function CustomersPage() {
   const [pagination, setPagination]         = useState({ total: 0, totalPages: 1 });
   const [syncing, setSyncing]               = useState(false);
   const [exporting, setExporting]           = useState(false);
-  const [toast, setToast]                   = useState(null);
-  const [confirmModal, setConfirmModal]     = useState(null);
   const [filterOpen, setFilterOpen]         = useState(false);
   const [sortOpen, setSortOpen]             = useState(false);
   const filterRef = useRef(null);
   const sortRef   = useRef(null);
 
-  const showToast = (msg, type = "success") => {
-    setToast({ message: msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const askConfirm = (message, onConfirm, confirmLabel = "Confirmer") =>
-    setConfirmModal({ message, onConfirm, confirmLabel });
+  const { toast, showToast }                    = useToast();
+  const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
+  useClickOutside([
+    [sortRef,   () => setSortOpen(false)],
+    [filterRef, () => setFilterOpen(false)],
+  ]);
 
   // Debounce search → reset page
   useEffect(() => {
@@ -61,15 +63,6 @@ export default function CustomersPage() {
     loadCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, statusFilter, sort, sortDir, page]);
-
-  useEffect(() => {
-    const close = (e) => {
-      if (sortRef.current   && !sortRef.current.contains(e.target))   setSortOpen(false);
-      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, []);
 
   const loadCustomers = async () => {
     try {
@@ -216,27 +209,8 @@ export default function CustomersPage() {
   return (
     <div className="ap-page">
 
-      {/* Toast */}
-      {toast && (
-        <div className={`ap-toast ${toast.type === "error" ? "ap-toast-error" : "ap-toast-success"}`}>
-          {toast.message}
-        </div>
-      )}
-
-      {/* Modale de confirmation */}
-      {confirmModal && (
-        <div className="ap-confirm-overlay" onClick={() => setConfirmModal(null)}>
-          <div className="ap-confirm-dialog" onClick={e => e.stopPropagation()}>
-            <p className="ap-confirm-msg">{confirmModal.message}</p>
-            <div className="ap-confirm-actions">
-              <button className="ap-confirm-cancel" onClick={() => setConfirmModal(null)}>Annuler</button>
-              <button className="ap-confirm-ok" onClick={() => { confirmModal.onConfirm(); setConfirmModal(null); }}>
-                {confirmModal.confirmLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Toast toast={toast} />
+      <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
 
       {/* Topbar */}
       <div className="ap-topbar">

@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
+import { Toast } from "@/app/components/ui/Toast";
+import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "./customer-detail.css";
 
 const VIP_THRESHOLD = 50_000;
@@ -27,21 +31,13 @@ export default function CustomerDetailPage() {
   const [editing, setEditing]           = useState(false);
   const [saving, setSaving]             = useState(false);
   const [sendingEmail, setSendingEmail] = useState(null);
-  const [toast, setToast]               = useState(null);
-  const [confirmModal, setConfirmModal] = useState(null);
-
   const [form, setForm] = useState({
     firstname: "", lastname: "", email: "",
     phone: "", city: "", address: "", notes: "",
   });
 
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const askConfirm = (message, onConfirm, confirmLabel = "Confirmer") =>
-    setConfirmModal({ message, onConfirm, confirmLabel });
+  const { toast, showToast }                    = useToast();
+  const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
 
   useEffect(() => { loadCustomer(); }, [id]);
 
@@ -178,27 +174,8 @@ export default function CustomerDetailPage() {
   return (
     <div className="acd-page">
 
-      {/* Toast */}
-      {toast && (
-        <div className={`acd-toast ${toast.type === "error" ? "acd-toast-error" : "acd-toast-ok"}`}>
-          {toast.message}
-        </div>
-      )}
-
-      {/* Modale de confirmation */}
-      {confirmModal && (
-        <div className="acd-overlay" onClick={() => setConfirmModal(null)}>
-          <div className="acd-dialog" onClick={e => e.stopPropagation()}>
-            <p className="acd-dialog-msg">{confirmModal.message}</p>
-            <div className="acd-dialog-actions">
-              <button className="acd-btn-cancel" onClick={() => setConfirmModal(null)}>Annuler</button>
-              <button className="acd-btn-confirm" onClick={() => { confirmModal.onConfirm(); setConfirmModal(null); }}>
-                {confirmModal.confirmLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Toast toast={toast} />
+      <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
 
       {/* Topbar */}
       <div className="acd-topbar">

@@ -12,6 +12,20 @@
   --white: #ffffff;
   --error: #ef4444;
 
+  /* Couleurs sémantiques */
+  --color-accent: #C95D5D;
+  --color-danger: #be123c;
+  --color-danger-dark: #9f1239;
+  --color-warning: #b45309;
+  --color-success: #15803d;
+
+  /* Palette stone (UI admin/formulaires) */
+  --stone-100: #f5f5f4;
+  --stone-200: #e7e5e4;
+  --stone-400: #a8a29e;
+  --stone-500: #78716c;
+  --stone-600: #57534e;
+
   /* Border-radius */
   --radius-sm:   6px;
   --radius-md:   12px;

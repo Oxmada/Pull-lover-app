@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
+import { Toast } from "@/app/components/ui/Toast";
+import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 
 const P = {
   bg:     "#f5f5f4",
@@ -20,14 +24,9 @@ export default function CategoriesPage() {
   const [newName, setNewName]       = useState("");
   const [editingId, setEditingId]   = useState(null);
   const [editName, setEditName]     = useState("");
-  const [toast, setToast]           = useState(null);
-  const [confirmModal, setConfirmModal] = useState(null);
   const inputRef = useRef(null);
-
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const { toast, showToast }                    = useToast();
+  const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
 
   const fetchCategories = () => {
     fetch("/api/categories")
@@ -75,91 +74,20 @@ export default function CategoriesPage() {
   };
 
   const handleDelete = (id, name) => {
-    setConfirmModal({ id, name });
-  };
-
-  const confirmDelete = async () => {
-    const { id } = confirmModal;
-    setConfirmModal(null);
-    const res  = await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
-    const data = await res.json();
-    if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
-    setCategories((prev) => prev.filter((c) => c._id !== id));
-    showToast("Catégorie supprimée");
+    askConfirm(`Supprimer "${name}" ? Cette action est irréversible.`, async () => {
+      const res  = await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
+      setCategories((prev) => prev.filter((c) => c._id !== id));
+      showToast("Catégorie supprimée");
+    });
   };
 
   return (
     <div style={{ minHeight: "100vh", background: P.bg, padding: "40px 36px 28px", fontFamily: P.font }}>
 
-      {/* Toast */}
-      {toast && (
-        <div style={{
-          position: "fixed", top: "24px", right: "24px", zIndex: 9999,
-          padding: "12px 20px", borderRadius: "10px", color: "#fff",
-          fontSize: "14px", fontWeight: "600", fontFamily: P.font,
-          background: toast.type === "error" ? P.accent : P.text,
-          boxShadow: "0 8px 24px rgba(15,23,42,0.18)",
-          animation: "cat-slide-in 0.25s ease",
-        }}>
-          {toast.message}
-        </div>
-      )}
-
-      <style>{`
-        @keyframes cat-slide-in { from { opacity:0; transform:translateX(12px) } to { opacity:1; transform:translateX(0) } }
-        @keyframes cat-modal-in { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-      `}</style>
-
-      {/* Modal de confirmation suppression */}
-      {confirmModal && (
-        <div
-          onClick={() => setConfirmModal(null)}
-          style={{
-            position: "fixed", inset: 0, zIndex: 9998,
-            background: "rgba(0,0,0,0.35)", display: "flex",
-            alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff", borderRadius: "14px", padding: "32px 28px",
-              width: "100%", maxWidth: "400px", fontFamily: P.font,
-              boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
-              animation: "cat-modal-in 0.2s ease",
-            }}
-          >
-            <h2 style={{ fontSize: "17px", fontWeight: "700", color: P.text, marginBottom: "8px" }}>
-              Supprimer la catégorie
-            </h2>
-            <p style={{ fontSize: "14px", color: "#57534e", marginBottom: "24px", lineHeight: 1.5 }}>
-              Voulez-vous supprimer <strong>"{confirmModal.name}"</strong> ? Cette action est irréversible.
-            </p>
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              <button
-                onClick={() => setConfirmModal(null)}
-                style={{
-                  padding: "9px 20px", background: "#f5f5f4", color: "#78716c",
-                  border: `1.5px solid ${P.border}`, borderRadius: "8px",
-                  fontSize: "13px", fontWeight: "600", fontFamily: P.font, cursor: "pointer",
-                }}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmDelete}
-                style={{
-                  padding: "9px 20px", background: P.accent, color: "#fff",
-                  border: "none", borderRadius: "8px",
-                  fontSize: "13px", fontWeight: "600", fontFamily: P.font, cursor: "pointer",
-                }}
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Toast toast={toast} />
+      <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
 
       {/* Topbar */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "24px" }}>

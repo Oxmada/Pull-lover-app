@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ProductForm from "@/app/components/ProductForm";
+import { useToast } from "@/app/hooks/useToast";
+import { useConfirmDialog } from "@/app/hooks/useConfirmDialog";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { Toast } from "@/app/components/ui/Toast";
+import { ConfirmationDialog } from "@/app/components/ui/ConfirmationDialog";
 import "./products-admin.css";
 
 const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
@@ -20,25 +25,24 @@ export default function ProductsManagement() {
   const [sort, setSort]                     = useState("createdAt");
   const [order, setOrder]                   = useState("desc");
   const [page, setPage]                     = useState(1);
-  const [toast, setToast]                   = useState(null);
   const [exporting, setExporting]           = useState(false);
   const [showForm, setShowForm]             = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [filterOpen, setFilterOpen]         = useState(false);
   const [sortOpen, setSortOpen]             = useState(false);
   const [catOpen, setCatOpen]               = useState(false);
-  const [confirmModal, setConfirmModal]     = useState(null);
   const filterRef      = useRef(null);
   const sortRef        = useRef(null);
   const catRef         = useRef(null);
   const searchFirstRef = useRef(true);
 
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const askConfirm = (message, onConfirm) => setConfirmModal({ message, onConfirm });
+  const { toast, showToast }                   = useToast();
+  const { confirmModal, askConfirm, closeConfirm } = useConfirmDialog();
+  useClickOutside([
+    [sortRef,   () => setSortOpen(false)],
+    [catRef,    () => setCatOpen(false)],
+    [filterRef, () => setFilterOpen(false)],
+  ]);
 
   useEffect(() => { fetchCategories(); }, []);
 
@@ -51,16 +55,6 @@ export default function ProductsManagement() {
     const t = setTimeout(fetchProducts, 400);
     return () => clearTimeout(t);
   }, [search]);
-
-  useEffect(() => {
-    const close = (e) => {
-      if (sortRef.current   && !sortRef.current.contains(e.target))   setSortOpen(false);
-      if (catRef.current    && !catRef.current.contains(e.target))    setCatOpen(false);
-      if (filterRef.current && !filterRef.current.contains(e.target)) setFilterOpen(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, []);
 
   const fetchCategories = async () => {
     try {
@@ -221,32 +215,8 @@ export default function ProductsManagement() {
   return (
     <div className="ap-page">
 
-      {/* Toast */}
-      {toast && (
-        <div className={`ap-toast ${toast.type === "error" ? "ap-toast-error" : "ap-toast-success"}`}>
-          {toast.message}
-        </div>
-      )}
-
-      {/* Modale de confirmation */}
-      {confirmModal && (
-        <div className="ap-confirm-overlay" onClick={() => setConfirmModal(null)}>
-          <div className="ap-confirm-dialog" onClick={(e) => e.stopPropagation()}>
-            <p className="ap-confirm-msg">{confirmModal.message}</p>
-            <div className="ap-confirm-actions">
-              <button className="ap-confirm-cancel" onClick={() => setConfirmModal(null)}>
-                Annuler
-              </button>
-              <button
-                className="ap-confirm-ok"
-                onClick={() => { confirmModal.onConfirm(); setConfirmModal(null); }}
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Toast toast={toast} />
+      <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
 
       {/* Topbar */}
       <div className="ap-topbar">
