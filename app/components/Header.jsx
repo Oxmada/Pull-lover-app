@@ -135,7 +135,7 @@ export default function Header({ transparent = false }) {
                             <HeartIcon />
                             {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
                         </Link>
-                        <Link href="/cart" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Panier">
+                        <Link href="/panier" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Panier">
                             <BagIcon />
                             {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                         </Link>
@@ -159,7 +159,7 @@ export default function Header({ transparent = false }) {
                         <HeartIcon />
                         {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
                     </Link>
-                    <Link href="/cart" className="h-icon-btn h-cart-btn" aria-label="Panier">
+                    <Link href="/panier" className="h-icon-btn h-cart-btn" aria-label="Panier">
                         <BagIcon />
                         {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
                     </Link>

@@ -23,6 +23,11 @@ export default function CartPage() {
   const tva = Math.round(discountedSubtotal * TVA_RATE);
   const total = discountedSubtotal + tva;
   const totalQty = cartItems.reduce((acc, i) => acc + i.quantity, 0);
+  const hasZeroQty = cartItems.some((i) => i.quantity === 0);
+  const promoSavings = cartItems.reduce((acc, i) => {
+    if (i.promoPrice) return acc + (Number(i.price) - Number(i.promoPrice)) * i.quantity;
+    return acc;
+  }, 0);
 
   async function handleApplyPromo() {
     const code = promoCode.trim();
@@ -99,7 +104,7 @@ export default function CartPage() {
                       </p>
                     )}
                     <div className="qty-controls">
-                      <button onClick={() => decreaseQty(item.cartKey)}>−</button>
+                      <button onClick={() => decreaseQty(item.cartKey)} disabled={item.quantity === 0}>−</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => increaseQty(item.cartKey)}>+</button>
                     </div>
@@ -107,7 +112,15 @@ export default function CartPage() {
 
                   {/* PRIX + REMOVE */}
                   <div className="cart-item-right">
-                    <span className="cart-item-price">{item.promoPrice ?? item.price} €</span>
+                    {item.promoPrice ? (
+                      <div className="cart-item-prices">
+                        <span className="cart-item-price cart-item-price--promo">{Number(item.promoPrice).toLocaleString("fr-FR")} €</span>
+                        <span className="cart-item-price--original">{Number(item.price).toLocaleString("fr-FR")} €</span>
+                        <span className="cart-item-saving">−{((Number(item.price) - Number(item.promoPrice)) * item.quantity).toLocaleString("fr-FR")} €</span>
+                      </div>
+                    ) : (
+                      <span className="cart-item-price">{Number(item.price).toLocaleString("fr-FR")} €</span>
+                    )}
                     <button className="cart-remove-btn" onClick={() => removeFromCart(item.cartKey)} aria-label="Supprimer l'article">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6" />
@@ -170,6 +183,12 @@ export default function CartPage() {
                 <span>Sous-total ({totalQty} article{totalQty > 1 ? "s" : ""})</span>
                 <span>{cartTotal} €</span>
               </div>
+              {promoSavings > 0 && (
+                <div className="summary-row summary-discount">
+                  <span>Réduction produits</span>
+                  <span>−{promoSavings.toLocaleString("fr-FR")} €</span>
+                </div>
+              )}
               {promoApplied && (
                 <div className="summary-row summary-discount">
                   <span>Remise ({promoApplied.code})</span>
@@ -185,7 +204,12 @@ export default function CartPage() {
                 <span>Total</span>
                 <span>{total} €</span>
               </div>
-              <ButtonPrimary full onClick={() => router.push("/checkout")}>
+              {hasZeroQty && (
+                <p style={{ fontSize: 12, color: "#C95D5D", textAlign: "center", marginBottom: 8 }}>
+                  Un article a une quantité de 0. Supprimez-le ou augmentez la quantité.
+                </p>
+              )}
+              <ButtonPrimary full onClick={() => router.push("/checkout")} disabled={hasZeroQty}>
                 Procéder au paiement
               </ButtonPrimary>
             </div>

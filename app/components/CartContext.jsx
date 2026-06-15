@@ -73,13 +73,11 @@ export function CartProvider({ children }) {
   /* ➖ Quantité */
   const decreaseQty = (cartKey) => {
     setCartItems((prev) =>
-      prev
-        .map((item) =>
-          item.cartKey === cartKey
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
+      prev.map((item) =>
+        item.cartKey === cartKey
+          ? { ...item, quantity: Math.max(0, item.quantity - 1) }
+          : item
+      )
     );
   };
 
