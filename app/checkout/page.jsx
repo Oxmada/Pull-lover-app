@@ -153,9 +153,9 @@ function CheckoutInner() {
 
       <div className="checkout-inner">
 
-        <ButtonGhost onClick={() => router.back()}>
-          Retour
-        </ButtonGhost>
+        <button className="checkout-back" onClick={() => router.back()}>
+          ← Retour
+        </button>
 
         <div className="checkout-wrapper">
 
