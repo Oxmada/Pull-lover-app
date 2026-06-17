@@ -105,6 +105,9 @@ export default function AdminPromosPage() {
           .promo-form-wrap  { padding: 16px !important; }
           .promo-form-grid  { grid-template-columns: 1fr !important; }
         }
+        @media (max-width: 640px) {
+          .promo-search-input { min-width: 0 !important; }
+        }
       `}</style>
 
       <Toast toast={toast} />
@@ -113,19 +116,19 @@ export default function AdminPromosPage() {
       {/* Topbar */}
       <div className="ap-topbar">
         <h1 className="ap-topbar-title">Codes promo</h1>
-        <button className="ap-btn-add" onClick={() => { setShowForm(true); setForm(EMPTY_FORM); setFormError(""); }}>
-          Nouveau code
-        </button>
       </div>
 
       {/* Toolbar */}
       <div className="ap-toolbar">
         <input
-          className="ap-search-input"
+          className="ap-search-input promo-search-input"
           placeholder="Rechercher un code…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <button className="ap-btn-add" onClick={() => { setShowForm(true); setForm(EMPTY_FORM); setFormError(""); }}>
+          Nouveau code
+        </button>
         <div className="ap-stats-inline">
           <div className="ap-stat-chip">
             <span className="ap-stat-chip-value">{promos.length}</span>

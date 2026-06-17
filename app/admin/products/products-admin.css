@@ -768,4 +768,5 @@
 @media (max-width: 640px) {
   .ap-topbar   { flex-wrap: wrap; }
   .ap-btn-add  { width: 100%; justify-content: center; order: 3; }
+  .ap-sort-dropdown { left: auto; right: 0; }
 }
