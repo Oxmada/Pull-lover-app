@@ -53,6 +53,26 @@
   font-family: var(--font-montserrat), 'Montserrat', sans-serif;
 }
 
+/* ── Categories — formulaire ajout inline ── */
+@media (max-width: 600px) {
+  .admin-cat-form { flex-wrap: wrap; }
+  .admin-cat-form input { flex: 1 1 100%; }
+  .admin-cat-form button { flex: 1; }
+}
+
+/* ── Page content padding (responsive) ── */
+.admin-page {
+  padding: 40px 36px 28px;
+}
+
+@media (max-width: 900px) {
+  .admin-page { padding: 16px; }
+}
+
+@media (max-width: 810px) {
+  .admin-page { padding-top: 40px; }
+}
+
 /* ── Layout principal ── */
 .admin-layout {
   display: flex;

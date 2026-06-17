@@ -84,7 +84,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: P.bg, padding: "40px 36px 28px", fontFamily: P.font }}>
+    <div className="admin-page" style={{ minHeight: "100vh", background: P.bg, fontFamily: P.font }}>
 
       <Toast toast={toast} />
       <ConfirmationDialog confirmModal={confirmModal} onClose={closeConfirm} />
@@ -113,7 +113,7 @@ export default function CategoriesPage() {
 
       {/* Formulaire d'ajout inline */}
       {showForm && (
-        <form onSubmit={handleCreate} style={{
+        <form onSubmit={handleCreate} className="admin-cat-form" style={{
           display: "flex", gap: "8px", alignItems: "center",
           background: P.card, border: `1px solid ${P.border}`,
           borderRadius: "12px", padding: "14px 18px", marginBottom: "16px",
@@ -125,7 +125,7 @@ export default function CategoriesPage() {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             style={{
-              flex: 1, padding: "8px 13px", border: `1.5px solid ${P.border}`,
+              flex: 1, minWidth: 0, padding: "8px 13px", border: `1.5px solid ${P.border}`,
               borderRadius: "8px", fontSize: "13px", fontFamily: P.font,
               color: P.text, background: "#fafaf9", outline: "none",
             }}

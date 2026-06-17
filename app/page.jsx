@@ -16,7 +16,6 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [nlEmail, setNlEmail] = useState("");
   const [nlStatus, setNlStatus] = useState(null); // "success" | "error" | "duplicate"
-  const promoRef = useScrollReveal(0.1);
   const valuesRef = useScrollReveal(0.1);
 
   async function handleNewsletter(e) {
@@ -59,7 +58,7 @@ export default function HomePage() {
 
       {/* ── Promotions ── */}
       {promoProducts.length > 0 && (
-        <section className="promo-banner-pro reveal" ref={promoRef}>
+        <section className="promo-banner-pro">
           <div className="container-pro">
             <div className="promo-header-pro">
               <div>
