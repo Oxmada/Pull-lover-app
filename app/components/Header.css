@@ -210,7 +210,7 @@
     .h-burger--open {
         position: fixed;
         top: 69px; /* bandeau (~41px) + centre navbar (88px / 2) - moitié bouton (16px) */
-        right: calc(1.25rem + 20px);
+        right: calc(1.25rem + 40px);
         z-index: 110;
         width: 32px;
         height: 32px;

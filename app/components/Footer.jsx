@@ -68,9 +68,9 @@ export default function Footer() {
         <Link href="/politique-de-confidentialite" className="footer-legal-link">Politique de confidentialité</Link>
         <p className="footer-credit">
           Réalisé par{" "}
-          <a href="https://oxmad-digital.com" target="_blank"
+          <a href="https://oxmad-digital.mg" target="_blank"
             rel="noopener noreferrer" className="footer-credit-link">
-            Oxmad-digital
+            Oxmad Digital
           </a>
         </p>
       </div>
