@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ButtonPrimary, ButtonGhost } from "./components/ui/Button";
-import { Eyebrow, BadgePromo } from "./components/ui/Tag";
+import { useState } from "react";
+import { ButtonPrimary } from "./components/ui/Button";
 import "./home.css";
 import CounterTime from "./components/CounterTime";
 import AproposSection from "./components/AproposSection";
@@ -13,7 +11,6 @@ import LifeStyleSection from "./components/LifeStyleSection";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 
 export default function HomePage() {
-  const [products, setProducts] = useState([]);
   const [nlEmail, setNlEmail] = useState("");
   const [nlStatus, setNlStatus] = useState(null); // "success" | "error" | "duplicate"
   const valuesRef = useScrollReveal(0.1);
@@ -32,21 +29,6 @@ export default function HomePage() {
     }).catch(() => setNlStatus("error"));
   }
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const res = await fetch("/api/products?limit=8");
-        const data = await res.json();
-        setProducts(data.products || []);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    loadProducts();
-  }, []);
-
-  const promoProducts = products.filter(p => p.promoPrice).slice(0, 4);
-
   return (
     <main className="home-pro">
 
@@ -55,44 +37,6 @@ export default function HomePage() {
 
       {/* ── À propos ── */}
       <AproposSection />
-
-      {/* ── Promotions ── */}
-      {promoProducts.length > 0 && (
-        <section className="promo-banner-pro">
-          <div className="container-pro">
-            <div className="promo-header-pro">
-              <div>
-                <Eyebrow>Offres spéciales</Eyebrow>
-                <h2>Jusqu'à -50% sur une sélection</h2>
-              </div>
-              <ButtonGhost href="/nos-mailles?promo=true">Tout voir →</ButtonGhost>
-            </div>
-            <div className="products-grid-pro">
-              {promoProducts.map((product) => (
-                <Link href={`/products/${product._id}`} key={product._id} className="product-card-pro">
-                  {product.promoPrice && (
-                    <BadgePromo>
-                      -{Math.round(((product.price - product.promoPrice) / product.price) * 100)}%
-                    </BadgePromo>
-                  )}
-                  <div className="product-image-pro">
-                    <img src={product.image || "/no-image.png"} alt={product.name} />
-                    <div className="product-overlay" aria-hidden="true">Voir le produit →</div>
-                  </div>
-                  <div className="product-details-pro">
-                    <h3>{product.name}</h3>
-                    {product.brand && <p className="product-brand">{product.brand}</p>}
-                    <div className="product-price-pro">
-                      <span className="price-current">{product.promoPrice?.toLocaleString()} €</span>
-                      <span className="price-original">{product.price.toLocaleString()} €</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── Nouveautés ── */}
       <NotreCollectionSection />
