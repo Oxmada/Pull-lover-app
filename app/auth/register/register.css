@@ -286,7 +286,7 @@
 /* ── SOCIAL ── */
 .register-social {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
 }
 
@@ -339,5 +339,5 @@
 @media (max-width: 640px) {
   .register-page { padding: 60px 20px; }
   .register-card { padding: 28px 20px; }
-  .register-social { grid-template-columns: 1fr; }
+
 }
