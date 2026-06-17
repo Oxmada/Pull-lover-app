@@ -190,7 +190,6 @@ export default function RegisterPage() {
           {/* SOCIAL */}
           <div className="register-social">
             <button type="button" onClick={() => signIn("google")}>Google</button>
-            <button type="button" onClick={() => signIn("facebook")}>Facebook</button>
           </div>
 
           {/* FOOTER */}

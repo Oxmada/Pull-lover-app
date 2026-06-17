@@ -2,7 +2,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
 import { connectDB } from "@/app/lib/db";
 import User from "@/app/models/User";
 import bcrypt from "bcryptjs";
@@ -17,10 +16,6 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
     CredentialsProvider({
       async authorize(credentials) {
@@ -62,7 +57,7 @@ export const authOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === "google" || account?.provider === "facebook") {
+      if (account?.provider === "google") {
         await connectDB();
         const existing = await User.findOne({ email: user.email });
         if (!existing) {
@@ -85,7 +80,7 @@ export const authOptions = {
     async jwt({ token, user, account }) {
       if (user) {
         token.role = user.role ?? "customer";
-        token.emailVerified = user.emailVerified ?? ["google", "facebook"].includes(account?.provider);
+        token.emailVerified = user.emailVerified ?? account?.provider === "google";
       }
       // Charger l'id et le rôle réels depuis MongoDB pour les providers OAuth
       if (account?.provider && account.provider !== "credentials") {
