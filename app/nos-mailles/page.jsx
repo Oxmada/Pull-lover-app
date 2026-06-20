@@ -337,9 +337,25 @@ function NosMaillesContent() {
   );
 }
 
+function NosMaillesSkeleton() {
+  return (
+    <div className="boutique-container">
+      <div className="products-grid">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="ncs-skeleton">
+            <div className="ncs-skeleton-img" />
+            <div className="ncs-skeleton-text" />
+            <div className="ncs-skeleton-text ncs-skeleton-text--short" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function NosMaillesPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<NosMaillesSkeleton />}>
       <NosMaillesContent />
     </Suspense>
   );

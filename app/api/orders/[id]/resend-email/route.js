@@ -10,7 +10,7 @@ export async function POST(req, { params }) {
     const { id } = await params;
 
     // 1. Récupérer la commande avec les détails des produits
-    const order = await Order.findById(id).populate("products.product");
+    const order = await Order.findById(id).populate("products.product").lean();
 
     if (!order) {
       return NextResponse.json({ success: false, message: "Commande non trouvée" }, { status: 404 });

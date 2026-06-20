@@ -302,9 +302,25 @@ function BoutiqueContent() {
   );
 }
 
+function BoutiqueSkeleton() {
+  return (
+    <div className="boutique-container">
+      <div className="products-grid">
+        {[...Array(9)].map((_, i) => (
+          <div key={i} className="skeleton-card">
+            <div className="skeleton-image" />
+            <div className="skeleton-line" />
+            <div className="skeleton-line short" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function BoutiquePage() {
   return (
-    <Suspense>
+    <Suspense fallback={<BoutiqueSkeleton />}>
       <BoutiqueContent />
     </Suspense>
   );

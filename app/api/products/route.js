@@ -1,5 +1,6 @@
 // app/api/products/route.js
 export const runtime = "nodejs";
+export const revalidate = 60;
 
 import mongoose from "mongoose";
 import "@/app/models/Category";
@@ -49,11 +50,18 @@ export async function GET(req) {
       options: { strictPopulate: false },
     });
 
-    return NextResponse.json({
-      products,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    });
+    return NextResponse.json(
+      {
+        products,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
 
   } catch (error) {
     console.error("❌ ERREUR GET:", error.message);

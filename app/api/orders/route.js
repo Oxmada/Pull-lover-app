@@ -306,7 +306,8 @@ export async function GET(req) {
     const orders = await Order.find(query)
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate("products.product");
+      .populate("products.product")
+      .lean();
 
     return NextResponse.json({
       success: true,

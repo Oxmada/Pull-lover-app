@@ -1,10 +1,9 @@
 ﻿/* ── PAGE ── */
 .login-page {
-  min-height: 100vh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: clamp(48px, 8vh, 96px) 20px 60px;
+  padding: 80px 20px;
   position: relative;
   overflow: hidden;
   background: #faf8f7;
@@ -306,9 +305,7 @@
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .login-page {
-    min-height: auto;
-    align-items: flex-start;
-    padding: 32px 20px 48px;
+    padding: 48px 20px;
   }
   .login-card { padding: 28px 20px; }
 }
