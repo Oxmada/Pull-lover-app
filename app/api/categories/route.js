@@ -1,4 +1,5 @@
 export const runtime = "nodejs";
+export const revalidate = 3600;
 
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/db";
@@ -16,7 +17,9 @@ export async function GET() {
   try {
     await connectDB();
     const categories = await Category.find().sort({ createdAt: -1 });
-    return NextResponse.json(categories);
+    return NextResponse.json(categories, {
+      headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" },
+    });
   } catch {
     return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }

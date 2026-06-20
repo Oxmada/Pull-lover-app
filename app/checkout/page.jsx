@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import Image from "next/image";
 import { useCart } from "@/app/components/CartContext";
 import { ButtonPrimary, ButtonGhost } from "@/app/components/ui/Button";
 import "./checkout.css";
@@ -45,7 +46,15 @@ function CheckoutInner() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem("pull-lover-promo");
-      if (stored) setAppliedPromo(JSON.parse(stored));
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const expired = Date.now() - (parsed.savedAt || 0) > 24 * 60 * 60 * 1000;
+        if (expired) {
+          localStorage.removeItem("pull-lover-promo");
+        } else {
+          setAppliedPromo(parsed);
+        }
+      }
     } catch {}
   }, []);
 
@@ -300,7 +309,7 @@ function CheckoutInner() {
               {cartItems.map((item) => (
                 <div key={item._id} className="checkout-item">
                   <div className="checkout-item-image">
-                    {item.image && <img src={item.image} alt={item.name} />}
+                    {item.image && <Image src={item.image} alt={item.name || ""} width={64} height={64} />}
                   </div>
                   <div className="checkout-item-info">
                     <strong>{item.name}</strong>

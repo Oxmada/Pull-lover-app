@@ -40,15 +40,6 @@ export async function middleware(req) {
         new URL("/admin/unauthorized", req.url)
       );
     }
-    // 🔒 PROTECTION AJOUT PRODUIT
-if (pathname.startsWith("/products")) {
-  if (!token || token.role !== "admin") {
-    return NextResponse.redirect(
-      new URL("/admin/unauthorized", req.url)
-    );
-  }
-}
-
   }
 
   return NextResponse.next();

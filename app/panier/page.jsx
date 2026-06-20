@@ -47,7 +47,7 @@ export default function CartPage() {
         localStorage.removeItem(PROMO_STORAGE_KEY);
       } else {
         setPromoApplied(data);
-        localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(PROMO_STORAGE_KEY, JSON.stringify({ ...data, savedAt: Date.now() }));
         setPromoCode("");
       }
     } catch {

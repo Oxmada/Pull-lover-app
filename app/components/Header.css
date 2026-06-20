@@ -1,7 +1,5 @@
 ﻿/* Header.css — Pull-lover */
 
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Montserrat:wght@600;700&display=swap');
-
 /* ── Wrapper ── */
 .h-wrapper {
     width: 100%;
@@ -57,7 +55,7 @@
 }
 
 .h-logo-script {
-    font-family: 'Pinyon Script', cursive;
+    font-family: var(--font-pinyon), cursive;
     font-size: 2.2rem;
     color: #0f172a;
     line-height: 1;

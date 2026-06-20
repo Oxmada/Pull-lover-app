@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { AdminDataTable } from "@/app/components/admin/AdminDataTable";
 
 const ALL_SIZES = ["XS", "S", "M", "L", "XL"];
@@ -41,7 +42,7 @@ const COLUMNS = (onEdit, onDelete, onToggle) => [
     render: (p) => (
       <div className="ap-product-cell">
         {p.image
-          ? <img src={p.image} alt={p.name} className="ap-product-img" />
+          ? <Image src={p.image} alt={p.name || ""} width={40} height={40} className="ap-product-img" />
           : <div className="ap-product-no-img">👕</div>
         }
         <div>

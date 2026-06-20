@@ -16,7 +16,7 @@ const NotreCollectionSection = () => {
     useEffect(() => {
         async function loadProducts() {
             try {
-                const res = await fetch("/api/products?limit=8");
+                const res = await fetch("/api/products?limit=8", { cache: "force-cache" });
                 const data = await res.json();
                 setProducts(data.products || []);
             } catch (err) {
@@ -88,6 +88,7 @@ const NotreCollectionSection = () => {
                                                     alt={product.name}
                                                     width={400}
                                                     height={480}
+                                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                                     className="ncs-card-img ncs-card-img-primary"
                                                 />
                                                 {hasSecondary && (
@@ -96,6 +97,7 @@ const NotreCollectionSection = () => {
                                                         alt={product.name}
                                                         width={400}
                                                         height={480}
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                                         className="ncs-card-img ncs-card-img-secondary"
                                                     />
                                                 )}

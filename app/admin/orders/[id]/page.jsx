@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useToast } from "@/app/hooks/useToast";
 import { Toast } from "@/app/components/ui/Toast";
 import "./order-detail.css";
@@ -187,7 +188,7 @@ export default function AdminOrderDetailPage() {
                     <td>
                       <div className="od-product-cell">
                         {p.image
-                          ? <img src={p.image} alt={p.name} className="od-product-img" />
+                          ? <Image src={p.image} alt={p.name || ""} width={48} height={48} className="od-product-img" />
                           : <div className="od-product-no-img">👕</div>
                         }
                         <span className="od-product-name">{p.name || "Produit supprim�"}</span>

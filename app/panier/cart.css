@@ -49,6 +49,7 @@
   position: absolute;
   border-radius: var(--radius-full);
   filter: blur(60px);
+  will-change: transform;
 }
 
 .cart-bg span:nth-child(1) {

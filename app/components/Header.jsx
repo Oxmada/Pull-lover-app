@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useFavorites } from "./FavoritesContext";
@@ -62,13 +63,14 @@ export default function Header({ transparent = false }) {
             <nav className="h-navbar">
                 <Link href="/" className="h-logo">
                     {transparent && (
-                      <img
+                      <Image
                         src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
                         alt=""
                         aria-hidden="true"
                         width={34}
                         height={34}
                         className="h-logo-coeur"
+                        priority
                       />
                     )}
                     <span className="h-logo-bold">Pull</span>

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { ButtonPrimary } from "./components/ui/Button";
 import "./home.css";
-import CounterTime from "./components/CounterTime";
 import AproposSection from "./components/AproposSection";
+
+const CounterTime = dynamic(() => import("./components/CounterTime"), { ssr: false });
 import NotreCollectionSection from "./components/NotreCollectionSection";
 import ProcessSection from "./components/ProcessSection";
 import LifeStyleSection from "./components/LifeStyleSection";

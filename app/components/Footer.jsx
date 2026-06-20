@@ -1,11 +1,10 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 import { FacebookIcon, InstagramIcon, LinkedInIcon, YouTubeIcon } from "@/app/components/icons";
 import "./Footer.css";
 
 const LogoCoeur = () => (
-  <img
+  <Image
     src="https://res.cloudinary.com/dewstflqp/image/upload/v1778090909/pull-lover_logo_coeur_blanc_nc4sgu.png"
     alt="Pull-lover logo"
     width={24}

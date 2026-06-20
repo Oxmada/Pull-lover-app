@@ -86,7 +86,7 @@ function NosMaillesContent() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("/api/categories", { cache: "force-cache" });
         if (!res.ok) return;
         const data = await res.json();
         setCategories(Array.isArray(data) ? data : []);

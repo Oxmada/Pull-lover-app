@@ -1,19 +1,36 @@
 import React from "react";
 import "./globals.css";
-import { Montserrat } from 'next/font/google';
+import { Montserrat, Pinyon_Script } from 'next/font/google';
 import HeaderWrapper from "./components/HeaderWrapper";
 import Footer from "./components/Footer";
 import Providers from "./components/Providers";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-montserrat',
+  display: 'swap',
+});
+
+const pinyonScript = Pinyon_Script({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-pinyon',
+  display: 'swap',
 });
 
 export const metadata = {
-  title: "Pull Lover",
-  description: "Boutique de mailles artisanales faites main à Antananarivo",
+  title: { default: "Pull Lover", template: "%s | Pull Lover" },
+  description: "Boutique de mailles artisanales faites main à Antananarivo, Madagascar.",
+  metadataBase: new URL("https://www.pull-lover.com"),
+  openGraph: {
+    siteName: "Pull Lover",
+    type: "website",
+    locale: "fr_FR",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Pull Lover" }],
+  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
 export const viewport = {
@@ -24,7 +41,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={montserrat.variable}>
+    <html lang="fr" className={`${montserrat.variable} ${pinyonScript.variable}`}>
       <body className={montserrat.className}>
         <Providers>
           <HeaderWrapper />
