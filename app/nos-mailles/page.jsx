@@ -11,6 +11,7 @@ import "../components/NotreCollectionSection.css";
 import "./nos-mailles.css";
 
 const GENDER_FILTERS = ["Homme", "Femme", "Accessoires"];
+const PRODUCTS_PER_PAGE = 6;
 
 function NosMaillesContent() {
   const searchParams = useSearchParams();
@@ -18,16 +19,15 @@ function NosMaillesContent() {
 
   const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
-  const pageParam = parseInt(searchParams.get("page") || "1", 10);
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(search);
-
-  const productsPerPage = 6;
-
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef(null);
 
@@ -52,56 +52,71 @@ function NosMaillesContent() {
     router.push(`/nos-mailles?${newParams.toString()}`);
   };
 
+  // Debounce recherche → URL
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== search) {
-        updateURL({ search: searchInput, page: "" });
+        updateURL({ search: searchInput });
       }
     }, 500);
     return () => clearTimeout(timer);
   }, [searchInput]);
 
+  // Catégories (une seule fois)
   useEffect(() => {
-    async function fetchProducts() {
+    fetch("/api/categories")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => setCategories(Array.isArray(data) ? data : []))
+      .catch(console.error);
+  }, []);
+
+  // Fetch page 1 quand les filtres changent
+  useEffect(() => {
+    async function fetchFirst() {
       try {
         setLoading(true);
         setError("");
-        const query = new URLSearchParams({ limit: "100" });
-        if (search) query.append("search", search);
-        if (category) query.append("category", category);
+        setProducts([]);
+        setPage(1);
+        const query = new URLSearchParams({
+          limit: String(PRODUCTS_PER_PAGE),
+          page: "1",
+        });
+        if (search) query.set("search", search);
+        if (category) query.set("category", category);
         const res = await fetch(`/api/products?${query.toString()}`);
-        if (!res.ok) throw new Error("Erreur chargement produits");
+        if (!res.ok) throw new Error();
         const data = await res.json();
         setProducts(data.products || []);
-      } catch (err) {
-        console.error(err);
+        setTotalPages(data.totalPages || 1);
+      } catch {
         setError("Impossible de charger les produits");
       } finally {
         setLoading(false);
       }
     }
-    fetchProducts();
+    fetchFirst();
   }, [search, category]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch("/api/categories", { cache: "force-cache" });
-        if (!res.ok) return;
-        const data = await res.json();
-        setCategories(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error("Erreur chargement catégories");
-      }
+  async function loadMore() {
+    try {
+      setLoadingMore(true);
+      const nextPage = page + 1;
+      const query = new URLSearchParams({
+        limit: String(PRODUCTS_PER_PAGE),
+        page: String(nextPage),
+      });
+      if (search) query.set("search", search);
+      if (category) query.set("category", category);
+      const res = await fetch(`/api/products?${query.toString()}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      setProducts((prev) => [...prev, ...(data.products || [])]);
+      setPage(nextPage);
+    } finally {
+      setLoadingMore(false);
     }
-    fetchCategories();
-  }, []);
-
-  const sortedProducts = [...products];
-
-  const currentPage = Math.max(1, pageParam);
-  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
-  const currentProducts = sortedProducts.slice(0, currentPage * productsPerPage);
+  }
 
   const resetFilters = () => {
     setSearchInput("");
@@ -144,7 +159,7 @@ function NosMaillesContent() {
                 className={`gender-btn${isActive ? " active" : ""}`}
                 onClick={() => {
                   if (!cat) return;
-                  updateURL({ category: isActive ? "" : cat._id, page: "" });
+                  updateURL({ category: isActive ? "" : cat._id });
                 }}
               >
                 {label}
@@ -162,12 +177,16 @@ function NosMaillesContent() {
             }) ? " active" : ""}`}
             onClick={() => setFilterOpen((o) => !o)}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+            </svg>
             {GENDER_FILTERS.find((label) => {
               const cat = categories.find((c) => c.name.toLowerCase() === label.toLowerCase());
               return cat && category === cat._id;
             }) || "Filtres"}
-            <svg className={`filter-chevron${filterOpen ? " open" : ""}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg className={`filter-chevron${filterOpen ? " open" : ""}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
           </button>
           {filterOpen && (
             <div className="filter-dropdown-panel">
@@ -180,7 +199,7 @@ function NosMaillesContent() {
                     className={`filter-dropdown-option${isActive ? " active" : ""}`}
                     onClick={() => {
                       if (!cat) return;
-                      updateURL({ category: isActive ? "" : cat._id, page: "" });
+                      updateURL({ category: isActive ? "" : cat._id });
                       setFilterOpen(false);
                     }}
                   >
@@ -208,7 +227,7 @@ function NosMaillesContent() {
 
       {error && <div className="error-state">❌ {error}</div>}
 
-      {!loading && sortedProducts.length === 0 && (
+      {!loading && products.length === 0 && !error && (
         <div className="empty-state">
           <p>Aucun produit trouvé</p>
           <button className="reset-btn" onClick={resetFilters}>Réinitialiser</button>
@@ -216,9 +235,9 @@ function NosMaillesContent() {
       )}
 
       {/* GRILLE PRODUITS */}
-      {!loading && currentProducts.length > 0 && (
+      {!loading && products.length > 0 && (
         <div className="products-grid">
-          {currentProducts.map((product) => {
+          {products.map((product) => {
             const secondaryImage = product.images?.[0] || null;
             const hasSecondary = !!secondaryImage;
             const isOutOfStock = product.stock === 0 || !product.isAvailable;
@@ -250,6 +269,7 @@ function NosMaillesContent() {
                         alt={product.name}
                         width={400}
                         height={480}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="ncs-card-img ncs-card-img-primary"
                       />
                       {hasSecondary && (
@@ -258,6 +278,7 @@ function NosMaillesContent() {
                           alt={product.name}
                           width={400}
                           height={480}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="ncs-card-img ncs-card-img-secondary"
                         />
                       )}
@@ -311,15 +332,14 @@ function NosMaillesContent() {
       )}
 
       {/* VOIR PLUS */}
-      {!loading && currentPage < totalPages && (
+      {!loading && page < totalPages && (
         <div className="pagination">
-          <ButtonGhost
-            onClick={() => updateURL({ page: String(currentPage + 1) })}
-          >
-            Voir plus
+          <ButtonGhost onClick={loadMore} disabled={loadingMore}>
+            {loadingMore ? "Chargement..." : "Voir plus"}
           </ButtonGhost>
         </div>
       )}
+
     </div>
   );
 }

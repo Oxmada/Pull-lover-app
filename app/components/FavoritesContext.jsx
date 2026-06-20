@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 
 const FavoritesContext = createContext();
@@ -9,6 +9,8 @@ export function FavoritesProvider({ children }) {
   const { data: session, status } = useSession();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
+  const favoritesRef = useRef(favorites);
+  useEffect(() => { favoritesRef.current = favorites; }, [favorites]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -29,7 +31,7 @@ export function FavoritesProvider({ children }) {
       return;
     }
 
-    const alreadyFav = favorites.some((p) => p._id === product._id);
+    const alreadyFav = favoritesRef.current.some((p) => p._id === product._id);
 
     if (alreadyFav) {
       setFavorites((prev) => prev.filter((p) => p._id !== product._id));
@@ -46,7 +48,7 @@ export function FavoritesProvider({ children }) {
         body: JSON.stringify({ productId: product._id }),
       }).catch(console.error);
     }
-  }, [session, favorites]);
+  }, [session]);
 
   const isFavorite = useCallback(
     (id) => favorites.some((p) => p._id === id),

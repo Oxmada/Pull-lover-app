@@ -40,7 +40,11 @@ function useCountdown(target) {
 
     useEffect(() => {
         setTime(calc());
-        const id = setInterval(() => setTime(calc()), 1000);
+        const id = setInterval(() => {
+            const next = calc();
+            setTime(next);
+            if (next.days === 0 && next.hours === 0 && next.minutes === 0) clearInterval(id);
+        }, 1000);
         return () => clearInterval(id);
     }, []);
 

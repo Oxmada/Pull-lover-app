@@ -120,4 +120,9 @@ ProductSchema.pre("save", async function () {
   }
 });
 
+ProductSchema.index({ category: 1, createdAt: -1 });
+ProductSchema.index({ createdAt: -1 });
+ProductSchema.index({ isAvailable: 1 });
+ProductSchema.index({ stock: 1 });
+
 export default mongoose.models.Product || mongoose.model("Product", ProductSchema);

@@ -26,20 +26,28 @@ export async function GET(req) {
     const filter = {};
 
     if (search) filter.name = { $regex: search, $options: "i" };
-    if (category && category !== "") filter.category = category;
+    if (category && category !== "") {
+      filter.category = mongoose.Types.ObjectId.isValid(category)
+        ? new mongoose.Types.ObjectId(category)
+        : category;
+    }
 
-    const total = await Product.countDocuments(filter).catch(() => 0);
+    const [result] = await Product.aggregate([
+      { $match: filter },
+      {
+        $facet: {
+          data: [{ $sort: { createdAt: -1 } }, { $skip: skip }, { $limit: limit }],
+          total: [{ $count: "count" }],
+        },
+      },
+    ]);
 
-    const products = await Product.find(filter)
-      .populate({
-        path: "category",
-        select: "name",
-        options: { strictPopulate: false },
-      })
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 })
-      .lean();
+    const total = result.total[0]?.count ?? 0;
+    const products = await Product.populate(result.data, {
+      path: "category",
+      select: "name",
+      options: { strictPopulate: false },
+    });
 
     return NextResponse.json({
       products,
@@ -57,15 +65,13 @@ export async function GET(req) {
    Supprimer de Cloudinary
 ======================= */
 async function deleteFromCloudinary(publicIds) {
-  for (const publicId of publicIds) {
-    if (!publicId) continue;
-    try {
-      await cloudinary.uploader.destroy(publicId);
-      console.log(`🗑️ Image supprimée: ${publicId}`);
-    } catch (error) {
-      console.error(`❌ Erreur suppression: ${publicId}`, error);
-    }
-  }
+  await Promise.all(
+    publicIds.filter(Boolean).map((id) =>
+      cloudinary.uploader.destroy(id).catch((err) =>
+        console.error(`❌ Erreur suppression: ${id}`, err)
+      )
+    )
+  );
 }
 
 /* =======================

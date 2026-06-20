@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import "./LifeStyleSection.css";
 
 export default function LifeStyleSection() {
@@ -20,9 +21,13 @@ export default function LifeStyleSection() {
 
                     {/* Image unique à droite */}
                     <div className="lifestyle-band-img">
-                        <img
+                        <Image
                             src="https://res.cloudinary.com/dewstflqp/image/upload/v1780152420/pull-lover-tricot-crochet-noir-femme-desert.jpg_rwfz99.jpg"
                             alt="Femme marchant sur la plage"
+                            width={680}
+                            height={850}
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            style={{ width: "100%", height: "auto" }}
                         />
                     </div>
 

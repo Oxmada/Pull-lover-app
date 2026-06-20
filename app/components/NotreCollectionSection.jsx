@@ -16,7 +16,7 @@ const NotreCollectionSection = () => {
     useEffect(() => {
         async function loadProducts() {
             try {
-                const res = await fetch("/api/products?limit=8", { cache: "force-cache" });
+                const res = await fetch("/api/products?limit=8");
                 const data = await res.json();
                 setProducts(data.products || []);
             } catch (err) {

@@ -1,17 +1,15 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { connectDB } from "@/app/lib/db";
 import Order    from "@/app/models/Order";
 import Customer from "@/app/models/Customer";
 import Product  from "@/app/models/Product";
 
-export async function GET(request) {
-  try {
+const fetchStats = unstable_cache(
+  async (period) => {
     await connectDB();
-
-    const { searchParams } = new URL(request.url);
-    const period  = searchParams.get("period") || "7";
     const daysAgo = parseInt(period);
 
     const periodStart = new Date();
@@ -206,7 +204,7 @@ export async function GET(request) {
       value: item.count,
     }));
 
-    return NextResponse.json({
+    return {
       success: true,
       stats: {
         customersCount,
@@ -235,12 +233,24 @@ export async function GET(request) {
       recentOrders,
       statusDistribution,
       paymentDistribution,
-    });
+    };
   } catch (error) {
     console.error("STATS ERROR:", error);
-    return NextResponse.json(
-      { success: false, message: "Erreur stats", error: error.message },
-      { status: 500 }
-    );
+    return { success: false, message: "Erreur stats", error: error.message };
   }
+},
+  ["admin-stats"],
+  { revalidate: 60 }
+);
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const period = searchParams.get("period") || "7";
+
+  const data = await fetchStats(period);
+
+  if (!data.success) {
+    return NextResponse.json(data, { status: 500 });
+  }
+  return NextResponse.json(data);
 }

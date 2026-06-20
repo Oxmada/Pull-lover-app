@@ -22,6 +22,7 @@ export async function connectDB() {
       .connect(MONGODB_URI, {
         bufferCommands: false,
         serverSelectionTimeoutMS: 10000,
+        maxPoolSize: 10,
       })
       .then((m) => {
         console.log("✅ MongoDB connecté");
