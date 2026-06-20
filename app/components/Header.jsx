@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 import { useCart } from "./CartContext";
 import { useFavorites } from "./FavoritesContext";
 import { useSession, signOut } from "next-auth/react";
@@ -44,15 +45,7 @@ export default function Header({ transparent = false }) {
         }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
-                setUserMenuOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useClickOutside([[userMenuRef, () => setUserMenuOpen(false)]]);
 
     return (
         <header className={`h-wrapper${transparent ? " h-wrapper--transparent" : ""}`}>

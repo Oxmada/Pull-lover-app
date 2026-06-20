@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 import { useFavorites } from "../components/FavoritesContext";
 import { ButtonPrimary, ButtonGhost } from "../components/ui/Button";
 import { BadgePromo } from "../components/ui/Tag";
@@ -33,15 +34,7 @@ function NosMaillesContent() {
 
   const { toggleFavorite, isFavorite } = useFavorites();
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (filterRef.current && !filterRef.current.contains(e.target)) {
-        setFilterOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside([[filterRef, () => setFilterOpen(false)]]);
 
   const updateURL = (params) => {
     const newParams = new URLSearchParams(searchParams);

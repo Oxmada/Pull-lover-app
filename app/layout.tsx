@@ -27,7 +27,6 @@ export const metadata = {
     siteName: "Pull Lover",
     type: "website",
     locale: "fr_FR",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Pull Lover" }],
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
