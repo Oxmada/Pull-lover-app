@@ -24,10 +24,9 @@ export default function LifeStyleSection() {
                         <Image
                             src="https://res.cloudinary.com/dewstflqp/image/upload/v1780152420/pull-lover-tricot-crochet-noir-femme-desert.jpg_rwfz99.jpg"
                             alt="Femme marchant sur la plage"
-                            width={680}
-                            height={850}
+                            fill
                             sizes="(max-width: 768px) 100vw, 50vw"
-                            style={{ width: "100%", height: "auto" }}
+                            style={{ objectFit: "cover", objectPosition: "center top" }}
                         />
                     </div>
 
