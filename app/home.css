@@ -5,7 +5,7 @@
 .container-pro {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 80px;
+  padding: 0 64px;
 }
 
 /* ── Promotions ── */
@@ -199,7 +199,7 @@
 .values-newsletter-inner {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0px 80px 160px 80px;
+  padding: 0 64px 160px 64px;
 }
 
 /* Bandeau unique */
@@ -341,11 +341,11 @@
 /* ── Responsive ── */
 @media (max-width: 1200px) and (min-width: 768px) {
   .container-pro {
-    padding: 0 64px;
+    padding: 0 2rem;
   }
 
   .promo-banner-pro {
-    padding: 100px 0;
+    padding: 75px 0;
   }
 
   .promo-header-pro {
@@ -365,7 +365,7 @@
   }
 
   .values-newsletter-inner {
-    padding: 0px 64px 100px 64px;
+    padding: 0 2rem 100px 2rem;
   }
 
   .vn-nl-input {

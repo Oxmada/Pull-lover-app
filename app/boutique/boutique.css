@@ -19,7 +19,7 @@
 .boutique-container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 2.5rem 80px 4rem;
+  padding: 2.5rem 64px 4rem;
 }
 
 /* ── FILTRES ── */
@@ -421,7 +421,7 @@
 /* ── TABLETTE (768px – 1024px) ── */
 @media (max-width: 1024px) and (min-width: 768px) {
   .boutique-container {
-    padding: 2rem 48px 3rem;
+    padding: 2rem 2rem 3rem;
   }
 
   .search-wrapper {

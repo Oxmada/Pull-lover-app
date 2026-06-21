@@ -518,7 +518,7 @@
 /* ── TABLETTE — max 1024px ── */
 @media (max-width: 1024px) {
   .cart-page {
-    padding: 60px 40px;
+    padding: 60px 2rem;
   }
 
   .cart-wrapper {

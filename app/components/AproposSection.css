@@ -5,7 +5,7 @@
 .apropos-section {
     width: 100%;
     background-color: #ffffff;
-    padding: 100px 80px;
+    padding: 100px 64px;
     box-sizing: border-box;
 }
 
@@ -141,7 +141,7 @@
    ========================================= */
 @media (min-width: 768px) and (max-width: 1200px) {
     .apropos-section {
-        padding: 100px 64px;
+        padding: 100px 2rem;
     }
 
     .apropos-product-presentation {

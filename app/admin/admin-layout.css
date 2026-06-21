@@ -62,11 +62,11 @@
 
 /* ── Page content padding (responsive) ── */
 .admin-page {
-  padding: 40px 36px 28px;
+  padding: 40px 64px 28px;
 }
 
 @media (max-width: 900px) {
-  .admin-page { padding: 16px; }
+  .admin-page { padding: 16px 2rem; }
 }
 
 @media (max-width: 767px) {
