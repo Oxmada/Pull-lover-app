@@ -518,19 +518,19 @@
 /* ── TABLETTE — max 1024px ── */
 @media (max-width: 1024px) {
   .cart-page {
-    padding: 60px 64px;
+    padding: 60px 40px;
   }
 
   .cart-wrapper {
     flex-direction: row;
-    max-width: 682px;
+    max-width: 760px;
     gap: 15px;
     align-items: flex-start;
   }
 
   .cart-left {
-    width: 307px;
-    flex: none;
+    flex: 1;
+    min-width: 0;
     border-radius: var(--radius-md);
     padding: 20px;
     gap: 20px;
@@ -539,7 +539,7 @@
   }
 
   .cart-right {
-    width: 360px;
+    width: 300px;
     flex-shrink: 0;
     position: static;
     gap: 15px;

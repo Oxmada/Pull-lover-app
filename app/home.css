@@ -339,7 +339,7 @@
 .vn-nl-feedback--err  { color: #C95D5D; }
 
 /* ── Responsive ── */
-@media (max-width: 1200px) and (min-width: 810px) {
+@media (max-width: 1200px) and (min-width: 768px) {
   .container-pro {
     padding: 0 64px;
   }
@@ -388,7 +388,7 @@
   }
 }
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
   .container-pro {
     padding: 0 1.5rem;
   }

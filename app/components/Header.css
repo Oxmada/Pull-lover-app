@@ -155,9 +155,13 @@
 }
 
 /* ── Responsive ── */
-@media (min-width: 810px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1200px) {
     .h-navbar {
         padding: 0 1.5rem;
+    }
+
+    .h-nav-list {
+        gap: 1.5rem;
     }
 }
 
@@ -166,7 +170,7 @@
     display: none;
 }
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
     .h-navbar {
         padding: 0 16px;
     }
@@ -355,7 +359,7 @@
     color: #fff;
 }
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
     .h-wrapper--transparent .h-burger--open {
         color: #78716c;
     }

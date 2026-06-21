@@ -436,8 +436,8 @@
 .checkout-pay-btn:hover { background: #C95D5D; }
 .checkout-pay-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* ── TABLETTE — 810px à 1200px ── */
-@media (min-width: 810px) and (max-width: 1200px) {
+/* ── TABLETTE — 768px à 1200px ── */
+@media (min-width: 768px) and (max-width: 1200px) {
   .checkout-page {
     padding: 60px 40px;
   }
@@ -458,8 +458,8 @@
   }
 }
 
-/* ── MOBILE — 390px à 810px ── */
-@media (max-width: 810px) {
+/* ── MOBILE — < 768px ── */
+@media (max-width: 767px) {
   .checkout-page {
     padding: 48px 20px 60px;
   }

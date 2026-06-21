@@ -96,3 +96,57 @@
   text-align: center;
   font-size: 18px;
 }
+
+/* ── TABLETTE (768px – 1024px) ── */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .products-grid {
+    gap: 24px;
+  }
+
+  .product-image {
+    height: 220px;
+  }
+}
+
+/* ── MOBILE (< 768px) ── */
+@media (max-width: 767px) {
+  .search-page {
+    padding: 24px 0;
+  }
+
+  .search-title {
+    font-size: 20px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .product-image {
+    height: 180px;
+  }
+}
+
+/* ── PETIT MOBILE (< 480px) ── */
+@media (max-width: 480px) {
+  .products-grid {
+    gap: 12px;
+  }
+
+  .product-image {
+    height: 150px;
+  }
+
+  .product-content {
+    padding: 10px;
+  }
+
+  .product-name {
+    font-size: 13px;
+  }
+
+  .product-price {
+    font-size: 14px;
+  }
+}
