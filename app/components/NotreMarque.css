@@ -244,11 +244,11 @@
 
 @media (min-width: 768px) and (max-width: 1200px) {
     .nm-container {
-        padding: 0 64px;
+        padding: 0 32px;
     }
 
     .nm-intro {
-        padding: 80px 0;
+        padding: 100px 0 75px;
     }
 
     .nm-intro__inner {
@@ -263,6 +263,10 @@
         font-size: 2rem;
     }
 
+    .nm-stats {
+        padding-bottom: 75px;
+    }
+
     .nm-stats__grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -274,6 +278,10 @@
     .nm-stat:nth-child(1),
     .nm-stat:nth-child(2) {
         border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nm-video-section {
+        padding-bottom: 75px;
     }
 
     .nm-video-section__heading {

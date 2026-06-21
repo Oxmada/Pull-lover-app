@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100dvh;
   padding: 80px 20px;
   position: relative;
   overflow: hidden;
@@ -305,7 +306,7 @@
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   .login-page {
-    padding: 48px 20px;
+    padding: 60px 20px;
   }
   .login-card { padding: 28px 20px; }
 }

@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function ConditionsDeVentePage() {
   return (
-    <main style={{ maxWidth: 800, margin: "0 auto", padding: "60px 24px", fontFamily: "Montserrat, sans-serif", color: "#0f172a", lineHeight: 1.8 }}>
+    <main style={{ maxWidth: 800, margin: "0 auto", padding: "60px 32px", fontFamily: "Montserrat, sans-serif", color: "#0f172a", lineHeight: 1.8 }}>
       <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Conditions générales de vente</h1>
       <p style={{ color: "#64748b", marginBottom: 48 }}>Dernière mise à jour : juin 2025</p>
 

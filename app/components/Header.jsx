@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -37,6 +37,13 @@ export default function Header({ transparent = false }) {
 
     const close = () => setMenuOpen(false);
 
+    useEffect(() => {
+        document.body.style.overflow = menuOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [menuOpen]);
+
+    const isActive = (href) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+
     const handleAccueilClick = (e) => {
         close();
         if (pathname === "/") {
@@ -71,12 +78,21 @@ export default function Header({ transparent = false }) {
                 </Link>
 
                 {/* Nav links */}
-                <ul className={`h-nav-list ${menuOpen ? "h-nav-list--open" : ""}`}>
+                <ul className={`h-nav-list${menuOpen ? " h-nav-list--open" : ""}`}>
+                    {/* En-tête du drawer (mobile/tablet uniquement) */}
+                    <li className="h-drawer-header">
+                        <span className="h-drawer-brand">Pull<span className="h-drawer-brand-script">Lover</span></span>
+                        <button className="h-drawer-close" onClick={close} aria-label="Fermer le menu">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </li>
                     {navLinks.map((link) => (
                         <li key={link.href}>
                             <Link
                                 href={link.href}
-                                className="h-nav-link"
+                                className={`h-nav-link${isActive(link.href) ? " h-nav-link--active" : ""}`}
                                 onClick={link.href === "/" ? handleAccueilClick : close}
                             >
                                 {link.label}
@@ -85,39 +101,47 @@ export default function Header({ transparent = false }) {
                     ))}
                     {isAdmin && (
                         <li>
-                            <Link href="/admin/dashboard" className="h-nav-link h-nav-link--admin" onClick={close}>
+                            <Link href="/admin/dashboard" className={`h-nav-link h-nav-link--admin${isActive("/admin/dashboard") ? " h-nav-link--active" : ""}`} onClick={close}>
                                 Dashboard
                             </Link>
                         </li>
                     )}
                     {session && !isAdmin && (
                         <li>
-                            <Link href="/dashboard" className="h-nav-link" onClick={close}>
+                            <Link href="/dashboard" className={`h-nav-link${isActive("/dashboard") ? " h-nav-link--active" : ""}`} onClick={close}>
                                 Mon espace
                             </Link>
                         </li>
                     )}
                     {/* Icônes dans le menu mobile */}
                     <li className="h-nav-icons-mobile">
-                        <Link href="/favoris" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Favoris">
-                            <HeartIcon />
-                            {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
-                        </Link>
-                        <Link href="/panier" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Panier">
-                            <BagIcon />
-                            {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
-                        </Link>
-                        {status === "loading" ? (
-                            <span className="h-icon-btn" aria-hidden="true"><UserIcon size={22} /></span>
-                        ) : !session ? (
-                            <Link href="/auth/login" className="h-icon-btn" onClick={close} aria-label="Connexion">
-                                <UserIcon size={22} />
-                            </Link>
-                        ) : (
-                            <Link href="/dashboard" className="h-icon-btn" onClick={close} aria-label="Mon espace">
-                                <UserIcon size={22} />
-                            </Link>
+                        {session && (
+                            <div className="h-drawer-user-info">
+                                <UserIcon size={14} />
+                                <span className="h-drawer-user-name">{session.user?.name || session.user?.email}</span>
+                            </div>
                         )}
+                        <div className="h-drawer-icons-row">
+                            <Link href="/favoris" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Favoris">
+                                <HeartIcon />
+                                {favCount > 0 && <span className="h-cart-badge">{favCount}</span>}
+                            </Link>
+                            <Link href="/panier" className="h-icon-btn h-cart-btn" onClick={close} aria-label="Panier">
+                                <BagIcon />
+                                {cartCount > 0 && <span className="h-cart-badge">{cartCount}</span>}
+                            </Link>
+                            {status === "loading" ? (
+                                <span className="h-icon-btn" aria-hidden="true"><UserIcon size={22} /></span>
+                            ) : !session ? (
+                                <Link href="/auth/login" className="h-icon-btn" onClick={close} aria-label="Connexion">
+                                    <UserIcon size={22} />
+                                </Link>
+                            ) : (
+                                <Link href="/dashboard" className="h-icon-btn" onClick={close} aria-label="Mon espace">
+                                    <UserIcon size={22} />
+                                </Link>
+                            )}
+                        </div>
                     </li>
                 </ul>
 
@@ -172,11 +196,11 @@ export default function Header({ transparent = false }) {
 
                 {/* Burger / Close */}
                 <button
-                    className={`h-burger${menuOpen ? " h-burger--open" : ""}`}
+                    className="h-burger"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label={menuOpen ? "Fermer" : "Menu"}
+                    aria-label="Menu"
                 >
-                    {menuOpen ? "✕" : <BurgerIcon />}
+                    <BurgerIcon />
                 </button>
             </nav>
 

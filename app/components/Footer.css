@@ -140,6 +140,7 @@
 
   .footer-bottom-row {
     padding: 12px 2rem 18px;
+    justify-content: center;
   }
 
   .footer-nav {
