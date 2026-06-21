@@ -192,9 +192,14 @@
   .search-wrapper {
     width: 220px;
   }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .boutique-container {
     padding: 1.5rem 24px 3rem;
   }

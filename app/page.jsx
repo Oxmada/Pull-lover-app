@@ -1,3 +1,4 @@
+'use client';
 import dynamic from "next/dynamic";
 import AproposSection from "./components/AproposSection";
 import NotreCollectionSection from "./components/NotreCollectionSection";
