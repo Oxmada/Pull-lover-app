@@ -7,11 +7,66 @@ import "./HeaderHero.css";
 
 gsap.registerPlugin(SplitText);
 
+const DROP_DATE = new Date("2026-06-20T19:00:00");
+const START_DATE = new Date("2026-05-13T00:00:00");
+
+function useCountdown(target) {
+  const calc = () => {
+    const diff = Math.max(0, target - Date.now());
+    return {
+      days: Math.floor(diff / 86400000),
+      hours: Math.floor((diff % 86400000) / 3600000),
+      minutes: Math.floor((diff % 3600000) / 60000),
+    };
+  };
+  const [time, setTime] = useState(null);
+  useEffect(() => {
+    setTime(calc());
+    const id = setInterval(() => {
+      const next = calc();
+      setTime(next);
+      if (next.days === 0 && next.hours === 0 && next.minutes === 0) clearInterval(id);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function useProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const calc = () => {
+      const total = DROP_DATE - START_DATE;
+      const elapsed = Math.min(Date.now() - START_DATE, total);
+      return Math.max(0, Math.min(100, (elapsed / total) * 100));
+    };
+    const id = setTimeout(() => setProgress(calc()), 200);
+    return () => clearTimeout(id);
+  }, []);
+  return progress;
+}
+
+function DigitGroupBar({ value, label }) {
+  const str = value != null ? String(value).padStart(2, "0") : "00";
+  return (
+    <div className="hcb-group">
+      <div className="hcb-boxes">
+        <span className="hcb-box">{str[0]}</span>
+        <span className="hcb-box">{str[1]}</span>
+      </div>
+      <span className="hcb-label">{label}</span>
+    </div>
+  );
+}
+
 export default function HeaderHero() {
   const [showBadge, setShowBadge] = useState(true);
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subRef = useRef(null);
+  const time = useCountdown(DROP_DATE);
+  const progress = useProgress();
+  const { days = 0, hours = 0, minutes = 0 } = time ?? {};
 
   useEffect(() => {
     if (!titleRef.current || !subRef.current) return;
@@ -24,7 +79,8 @@ export default function HeaderHero() {
     tl.from(letters, { y: 100, autoAlpha: 0, stagger: 0.05, duration: 1 })
       .from(subSplit.words, { y: 30, autoAlpha: 0, stagger: 0.04, duration: 0.7 }, "-=0.5")
       .from(".hero-cta", { autoAlpha: 0, y: 20, duration: 0.6 }, "-=0.4")
-      .from(".hero-badge", { autoAlpha: 0, y: -20, duration: 0.5 }, "-=0.4");
+      .from(".hero-badge", { autoAlpha: 0, y: -20, duration: 0.5 }, "-=0.4")
+      .from(".hero-countdown-bar", { autoAlpha: 0, y: 20, duration: 0.5 }, "-=0.3");
 
     return () => {
       tl.kill();
@@ -92,6 +148,23 @@ export default function HeaderHero() {
       </div>
 
       <div className="made-with-love">100% made with love</div>
+
+      <div className="hero-countdown-bar">
+        <span className="hcb-title">Nouveau drop en cours</span>
+        <div className="hcb-sep" />
+        <div className="hcb-counter">
+          <DigitGroupBar value={days} label="Jours" />
+          <span className="hcb-colon">:</span>
+          <DigitGroupBar value={hours} label="Heures" />
+          <span className="hcb-colon">:</span>
+          <DigitGroupBar value={minutes} label="Min" />
+        </div>
+        <div className="hcb-sep" />
+        <div className="hcb-progress-track">
+          <div className="hcb-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+
     </section>
   );
 }

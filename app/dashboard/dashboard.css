@@ -865,7 +865,7 @@
 }
 
 /* Mobile (≤810px) : sidebar masquée, bottom nav visible */
-@media (max-width: 810px) {
+@media (max-width: 767px) {
   .sidebar {
     display: none;
   }

@@ -662,7 +662,7 @@
   .ap-stats-inline { display: none; }
 }
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
   .ap-page { padding-top: 40px; }
 }
 

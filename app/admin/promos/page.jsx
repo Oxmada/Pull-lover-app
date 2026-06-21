@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useToast } from "@/app/hooks/useToast";
@@ -101,7 +101,7 @@ export default function AdminPromosPage() {
     <div className="ap-page">
 
       <style>{`
-        @media (max-width: 810px) {
+        @media (max-width: 767px) {
           .promo-form-wrap  { padding: 16px !important; }
           .promo-form-grid  { grid-template-columns: 1fr !important; }
         }

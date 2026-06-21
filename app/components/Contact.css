@@ -226,7 +226,7 @@
    Responsive — Tablet (810px – 1200px)
    ============================================= */
 
-@media (min-width: 810px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1200px) {
     .contact {
         padding: 80px 0;
     }
@@ -245,7 +245,7 @@
    Responsive — Mobile (≤ 810px)
    ============================================= */
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
     .contact {
         padding: 64px 0;
     }

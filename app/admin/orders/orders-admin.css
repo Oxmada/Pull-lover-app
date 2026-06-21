@@ -525,7 +525,7 @@
   .ap-topbar-title { font-size: 20px; }
 }
 
-@media (max-width: 810px) {
+@media (max-width: 767px) {
   .ap-page { padding-top: 40px; }
 }
 

@@ -217,7 +217,7 @@
 }
 
 /* ── Tablet : 810px – 1200px ── */
-@media (min-width: 810px) and (max-width: 1200px) {
+@media (min-width: 768px) and (max-width: 1200px) {
     .ct-section {
         padding: 100px 64px 100px 64px;
     }
@@ -282,7 +282,7 @@
 }
 
 /* ── Mobile : 390px – 809px ── */
-@media (min-width: 390px) and (max-width: 809px) {
+@media (min-width: 390px) and (max-width: 767px) {
     .ct-section {
         padding: 60px 1.5rem 60px 1.5rem;
     }
