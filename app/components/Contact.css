@@ -252,7 +252,7 @@
 
     .contact__container {
         grid-template-columns: 1fr;
-        padding: 0 1.5rem;
+        padding: 0 2rem;
         gap: 40px;
     }
 

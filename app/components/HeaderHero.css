@@ -376,6 +376,8 @@
 
   .hero-container {
     gap: 20px;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .hero-content-left {

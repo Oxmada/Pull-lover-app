@@ -201,7 +201,7 @@
 
 @media (max-width: 767px) {
   .boutique-container {
-    padding: 1.5rem 24px 3rem;
+    padding: 1.5rem 2rem 3rem;
   }
 
   /* Filtres en ligne avec la recherche */
@@ -326,7 +326,7 @@
 
 @media (max-width: 480px) {
   .boutique-container {
-    padding: 1.25rem 16px 2.5rem;
+    padding: 1.25rem 2rem 2.5rem;
   }
 
   .boutique-title {

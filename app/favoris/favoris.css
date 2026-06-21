@@ -390,7 +390,7 @@
 /* ── TABLETTE PETITE — max 768px ── */
 @media (max-width: 768px) {
   .favoris-page {
-    padding: 40px 24px;
+    padding: 40px 2rem;
   }
 
   .favoris-grid {
@@ -406,7 +406,7 @@
 /* ── MOBILE — max 480px ── */
 @media (max-width: 480px) {
   .favoris-page {
-    padding: 24px 16px 48px;
+    padding: 24px 2rem 48px;
   }
 
   .favoris-grid {

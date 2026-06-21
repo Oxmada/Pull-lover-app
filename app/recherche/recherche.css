@@ -111,7 +111,7 @@
 /* ── MOBILE (< 768px) ── */
 @media (max-width: 767px) {
   .search-page {
-    padding: 24px 0;
+    padding: 24px 2rem;
   }
 
   .search-title {

@@ -461,7 +461,7 @@
 /* ── MOBILE — < 768px ── */
 @media (max-width: 767px) {
   .checkout-page {
-    padding: 48px 20px 60px;
+    padding: 48px 2rem 60px;
   }
 
   .checkout-wrapper {
@@ -484,7 +484,7 @@
 /* ── PETIT MOBILE — max 480px ── */
 @media (max-width: 480px) {
   .checkout-page {
-    padding: 32px 16px 48px;
+    padding: 32px 2rem 48px;
   }
 
   .checkout-left {

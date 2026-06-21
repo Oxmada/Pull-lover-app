@@ -172,7 +172,7 @@
 
 @media (max-width: 767px) {
     .h-navbar {
-        padding: 0 16px;
+        padding: 0 2rem;
     }
 
     .h-burger {
