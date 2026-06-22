@@ -108,31 +108,12 @@ export default function AdminSettingsPage() {
         .content-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-template-rows: auto auto;
           gap: 16px;
           align-items: start;
-        }
-        .content-grid .card-drop {
-          grid-column: 1;
-          grid-row: 1 / 3;
-        }
-        .content-grid .card-bandeau {
-          grid-column: 2;
-          grid-row: 1;
-        }
-        .content-grid .card-badge {
-          grid-column: 2;
-          grid-row: 2;
         }
         @media (max-width: 860px) {
           .content-grid {
             grid-template-columns: 1fr;
-          }
-          .content-grid .card-drop,
-          .content-grid .card-bandeau,
-          .content-grid .card-badge {
-            grid-column: 1;
-            grid-row: auto;
           }
         }
       `}</style>
@@ -144,7 +125,7 @@ export default function AdminSettingsPage() {
       <div className="content-grid">
 
         {/* ── Compteur drop ── */}
-        <div style={cardStyle} className="card-drop">
+        <div style={cardStyle}>
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Compteur — date du prochain drop
           </p>
@@ -173,7 +154,7 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* ── Bandeau header ── */}
-        <div style={cardStyle} className="card-bandeau">
+        <div style={cardStyle}>
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Bandeau header
           </p>
@@ -210,7 +191,7 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* ── Badge / notif hero ── */}
-        <div style={cardStyle} className="card-badge">
+        <div style={cardStyle}>
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Notification hero (page d'accueil)
           </p>
