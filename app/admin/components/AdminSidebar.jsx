@@ -17,7 +17,7 @@ const NAV_ITEMS = [
   { href: "/admin/orders",     label: "Commandes",      short: "Commandes",  icon: <AdminOrdersIcon /> },
   { href: "/admin/newsletter", label: "Newsletter",     short: "News",       icon: <NewsletterIcon /> },
   { href: "/admin/promos",    label: "Codes promo",    short: "Promos",     icon: <PromoIcon /> },
-  { href: "/admin/settings", label: "Paramètres drop", short: "Drop",       icon: <SettingsIcon /> },
+  { href: "/admin/settings", label: "Gestion du contenu", short: "Contenu",  icon: <SettingsIcon /> },
 ];
 
 const BOTTOM_PRIMARY = ["/admin/dashboard", "/admin/products", "/admin/orders"];

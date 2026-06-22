@@ -18,7 +18,7 @@ const inputStyle = {
 
 const cardStyle = {
   background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10,
-  padding: "20px 24px", marginBottom: 16,
+  padding: "20px 24px",
 };
 
 function toLocalDatetimeValue(date) {
@@ -54,7 +54,7 @@ export default function AdminSettingsPage() {
   const [badgeText, setBadgeText]     = useState("");
   const [current, setCurrent]         = useState(null);
   const [loading, setLoading]         = useState(true);
-  const [saving, setSaving]           = useState(null); // "drop" | "bandeau" | "badge"
+  const [saving, setSaving]           = useState(null);
   const [errors, setErrors]           = useState({});
   const { toast, showToast }          = useToast();
 
@@ -94,7 +94,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="ap-page">
-        <div className="ap-topbar"><h1 className="ap-topbar-title">Paramètres du drop</h1></div>
+        <div className="ap-topbar"><h1 className="ap-topbar-title">Gestion du contenu</h1></div>
         <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
       </div>
     );
@@ -104,18 +104,51 @@ export default function AdminSettingsPage() {
     <div className="ap-page">
       <Toast toast={toast} />
 
+      <style>{`
+        .content-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto auto;
+          gap: 16px;
+          align-items: start;
+        }
+        .content-grid .card-drop {
+          grid-column: 1;
+          grid-row: 1 / 3;
+        }
+        .content-grid .card-bandeau {
+          grid-column: 2;
+          grid-row: 1;
+        }
+        .content-grid .card-badge {
+          grid-column: 2;
+          grid-row: 2;
+        }
+        @media (max-width: 860px) {
+          .content-grid {
+            grid-template-columns: 1fr;
+          }
+          .content-grid .card-drop,
+          .content-grid .card-bandeau,
+          .content-grid .card-badge {
+            grid-column: 1;
+            grid-row: auto;
+          }
+        }
+      `}</style>
+
       <div className="ap-topbar">
-        <h1 className="ap-topbar-title">Paramètres du drop</h1>
+        <h1 className="ap-topbar-title">Gestion du contenu</h1>
       </div>
 
-      <div style={{ maxWidth: 560 }}>
+      <div className="content-grid">
 
         {/* ── Compteur drop ── */}
-        <div style={cardStyle}>
+        <div style={cardStyle} className="card-drop">
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Compteur — date du prochain drop
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>{formatDate(current?.dropDate)}</span>
             <StatusBadge
               active={!!(current?.dropDate && !dropExpired)}
@@ -140,11 +173,11 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* ── Bandeau header ── */}
-        <div style={cardStyle}>
+        <div style={cardStyle} className="card-bandeau">
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Bandeau header
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, color: "#57534e", fontStyle: current?.bandeauText ? "normal" : "italic" }}>
               {current?.bandeauText || "Aucun texte — bandeau masqué"}
             </span>
@@ -157,11 +190,11 @@ export default function AdminSettingsPage() {
               <input style={inputStyle} type="text" placeholder="Nouvel arrivage le 01/09/2026 à 19H" value={bandeauText}
                 onChange={(e) => setBandeauText(e.target.value)} />
               <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 5 }}>
-                Affiché en haut de toutes les pages (sauf accueil). Laisser vide pour masquer le bandeau.
+                Affiché en haut de toutes les pages (sauf accueil). Laisser vide pour masquer.
               </p>
             </div>
             {errors.bandeauText && <p style={{ fontSize: 13, color: "#C95D5D" }}>{errors.bandeauText}</p>}
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <button type="submit" className="ap-btn-add" style={{ alignSelf: "flex-start" }} disabled={saving === "bandeauText"}>
                 {saving === "bandeauText" ? "Sauvegarde…" : "Enregistrer"}
               </button>
@@ -177,11 +210,11 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* ── Badge / notif hero ── */}
-        <div style={cardStyle}>
+        <div style={cardStyle} className="card-badge">
           <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
             Notification hero (page d'accueil)
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, color: "#57534e", fontStyle: current?.badgeText ? "normal" : "italic" }}>
               {current?.badgeText || "Aucun texte — notification masquée"}
             </span>
@@ -198,7 +231,7 @@ export default function AdminSettingsPage() {
               </p>
             </div>
             {errors.badgeText && <p style={{ fontSize: 13, color: "#C95D5D" }}>{errors.badgeText}</p>}
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <button type="submit" className="ap-btn-add" style={{ alignSelf: "flex-start" }} disabled={saving === "badgeText"}>
                 {saving === "badgeText" ? "Sauvegarde…" : "Enregistrer"}
               </button>
