@@ -59,6 +59,10 @@ body {
   line-height: 1.6;
 }
 
+p {
+  font-size: 18px;
+}
+
 /* ── Scroll reveal ── */
 .reveal {
   opacity: 0;

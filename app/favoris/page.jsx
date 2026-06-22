@@ -166,8 +166,8 @@ export default function FavorisPage() {
             </div>
 
             <div className="favoris-footer">
-              <ButtonGhost href="/nos-mailles">
-                ← Continuer mes achats
+              <ButtonGhost href="/nos-mailles" style={{ color: '#C95D5D' }}>
+                Continuer mes achats
               </ButtonGhost>
             </div>
           </>
