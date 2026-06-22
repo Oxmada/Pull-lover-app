@@ -6,7 +6,7 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import {
   DashboardIcon, ProductsIcon, CategoriesIcon, UsersIcon, AdminOrdersIcon,
-  NewsletterIcon, PromoIcon, LogoutIcon, PlusIcon, CloseIcon,
+  NewsletterIcon, PromoIcon, LogoutIcon, PlusIcon, CloseIcon, SettingsIcon,
 } from "@/app/components/icons";
 
 const NAV_ITEMS = [
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { href: "/admin/orders",     label: "Commandes",      short: "Commandes",  icon: <AdminOrdersIcon /> },
   { href: "/admin/newsletter", label: "Newsletter",     short: "News",       icon: <NewsletterIcon /> },
   { href: "/admin/promos",    label: "Codes promo",    short: "Promos",     icon: <PromoIcon /> },
+  { href: "/admin/settings", label: "Paramètres drop", short: "Drop",       icon: <SettingsIcon /> },
 ];
 
 const BOTTOM_PRIMARY = ["/admin/dashboard", "/admin/products", "/admin/orders"];

@@ -7,11 +7,24 @@ import "./HeaderHero.css";
 
 gsap.registerPlugin(SplitText);
 
-const DROP_DATE = new Date("2026-06-20T19:00:00");
-const START_DATE = new Date("2026-05-13T00:00:00");
+function useDropSettings() {
+  const [dropDate, setDropDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((data) => {
+        setDropDate(data.dropDate ? new Date(data.dropDate) : null);
+        setStartDate(data.startDate ? new Date(data.startDate) : null);
+      })
+      .catch(() => {});
+  }, []);
+  return { dropDate, startDate };
+}
 
 function useCountdown(target) {
   const calc = () => {
+    if (!target) return null;
     const diff = Math.max(0, target - Date.now());
     return {
       days: Math.floor(diff / 86400000),
@@ -21,6 +34,7 @@ function useCountdown(target) {
   };
   const [time, setTime] = useState(null);
   useEffect(() => {
+    if (!target) return;
     setTime(calc());
     const id = setInterval(() => {
       const next = calc();
@@ -28,21 +42,22 @@ function useCountdown(target) {
       if (next.days === 0 && next.hours === 0 && next.minutes === 0) clearInterval(id);
     }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [target]);
   return time;
 }
 
-function useProgress() {
+function useProgress(dropDate, startDate) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
+    if (!dropDate || !startDate) return;
     const calc = () => {
-      const total = DROP_DATE - START_DATE;
-      const elapsed = Math.min(Date.now() - START_DATE, total);
+      const total = dropDate - startDate;
+      const elapsed = Math.min(Date.now() - startDate, total);
       return Math.max(0, Math.min(100, (elapsed / total) * 100));
     };
     const id = setTimeout(() => setProgress(calc()), 200);
     return () => clearTimeout(id);
-  }, []);
+  }, [dropDate, startDate]);
   return progress;
 }
 
@@ -64,9 +79,11 @@ export default function HeaderHero() {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subRef = useRef(null);
-  const time = useCountdown(DROP_DATE);
-  const progress = useProgress();
+  const { dropDate, startDate } = useDropSettings();
+  const time = useCountdown(dropDate);
+  const progress = useProgress(dropDate, startDate);
   const { days = 0, hours = 0, minutes = 0 } = time ?? {};
+  const isExpired = time !== null && days === 0 && hours === 0 && minutes === 0;
 
   useEffect(() => {
     if (!titleRef.current || !subRef.current) return;
@@ -149,21 +166,23 @@ export default function HeaderHero() {
 
       <div className="made-with-love">100% made with love</div>
 
-      <div className="hero-countdown-bar">
-        <span className="hcb-title">Nouveau drop en cours</span>
-        <div className="hcb-sep" />
-        <div className="hcb-counter">
-          <DigitGroupBar value={days} label="Jours" />
-          <span className="hcb-colon">:</span>
-          <DigitGroupBar value={hours} label="Heures" />
-          <span className="hcb-colon">:</span>
-          <DigitGroupBar value={minutes} label="Min" />
+      {!isExpired && dropDate && (
+        <div className="hero-countdown-bar">
+          <span className="hcb-title">Nouveau drop en cours</span>
+          <div className="hcb-sep" />
+          <div className="hcb-counter">
+            <DigitGroupBar value={days} label="Jours" />
+            <span className="hcb-colon">:</span>
+            <DigitGroupBar value={hours} label="Heures" />
+            <span className="hcb-colon">:</span>
+            <DigitGroupBar value={minutes} label="Min" />
+          </div>
+          <div className="hcb-sep" />
+          <div className="hcb-progress-track">
+            <div className="hcb-progress-fill" style={{ width: `${progress}%` }} />
+          </div>
         </div>
-        <div className="hcb-sep" />
-        <div className="hcb-progress-track">
-          <div className="hcb-progress-fill" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
+      )}
 
     </section>
   );
