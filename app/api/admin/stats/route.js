@@ -9,6 +9,7 @@ import Product  from "@/app/models/Product";
 
 const fetchStats = unstable_cache(
   async (period) => {
+    try {
     await connectDB();
     const daysAgo = parseInt(period);
 
