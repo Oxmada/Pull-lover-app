@@ -34,7 +34,7 @@
 
 .nm-intro__heading {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
     line-height: 1.2;
     color: #1a1a1a;
@@ -57,7 +57,7 @@
 
 .nm-intro__right p {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 300;
     line-height: 1.8;
     color: #444444;
@@ -106,7 +106,7 @@
 
 .nm-stat__label {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 400;
     color: #6b7280;
     letter-spacing: 0.04em;
@@ -127,7 +127,7 @@
 
 .nm-video-section__heading {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;
@@ -136,7 +136,7 @@
 
 .nm-video-section__sub {
     margin-top: 12px;
-    font-size: 0.95rem;
+    font-size: 1.125rem;
     color: #555;
     line-height: 1.6;
 }
@@ -199,7 +199,7 @@
 
 .nm-cta__heading {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;
@@ -209,7 +209,7 @@
 
 .nm-cta__sub {
     font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 300;
     color: #6b7280;
     margin: 0;
@@ -260,7 +260,11 @@
     }
 
     .nm-intro__heading {
-        font-size: 2rem;
+        font-size: 2.25rem;
+    }
+
+    .nm-intro__right p {
+        font-size: 1rem;
     }
 
     .nm-stats {
@@ -285,11 +289,19 @@
     }
 
     .nm-video-section__heading {
-        font-size: 1.75rem;
+        font-size: 2.25rem;
+    }
+
+    .nm-video-section__sub {
+        font-size: 1rem;
     }
 
     .nm-cta__heading {
-        font-size: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .nm-cta__sub {
+        font-size: 1rem;
     }
 }
 
@@ -317,8 +329,12 @@
     }
 
     .nm-intro__heading {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         margin-bottom: 20px;
+    }
+
+    .nm-intro__right p {
+        font-size: 0.75rem;
     }
 
     .nm-stats {
@@ -350,15 +366,20 @@
         font-size: 1.5rem;
     }
 
+    .nm-video-section__sub {
+        font-size: 0.75rem;
+    }
+
+
     .nm-cta {
         padding: 64px 0;
     }
 
     .nm-cta__heading {
-        font-size: 1.75rem;
+        font-size: 1.25rem;
     }
 
     .nm-cta__sub {
-        font-size: 0.875rem;
+        font-size: 0.75rem;
     }
 }

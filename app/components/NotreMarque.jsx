@@ -29,9 +29,9 @@ export default function NotreMarque() {
                     <div className="nm-intro__inner reveal" ref={introRef}>
                         <div className="nm-intro__left">
                             <Eyebrow className="nm-eyebrow">Notre marque</Eyebrow>
-                            <h1 className="nm-intro__heading">
+                            <h2 className="nm-intro__heading">
                                 Pull Lover, une marque, une histoire
-                            </h1>
+                            </h2>
                         </div>
                         <div className="nm-intro__right">
                             <p>
@@ -142,12 +142,11 @@ export default function NotreMarque() {
             <section className="nm-cta">
                 <div className="nm-container">
                     <div className="nm-cta__inner reveal" ref={ctaRef}>
-                        <Eyebrow className="nm-eyebrow">Notre collection</Eyebrow>
-                        <h2 className="nm-cta__heading">
+                        <h3 className="nm-cta__heading">
                             Prêt à trouver votre prochain coup de cœur ?
-                        </h2>
+                        </h3>
                         <p className="nm-cta__sub">
-                            Découvrez nos pulls et accessoires faits main, créés à Antananarivo.
+                            Découvrez nos pulls et accessoires faits main, créés à Madagascar.
                         </p>
                         <ButtonPrimary href="/nos-mailles" size="lg">
                             Voir la collection
