@@ -119,6 +119,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 3 / 4;
+    max-height: 400px;
     background: #f0f0f0;
     overflow: hidden;
     border-radius: var(--radius-md);
@@ -355,15 +356,66 @@
 /* ── Responsive ── */
 @media (min-width: 768px) and (max-width: 1200px) {
     .ncs-wrapper {
-        padding: 75px 32px;
+        padding: 75px 0;
     }
 
     .ncs-header {
         margin-bottom: 40px;
+        padding: 0 40px;
     }
 
     .ncs-grid {
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 40px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding: 0 40px;
+        gap: 20px;
+    }
+
+    .ncs-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ncs-card {
+        flex: 0 0 calc(50vw - 50px);
+        scroll-snap-align: start;
+    }
+
+    .ncs-card-bottom {
+        max-height: 50px;
+        opacity: 1;
+    }
+
+    .ncs-card-cta {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ncs-cta-body {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        background: #f5f3ef;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .ncs-cta-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+        line-height: 1.3;
     }
 
 }

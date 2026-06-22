@@ -235,8 +235,8 @@
   margin-top: 2px;
 }
 
-.vn-val h4 {
-  font-size: 0.875rem;
+.vn-val h3 {
+  font-size: 1rem;
   font-weight: 600;
   color: var(--dark);
   margin: 0 0 4px;
@@ -265,7 +265,7 @@
 }
 
 .vn-nl-text h3 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--dark);
   margin: 0 0 4px;
@@ -370,6 +370,18 @@
 
   .vn-nl-input {
     width: 200px;
+  }
+
+  .vn-val h3 {
+    font-size: 1rem;
+  }
+
+  .vn-val p {
+    font-size: 0.875rem;
+  }
+
+  .vn-nl-form .btn {
+    font-size: 1rem;
   }
 }
 

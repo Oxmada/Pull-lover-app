@@ -36,7 +36,7 @@ export default function ValuesNewsletterSection() {
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
               </svg>
               <div>
-                <h4>Livraison rapide</h4>
+                <h3>Livraison rapide</h3>
                 <p>24-48h partout à Madagascar</p>
               </div>
             </div>
@@ -45,7 +45,7 @@ export default function ValuesNewsletterSection() {
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               <div>
-                <h4>Paiement sécurisé</h4>
+                <h3>Paiement sécurisé</h3>
                 <p>Transactions 100% protégées</p>
               </div>
             </div>
@@ -54,7 +54,7 @@ export default function ValuesNewsletterSection() {
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
               </svg>
               <div>
-                <h4>Retours gratuits</h4>
+                <h3>Retours gratuits</h3>
                 <p>30 jours pour changer d'avis</p>
               </div>
             </div>
@@ -63,7 +63,7 @@ export default function ValuesNewsletterSection() {
                 <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
               </svg>
               <div>
-                <h4>Support client</h4>
+                <h3>Support client</h3>
                 <p>Assistance disponible 7j/7</p>
               </div>
             </div>

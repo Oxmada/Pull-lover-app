@@ -167,6 +167,11 @@
     width: 20px;
     height: 20px;
   }
+
+  .footer-brand img {
+    width: 20px !important;
+    height: 20px !important;
+  }
 }
 
 /* ── MOBILE (< 768px) ── */
