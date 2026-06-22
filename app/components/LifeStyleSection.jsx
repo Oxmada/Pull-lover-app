@@ -12,7 +12,7 @@ export default function LifeStyleSection() {
 
                     {/* Texte à gauche */}
                     <div className="lifestyle-band-text">
-                        <h2 className="lifestyle-title">Soyez vous-même&nbsp;!</h2>
+                        <h2 className="lifestyle-title section-title">Soyez vous-même&nbsp;!</h2>
                         <p className="lifestyle-subtitle">
                             Ego vero sic intellego. Patres conscripti, nos hoc tempore in
                             provinciis decernendis perpetuae pacis habere oportere rationem.

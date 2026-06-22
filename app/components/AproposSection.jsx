@@ -30,7 +30,7 @@ const AproposSection = () => {
                         {/* Groupe label + titre — gap 10px */}
                         <div className="apropos-header">
                             <Eyebrow className="apropos-eyebrow">Notre marque</Eyebrow>
-                            <h2 className="apropos-title">La passion de la maille</h2>
+                            <h2 className="apropos-title section-title">La passion de la maille</h2>
                         </div>
 
                         {/* Description — 60px après le titre */}

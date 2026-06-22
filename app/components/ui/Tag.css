@@ -13,11 +13,10 @@
   white-space: nowrap;
 }
 
-/* ── Eyebrow — label de section en capitales ── */
+/* ── Eyebrow — label de section en capitales (font-size défini dans globals.css) ── */
 .eyebrow {
   display: block;
   font-family: var(--font-montserrat, 'Montserrat', sans-serif);
-  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;

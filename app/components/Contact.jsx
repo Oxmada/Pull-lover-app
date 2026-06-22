@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { ButtonPrimary } from "./ui/Button";
+import { Eyebrow } from "./ui/Tag";
 import "./Contact.css";
 
 const INFOS = [
@@ -57,7 +58,7 @@ export default function Contact() {
                 <div className="contact__form-side reveal" ref={formRef}>
 
                     <div className="contact__header">
-                        <p className="contact__eyebrow">Contactez-nous</p>
+                        <Eyebrow className="contact-eyebrow">Contactez-nous</Eyebrow>
                         <h1 className="contact__heading">
                             Une question ?<br />On vous répond.
                         </h1>

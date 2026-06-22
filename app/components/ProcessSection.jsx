@@ -35,8 +35,8 @@ export default function ProcessSection() {
 
                 {/* En-tête */}
                 <div className="process-header">
-                    <Eyebrow>Notre processus</Eyebrow>
-                    <h2 className="process-title">Comment ça fonctionne ?</h2>
+                    <Eyebrow className="process-eyebrow">Notre processus</Eyebrow>
+                    <h2 className="process-title section-title">Comment ça fonctionne ?</h2>
                     <p className="process-subtitle">
                         De la commande à la livraison, nous prenons soin de chaque étape pour vous offrir une expérience unique et sans souci.
                     </p>

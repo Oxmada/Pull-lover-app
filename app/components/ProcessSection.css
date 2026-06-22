@@ -37,7 +37,6 @@
 
 .process-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 48px;
     font-weight: 700;
     color: #1a1a1a;
     line-height: 1.15;
@@ -140,9 +139,6 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .process-title {
-        font-size: 36px;
-    }
 }
 
 @media (max-width: 767px) {
@@ -153,10 +149,6 @@
 
     .process-grid {
         grid-template-columns: 1fr;
-    }
-
-    .process-title {
-        font-size: 24px;
     }
 
     .process-subtitle {

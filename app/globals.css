@@ -63,6 +63,40 @@ p {
   font-size: 18px;
 }
 
+/* ── Eyebrow — tailles responsive communes ── */
+.eyebrow {
+  font-size: 14px;
+}
+
+@media (max-width: 1199px) {
+  .eyebrow {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 767px) {
+  .eyebrow {
+    font-size: 10px;
+  }
+}
+
+/* ── Section title (H2) — tailles responsive communes ── */
+.section-title {
+  font-size: 48px;
+}
+
+@media (max-width: 1199px) {
+  .section-title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  .section-title {
+    font-size: 24px;
+  }
+}
+
 /* ── Scroll reveal ── */
 .reveal {
   opacity: 0;

@@ -130,6 +130,11 @@
     transition: opacity 0.2s, transform 0.2s;
 }
 
+.h-icon-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
 .h-icon-btn:hover {
     opacity: 0.55;
     transform: translateY(-1px);
@@ -191,6 +196,18 @@
 
     .h-nav-list {
         width: 380px;
+    }
+
+    .h-icon-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .h-icon-btn svg {
+        width: 16px;
+        height: 16px;
     }
 }
 

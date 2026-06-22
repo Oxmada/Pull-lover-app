@@ -36,8 +36,8 @@ const NotreCollectionSection = () => {
 
                 <div className="ncs-header">
                     <div className="ncs-header-titles">
-                        <Eyebrow>Notre collection</Eyebrow>
-                        <h2 className="ncs-title">Nos meilleures ventes</h2>
+                        <Eyebrow className="ncs-eyebrow">Notre collection</Eyebrow>
+                        <h2 className="ncs-title section-title">Nos meilleures ventes</h2>
                     </div>
                     <ButtonPrimary href="/nos-mailles?sort=newest">
                         Voir tous les produits
