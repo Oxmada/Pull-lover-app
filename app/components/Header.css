@@ -513,8 +513,9 @@
 
 /* Lien Dashboard admin */
 .h-nav-link--admin {
-    background: rgba(0, 0, 0, 0.06);
-    padding: 0.3rem 0.75rem;
+    background: rgba(201, 93, 93, 0.15);
+    padding: 0.45rem 1.1rem;
     border-radius: var(--radius-lg);
     font-size: 0.85rem;
+    color: #C95D5D;
 }

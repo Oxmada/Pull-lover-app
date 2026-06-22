@@ -182,7 +182,7 @@
 }
 
 .social-vertical a {
-  color: #fff;
+  color: #C95D5D;
   font-size: 1.1rem;
   transition: transform 0.2s;
 }
@@ -205,7 +205,7 @@
 .follow-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  color: #fff;
+  color: #C95D5D;
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
