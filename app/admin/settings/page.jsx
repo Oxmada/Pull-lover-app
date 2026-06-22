@@ -16,6 +16,11 @@ const inputStyle = {
   outline: "none", boxSizing: "border-box", background: "#fff",
 };
 
+const cardStyle = {
+  background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10,
+  padding: "20px 24px", marginBottom: 16,
+};
+
 function toLocalDatetimeValue(date) {
   if (!date) return "";
   const d = new Date(date);
@@ -23,59 +28,77 @@ function toLocalDatetimeValue(date) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function AdminSettingsPage() {
-  const [dropDate, setDropDate] = useState("");
-  const [currentDrop, setCurrentDrop] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const { toast, showToast } = useToast();
+function formatDate(d) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("fr-FR", {
+    day: "2-digit", month: "long", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+}
 
-  useEffect(() => {
-    load();
-  }, []);
+function StatusBadge({ active, activeLabel, inactiveLabel }) {
+  return (
+    <span style={{
+      fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20,
+      background: active ? "#dcfce7" : "#fee2e2",
+      color: active ? "#15803d" : "#b91c1c",
+    }}>
+      {active ? activeLabel : inactiveLabel}
+    </span>
+  );
+}
+
+export default function AdminSettingsPage() {
+  const [dropDate, setDropDate]       = useState("");
+  const [bandeauText, setBandeauText] = useState("");
+  const [badgeText, setBadgeText]     = useState("");
+  const [current, setCurrent]         = useState(null);
+  const [loading, setLoading]         = useState(true);
+  const [saving, setSaving]           = useState(null); // "drop" | "bandeau" | "badge"
+  const [errors, setErrors]           = useState({});
+  const { toast, showToast }          = useToast();
+
+  useEffect(() => { load(); }, []);
 
   async function load() {
     setLoading(true);
-    const res = await fetch("/api/admin/settings");
+    const res  = await fetch("/api/admin/settings");
     const data = await res.json();
-    setCurrentDrop(data.dropDate ?? null);
+    setCurrent(data);
     setDropDate(toLocalDatetimeValue(data.dropDate));
+    setBandeauText(data.bandeauText ?? "");
+    setBadgeText(data.badgeText ?? "");
     setLoading(false);
   }
 
-  async function handleSave(e) {
-    e.preventDefault();
-    setError("");
-    if (!dropDate) {
-      setError("Veuillez sélectionner une date.");
-      return;
-    }
-    setSaving(true);
-    const res = await fetch("/api/admin/settings", {
+  async function patch(field, value, label) {
+    setSaving(field);
+    setErrors((e) => ({ ...e, [field]: "" }));
+    const res  = await fetch("/api/admin/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ dropDate: new Date(dropDate).toISOString() }),
+      body: JSON.stringify({ [field]: value }),
     });
     const data = await res.json();
-    setSaving(false);
+    setSaving(null);
     if (!res.ok) {
-      setError(data.error || "Erreur lors de la sauvegarde");
+      setErrors((e) => ({ ...e, [field]: data.error || "Erreur" }));
     } else {
-      setCurrentDrop(data.dropDate);
-      showToast("Date du drop mise à jour");
+      setCurrent(data);
+      showToast(`${label} mis à jour`);
     }
   }
 
-  function formatDate(d) {
-    if (!d) return "—";
-    return new Date(d).toLocaleDateString("fr-FR", {
-      day: "2-digit", month: "long", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
-    });
-  }
+  const dropExpired = current?.dropDate && new Date(current.dropDate) < new Date();
 
-  const isExpired = currentDrop && new Date(currentDrop) < new Date();
+  if (loading) {
+    return (
+      <div className="ap-page">
+        <div className="ap-topbar"><h1 className="ap-topbar-title">Paramètres du drop</h1></div>
+        <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
+      </div>
+    );
+  }
 
   return (
     <div className="ap-page">
@@ -85,72 +108,112 @@ export default function AdminSettingsPage() {
         <h1 className="ap-topbar-title">Paramètres du drop</h1>
       </div>
 
-      {loading ? (
-        <div className="admin-loading-wrap"><span className="admin-loader" />Chargement</div>
-      ) : (
-        <div style={{ maxWidth: 560 }}>
+      <div style={{ maxWidth: 560 }}>
 
-          {/* Statut actuel */}
-          <div style={{
-            background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10,
-            padding: "20px 24px", marginBottom: 20,
-          }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
-              Drop actuel
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 15, fontWeight: 600, color: "#0f172a" }}>
-                {formatDate(currentDrop)}
-              </span>
-              {currentDrop && (
-                <span style={{
-                  fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20,
-                  background: isExpired ? "#fee2e2" : "#dcfce7",
-                  color: isExpired ? "#b91c1c" : "#15803d",
-                }}>
-                  {isExpired ? "Expiré — compteur caché" : "En cours"}
-                </span>
+        {/* ── Compteur drop ── */}
+        <div style={cardStyle}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
+            Compteur — date du prochain drop
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>{formatDate(current?.dropDate)}</span>
+            <StatusBadge
+              active={!!(current?.dropDate && !dropExpired)}
+              activeLabel="Actif"
+              inactiveLabel={current?.dropDate ? "Expiré — compteur caché" : "Non défini"}
+            />
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); patch("dropDate", dropDate ? new Date(dropDate).toISOString() : null, "Date du drop"); }}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <label style={labelStyle}>Date & heure *</label>
+              <input style={inputStyle} type="datetime-local" value={dropDate} onChange={(e) => setDropDate(e.target.value)} />
+              <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 5 }}>
+                Le compteur est affiché sur la page d'accueil jusqu'à cette date, puis se cache automatiquement.
+              </p>
+            </div>
+            {errors.dropDate && <p style={{ fontSize: 13, color: "#C95D5D" }}>{errors.dropDate}</p>}
+            <button type="submit" className="ap-btn-add" style={{ alignSelf: "flex-start" }} disabled={saving === "dropDate"}>
+              {saving === "dropDate" ? "Sauvegarde…" : "Enregistrer"}
+            </button>
+          </form>
+        </div>
+
+        {/* ── Bandeau header ── */}
+        <div style={cardStyle}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
+            Bandeau header
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <span style={{ fontSize: 13, color: "#57534e", fontStyle: current?.bandeauText ? "normal" : "italic" }}>
+              {current?.bandeauText || "Aucun texte — bandeau masqué"}
+            </span>
+            <StatusBadge active={!!current?.bandeauText} activeLabel="Visible" inactiveLabel="Masqué" />
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); patch("bandeauText", bandeauText, "Bandeau"); }}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <label style={labelStyle}>Texte du bandeau</label>
+              <input style={inputStyle} type="text" placeholder="Nouvel arrivage le 01/09/2026 à 19H" value={bandeauText}
+                onChange={(e) => setBandeauText(e.target.value)} />
+              <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 5 }}>
+                Affiché en haut de toutes les pages (sauf accueil). Laisser vide pour masquer le bandeau.
+              </p>
+            </div>
+            {errors.bandeauText && <p style={{ fontSize: 13, color: "#C95D5D" }}>{errors.bandeauText}</p>}
+            <div style={{ display: "flex", gap: 8 }}>
+              <button type="submit" className="ap-btn-add" style={{ alignSelf: "flex-start" }} disabled={saving === "bandeauText"}>
+                {saving === "bandeauText" ? "Sauvegarde…" : "Enregistrer"}
+              </button>
+              {bandeauText && (
+                <button type="button" disabled={saving === "bandeauText"}
+                  onClick={() => { setBandeauText(""); patch("bandeauText", "", "Bandeau"); }}
+                  style={{ padding: "10px 16px", background: "#fff", border: "1.5px solid #e7e5e4", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer", color: "#C95D5D" }}>
+                  Masquer
+                </button>
               )}
             </div>
-          </div>
-
-          {/* Formulaire */}
-          <div style={{
-            background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10,
-            padding: "20px 24px",
-          }}>
-            <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 20, color: "#0f172a" }}>
-              Définir le prochain drop
-            </h2>
-            <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div>
-                <label style={labelStyle}>Date & heure du drop *</label>
-                <input
-                  style={inputStyle}
-                  type="datetime-local"
-                  value={dropDate}
-                  onChange={(e) => setDropDate(e.target.value)}
-                  required
-                />
-                <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 6 }}>
-                  Le compteur apparaîtra sur le site jusqu'à cette date, puis se cachera automatiquement.
-                </p>
-              </div>
-
-              {error && (
-                <p style={{ fontSize: 13, color: "#C95D5D", margin: 0 }}>{error}</p>
-              )}
-
-              <div>
-                <button type="submit" className="ap-btn-add" disabled={saving}>
-                  {saving ? "Sauvegarde…" : "Enregistrer"}
-                </button>
-              </div>
-            </form>
-          </div>
-
+          </form>
         </div>
-      )}
+
+        {/* ── Badge / notif hero ── */}
+        <div style={cardStyle}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#78716c", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 14 }}>
+            Notification hero (page d'accueil)
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <span style={{ fontSize: 13, color: "#57534e", fontStyle: current?.badgeText ? "normal" : "italic" }}>
+              {current?.badgeText || "Aucun texte — notification masquée"}
+            </span>
+            <StatusBadge active={!!current?.badgeText} activeLabel="Visible" inactiveLabel="Masquée" />
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); patch("badgeText", badgeText, "Notification hero"); }}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <label style={labelStyle}>Texte de la notification</label>
+              <input style={inputStyle} type="text" placeholder="Nouvel arrivage le 01/09/2026 à 19H" value={badgeText}
+                onChange={(e) => setBadgeText(e.target.value)} />
+              <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 5 }}>
+                Badge clochette affiché sur la page d'accueil. Laisser vide pour masquer.
+              </p>
+            </div>
+            {errors.badgeText && <p style={{ fontSize: 13, color: "#C95D5D" }}>{errors.badgeText}</p>}
+            <div style={{ display: "flex", gap: 8 }}>
+              <button type="submit" className="ap-btn-add" style={{ alignSelf: "flex-start" }} disabled={saving === "badgeText"}>
+                {saving === "badgeText" ? "Sauvegarde…" : "Enregistrer"}
+              </button>
+              {badgeText && (
+                <button type="button" disabled={saving === "badgeText"}
+                  onClick={() => { setBadgeText(""); patch("badgeText", "", "Notification hero"); }}
+                  style={{ padding: "10px 16px", background: "#fff", border: "1.5px solid #e7e5e4", borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: "pointer", color: "#C95D5D" }}>
+                  Masquer
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+      </div>
     </div>
   );
 }

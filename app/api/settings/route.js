@@ -8,7 +8,9 @@ export async function GET() {
   await connectDB();
   const settings = await Settings.findOne();
   return NextResponse.json({
-    dropDate: settings?.dropDate ?? null,
-    startDate: settings?.updatedAt ?? null,
+    dropDate:    settings?.dropDate    ?? null,
+    startDate:   settings?.updatedAt   ?? null,
+    bandeauText: settings?.bandeauText ?? "",
+    badgeText:   settings?.badgeText   ?? "",
   });
 }

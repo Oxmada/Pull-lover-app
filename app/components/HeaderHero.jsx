@@ -10,16 +10,18 @@ gsap.registerPlugin(SplitText);
 function useDropSettings() {
   const [dropDate, setDropDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
+  const [badgeText, setBadgeText] = useState(null);
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => {
         setDropDate(data.dropDate ? new Date(data.dropDate) : null);
         setStartDate(data.startDate ? new Date(data.startDate) : null);
+        setBadgeText(data.badgeText ?? "");
       })
       .catch(() => {});
   }, []);
-  return { dropDate, startDate };
+  return { dropDate, startDate, badgeText };
 }
 
 function useCountdown(target) {
@@ -79,7 +81,7 @@ export default function HeaderHero() {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subRef = useRef(null);
-  const { dropDate, startDate } = useDropSettings();
+  const { dropDate, startDate, badgeText } = useDropSettings();
   const time = useCountdown(dropDate);
   const progress = useProgress(dropDate, startDate);
   const { days = 0, hours = 0, minutes = 0 } = time ?? {};
@@ -131,13 +133,13 @@ export default function HeaderHero() {
         </div>
 
         <div className="hero-content-right">
-          {showBadge && (
+          {showBadge && badgeText && (
             <div className="hero-badge">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="badge-icon">
                 <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6981 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>Nouvel arrivage le 20/06/2026 à 19H</span>
+              <span>{badgeText}</span>
               <button onClick={() => setShowBadge(false)} className="badge-close" aria-label="Fermer la notification">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" fill="currentColor" />

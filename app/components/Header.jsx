@@ -25,6 +25,14 @@ const navLinks = [
 export default function Header({ transparent = false }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [bandeauText, setBandeauText] = useState("");
+
+    useEffect(() => {
+        fetch("/api/settings")
+            .then((r) => r.json())
+            .then((data) => setBandeauText(data.bandeauText ?? ""))
+            .catch(() => {});
+    }, []);
     const userMenuRef = useRef(null);
     const pathname = usePathname();
 
@@ -56,8 +64,8 @@ export default function Header({ transparent = false }) {
 
     return (
         <header className={`h-wrapper${transparent ? " h-wrapper--transparent" : ""}`}>
-            {/* Bandeau — masqué en mode transparent (home) */}
-            {!transparent && <div className="h-bandeau">Nouvel arrivage le 20/06/2026 à 19H</div>}
+            {/* Bandeau — masqué en mode transparent (home) et si texte vide */}
+            {!transparent && bandeauText && <div className="h-bandeau">{bandeauText}</div>}
 
             {/* Navbar */}
             <nav className="h-navbar">
