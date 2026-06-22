@@ -97,9 +97,12 @@ export default function HeaderHero() {
 
     tl.from(letters, { y: 100, autoAlpha: 0, stagger: 0.05, duration: 1 })
       .from(subSplit.words, { y: 30, autoAlpha: 0, stagger: 0.04, duration: 0.7 }, "-=0.5")
-      .from(".hero-cta", { autoAlpha: 0, y: 20, duration: 0.6 }, "-=0.4")
-      .from(".hero-badge", { autoAlpha: 0, y: -20, duration: 0.5 }, "-=0.4")
-      .from(".hero-countdown-bar", { autoAlpha: 0, y: 20, duration: 0.5 }, "-=0.3");
+      .from(".hero-cta", { autoAlpha: 0, y: 20, duration: 0.6 }, "-=0.4");
+
+    const badge = document.querySelector(".hero-badge");
+    const countdownBar = document.querySelector(".hero-countdown-bar");
+    if (badge) tl.from(badge, { autoAlpha: 0, y: -20, duration: 0.5 }, "-=0.4");
+    if (countdownBar) tl.from(countdownBar, { autoAlpha: 0, y: 20, duration: 0.5 }, "-=0.3");
 
     return () => {
       tl.kill();

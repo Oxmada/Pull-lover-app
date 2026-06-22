@@ -50,6 +50,17 @@
 }
 
 /* --- BANDEAU D'INFORMATION (BADGE GLASS) --- */
+@keyframes badge-jiggle {
+  0%, 75%  { transform: translateX(0) rotate(0deg); }
+  77%      { transform: translateX(-5px) rotate(-4deg); }
+  80%      { transform: translateX(5px) rotate(4deg); }
+  83%      { transform: translateX(-4px) rotate(-3deg); }
+  86%      { transform: translateX(4px) rotate(3deg); }
+  89%      { transform: translateX(-2px) rotate(-1deg); }
+  92%      { transform: translateX(2px) rotate(1deg); }
+  95%, 100%{ transform: translateX(0) rotate(0deg); }
+}
+
 .hero-badge {
   background: rgba(255, 255, 255, 0.12);
   border: 2px solid rgba(255, 255, 255, 0.6);
@@ -64,6 +75,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   transition: background 0.3s, border-color 0.3s;
+  animation: badge-jiggle 6s ease-in-out 3s infinite;
 }
 
 .hero-badge:hover {

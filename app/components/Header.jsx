@@ -31,7 +31,7 @@ export default function Header({ transparent = false }) {
         fetch("/api/settings")
             .then((r) => r.json())
             .then((data) => setBandeauText(data.bandeauText ?? ""))
-            .catch(() => {});
+            .catch(console.error);
     }, []);
     const userMenuRef = useRef(null);
     const pathname = usePathname();
@@ -65,7 +65,15 @@ export default function Header({ transparent = false }) {
     return (
         <header className={`h-wrapper${transparent ? " h-wrapper--transparent" : ""}`}>
             {/* Bandeau — masqué en mode transparent (home) et si texte vide */}
-            {!transparent && bandeauText && <div className="h-bandeau">{bandeauText}</div>}
+            {!transparent && bandeauText && (
+                <div className="h-bandeau">
+                    <div className="h-bandeau-track">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <span key={i} className="h-bandeau-item">{bandeauText}</span>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Navbar */}
             <nav className="h-navbar">
