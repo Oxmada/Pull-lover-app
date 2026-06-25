@@ -28,9 +28,10 @@ const PAYMENT_LABELS = {
 export default function AdminOrderDetailPage() {
   const { id }   = useParams();
   const router   = useRouter();
-  const [order, setOrder]       = useState(null);
-  const [loading, setLoading]   = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [order, setOrder]             = useState(null);
+  const [loading, setLoading]         = useState(true);
+  const [updating, setUpdating]       = useState(false);
+  const [generatingLabel, setGeneratingLabel] = useState(false);
   const { toast, showToast } = useToast();
 
   useEffect(() => {
@@ -48,6 +49,21 @@ export default function AdminOrderDetailPage() {
     };
     fetchOrder();
   }, [id, router]);
+
+  const generateLabel = async () => {
+    setGeneratingLabel(true);
+    try {
+      const res  = await fetch(`/api/admin/orders/${id}/label`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.message || "Erreur", "error"); return; }
+      setOrder(data.order);
+      showToast(`Étiquette générée — Suivi : ${data.trackingNumber}`);
+    } catch {
+      showToast("Erreur serveur", "error");
+    } finally {
+      setGeneratingLabel(false);
+    }
+  };
 
   const updateStatus = async (newStatus) => {
     setUpdating(true);
@@ -166,6 +182,91 @@ export default function AdminOrderDetailPage() {
           </div>
         </div>
 
+      </div>
+
+      {/* ── Expédition Colissimo ── */}
+      <div className="od-card" style={{ marginTop: 24 }}>
+        <h2 className="od-card-title">Expédition Colissimo</h2>
+
+        {order.delivery?.method && (
+          <div className="od-summary-row" style={{ marginBottom: 12 }}>
+            <span className="od-summary-label">Mode</span>
+            <span className="od-summary-value">
+              {order.delivery.method === "colissimo_relais"
+                ? "Point relais Colissimo"
+                : "Colissimo domicile avec signature"}
+            </span>
+          </div>
+        )}
+
+        {order.delivery?.trackingNumber ? (
+          <>
+            <div className="od-summary-row" style={{ marginBottom: 12 }}>
+              <span className="od-summary-label">N° de suivi</span>
+              <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: "1px", color: "#0c4a6e" }}>
+                {order.delivery.trackingNumber}
+              </span>
+            </div>
+
+            {order.delivery.shippedAt && (
+              <div className="od-summary-row" style={{ marginBottom: 12 }}>
+                <span className="od-summary-label">Expédiée le</span>
+                <span className="od-summary-value">
+                  {new Date(order.delivery.shippedAt).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" })}
+                </span>
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
+              <a
+                href={`https://www.laposte.fr/outils/suivre-vos-envois?code=${order.delivery.trackingNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+                  background: "#0ea5e9", color: "#fff", textDecoration: "none",
+                }}
+              >
+                Suivre sur La Poste →
+              </a>
+
+              {order.delivery.labelUrl && (
+                <a
+                  href={order.delivery.labelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    padding: "9px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700,
+                    background: "#f1f5f9", color: "#0f172a", border: "1px solid #e2e8f0", textDecoration: "none",
+                  }}
+                >
+                  Télécharger l&apos;étiquette PDF
+                </a>
+              )}
+            </div>
+          </>
+        ) : (
+          <div style={{ marginTop: 8 }}>
+            <p style={{ fontSize: 13, color: "#888", marginBottom: 16 }}>
+              Aucune étiquette générée. Cliquez ci-dessous pour créer l&apos;étiquette Colissimo et passer la commande en <em>Expédiée</em>.
+            </p>
+            <button
+              onClick={generateLabel}
+              disabled={generatingLabel || order.status === "cancelled" || order.status === "delivered"}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "10px 22px", borderRadius: 8, fontSize: 14, fontWeight: 700,
+                background: generatingLabel ? "#94a3b8" : "#c0616a", color: "#fff",
+                border: "none", cursor: generatingLabel ? "not-allowed" : "pointer",
+                transition: "background 0.2s",
+              }}
+            >
+              {generatingLabel ? "Génération en cours…" : "Générer l'étiquette Colissimo"}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Produits ── */}

@@ -28,7 +28,7 @@ export async function POST(req) {
       );
     }
 
-    const { firstname, lastname, email, city, address, phone } = customer;
+    const { firstname, lastname, email, city, address, phone, postalCode, country } = customer;
 
     if (!firstname || !lastname || !email || !city || !address) {
       return NextResponse.json(
@@ -73,19 +73,29 @@ export async function POST(req) {
     /* ======================
        CRÉATION COMMANDE
     ====================== */
+    const deliveryMethod = delivery === "relais" ? "colissimo_relais" : "colissimo_domicile";
+
     const order = await Order.create({
       customer: {
         firstname,
         lastname,
         email,
-        phone: phone || "",
-        city,
+        phone:      phone      || "",
         address,
+        postalCode: postalCode || "",
+        city,
+        country:    country    || "",
       },
       products,
       total: Number(total),
       payment: payment || "cash",
-      delivery: delivery || "standard",
+      delivery: {
+        method:         deliveryMethod,
+        trackingNumber: null,
+        labelUrl:       null,
+        relayId:        null,
+        shippedAt:      null,
+      },
       status: "pending",
     });
 
@@ -151,9 +161,13 @@ if (existingCustomer) {
     };
 
     const deliveryLabels = {
-      standard: "🚚 Livraison standard",
-      express: "⚡ Livraison express",
-      pickup: "🏪 Retrait en magasin",
+      colissimo:          "📦 Colissimo — Livraison avec signature",
+      relais:             "📦 Colissimo — Point relais",
+      colissimo_domicile: "📦 Colissimo — Livraison avec signature",
+      colissimo_relais:   "📦 Colissimo — Point relais",
+      standard:           "🚚 Livraison standard",
+      express:            "⚡ Livraison express",
+      pickup:             "🏪 Retrait en magasin",
     };
 
     // Liste des produits formatée
@@ -190,7 +204,7 @@ if (existingCustomer) {
       productListHtml,
       address,
       city,
-      deliveryLabel: deliveryLabels[delivery] || delivery,
+      deliveryLabel: deliveryLabels[delivery] || deliveryLabels[deliveryMethod] || delivery,
       paymentLabel: paymentLabels[payment] || payment,
       total,
     });
@@ -202,7 +216,7 @@ if (existingCustomer) {
       productListHtml,
       address,
       city,
-      deliveryLabel: deliveryLabels[delivery] || delivery,
+      deliveryLabel: deliveryLabels[delivery] || deliveryLabels[deliveryMethod] || delivery,
       paymentLabel: paymentLabels[payment] || payment,
       total,
     });

@@ -274,6 +274,8 @@ export function getOrderStatusUpdateEmailTemplate({
   city,
   total,
   orderUrl,
+  trackingNumber,
+  trackingUrl,
 }) {
   const body = `
     <tr><td class="ep-body" style="padding:36px 40px 0;text-align:center">
@@ -288,6 +290,15 @@ export function getOrderStatusUpdateEmailTemplate({
       </table>
 
       <p style="margin:0 0 28px;font-size:15px;color:${gray600};line-height:1.7">${statusMessage}</p>
+
+      ${trackingNumber ? `
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px">
+        <tr><td style="background:#f0fafe;border:1px solid #bae6fd;border-radius:8px;padding:16px 20px;text-align:center">
+          <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#0369a1;letter-spacing:1px;text-transform:uppercase">Numéro de suivi Colissimo</p>
+          <p style="margin:0 0 12px;font-size:20px;font-weight:800;color:#0c4a6e;letter-spacing:1.5px">${trackingNumber}</p>
+          ${trackingUrl ? `<a href="${trackingUrl}" style="display:inline-block;padding:8px 20px;background:#0ea5e9;color:#fff;text-decoration:none;font-weight:700;font-size:13px;border-radius:6px">Suivre mon colis →</a>` : ""}
+        </td></tr>
+      </table>` : ""}
 
       ${orderUrl ? `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px">

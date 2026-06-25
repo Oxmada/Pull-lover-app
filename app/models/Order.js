@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 const OrderSchema = new mongoose.Schema(
   {
     customer: {
-      firstname: String,
-      lastname: String,
-      email: String,
-      phone: String,
-      city: String,
-      address: String,
+      firstname:  String,
+      lastname:   String,
+      email:      String,
+      phone:      String,
+      address:    String,
+      postalCode: String,
+      city:       String,
+      country:    String,
     },
 
     products: [
@@ -40,6 +42,18 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "confirmed", "processing", "paid", "shipped", "delivered", "cancelled"],
       default: "pending",
+    },
+
+    delivery: {
+      method: {
+        type: String,
+        enum: ["colissimo_domicile", "colissimo_relais"],
+        default: "colissimo_domicile",
+      },
+      trackingNumber: { type: String, default: null },
+      labelUrl:       { type: String, default: null },
+      relayId:        { type: String, default: null },
+      shippedAt:      { type: Date,   default: null },
     },
   },
   { timestamps: true }

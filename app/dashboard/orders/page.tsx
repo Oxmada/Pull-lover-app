@@ -148,6 +148,41 @@ export default async function OrdersPage() {
                       </div>
                     </div>
 
+                    {/* Suivi Colissimo */}
+                    {(order.status === "shipped" || order.status === "delivered") && (order as any).delivery?.trackingNumber && (
+                      <div style={{
+                        marginTop: 16,
+                        padding: "14px 16px",
+                        background: "#f0fafe",
+                        border: "1px solid #bae6fd",
+                        borderRadius: 8,
+                      }}>
+                        <p style={{ margin: "0 0 6px", fontSize: 11, fontWeight: 700, color: "#0369a1", letterSpacing: "1px", textTransform: "uppercase" }}>
+                          Suivi Colissimo
+                        </p>
+                        <p style={{ margin: "0 0 10px", fontSize: 16, fontWeight: 800, color: "#0c4a6e", letterSpacing: "1.5px" }}>
+                          {(order as any).delivery.trackingNumber}
+                        </p>
+                        {(order as any).delivery.shippedAt && (
+                          <p style={{ margin: "0 0 10px", fontSize: 12, color: "#475569" }}>
+                            Expédiée le {new Date((order as any).delivery.shippedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                          </p>
+                        )}
+                        <a
+                          href={`https://www.laposte.fr/outils/suivre-vos-envois?code=${(order as any).delivery.trackingNumber}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "inline-flex", alignItems: "center",
+                            padding: "7px 16px", borderRadius: 6, fontSize: 12, fontWeight: 700,
+                            background: "#0ea5e9", color: "#fff", textDecoration: "none",
+                          }}
+                        >
+                          Suivre mon colis →
+                        </a>
+                      </div>
+                    )}
+
                     {/* Infos livraison */}
                     <div style={{
                       marginTop: 16,
@@ -169,6 +204,12 @@ export default async function OrdersPage() {
                         <span>
                           <strong style={{ color: "#1a1a1a" }}>Paiement : </strong>
                           {PAYMENT_LABELS[order.payment] || order.payment}
+                        </span>
+                      )}
+                      {(order as any).delivery?.method && (
+                        <span>
+                          <strong style={{ color: "#1a1a1a" }}>Livraison : </strong>
+                          {(order as any).delivery.method === "colissimo_relais" ? "Point relais Colissimo" : "Colissimo domicile"}
                         </span>
                       )}
                     </div>
