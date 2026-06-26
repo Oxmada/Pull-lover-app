@@ -158,7 +158,6 @@
   border-radius: var(--radius-lg);
   text-decoration: none;
   width: fit-content;
-  margin-top: 1.5rem;
   transition: background 0.3s, transform 0.2s, border-color 0.3s;
 }
 

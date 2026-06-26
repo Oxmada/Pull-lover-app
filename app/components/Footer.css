@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  padding: 22px 64px;
+  padding: 40px 64px;
 }
 
 .footer-brand {
@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 64px 20px;
+  padding: 40px 64px;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -135,7 +135,7 @@
 /* ── TABLETTE (768px – 1199px) ── */
 @media (min-width: 768px) and (max-width: 1199px) {
   .footer-main {
-    padding: 20px 2rem;
+    padding: 30px 2rem;
     gap: 24px;
   }
 
@@ -144,7 +144,7 @@
   }
 
   .footer-bottom-row {
-    padding: 12px 2rem 18px;
+    padding: 30px 2rem;
     justify-content: center;
   }
 
