@@ -29,8 +29,8 @@ export default function Header({ transparent = false }) {
 
     useEffect(() => {
         fetch("/api/settings")
-            .then((r) => r.json())
-            .then((data) => setBandeauText(data.bandeauText ?? ""))
+            .then((r) => r.ok ? r.json() : null)
+            .then((data) => { if (data) setBandeauText(data.bandeauText ?? ""); })
             .catch(console.error);
     }, []);
     const userMenuRef = useRef(null);

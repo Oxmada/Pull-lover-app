@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { connectDB } from "@/app/lib/db";
 import User from "@/app/models/User";
+import "@/app/models/Product";
 
 export async function GET() {
   try {

@@ -5,12 +5,17 @@ import { connectDB } from "@/app/lib/db";
 import Settings from "@/app/models/Settings";
 
 export async function GET() {
-  await connectDB();
-  const settings = await Settings.findOne();
-  return NextResponse.json({
-    dropDate:    settings?.dropDate    ?? null,
-    startDate:   settings?.updatedAt   ?? null,
-    bandeauText: settings?.bandeauText ?? "",
-    badgeText:   settings?.badgeText   ?? "",
-  });
+  try {
+    await connectDB();
+    const settings = await Settings.findOne();
+    return NextResponse.json({
+      dropDate:    settings?.dropDate    ?? null,
+      startDate:   settings?.updatedAt   ?? null,
+      bandeauText: settings?.bandeauText ?? "",
+      badgeText:   settings?.badgeText   ?? "",
+    });
+  } catch (err) {
+    console.error("GET /api/settings:", err);
+    return NextResponse.json({ dropDate: null, startDate: null, bandeauText: "", badgeText: "" }, { status: 500 });
+  }
 }
