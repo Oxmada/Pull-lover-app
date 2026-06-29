@@ -273,12 +273,12 @@
 .product-detail-page .accordion-body {
   padding: 0 0 20px;
   color: #4b5563;
-  font-size: 0.875rem;
   line-height: 1.75;
 }
 
 .product-detail-page .accordion-body p {
   margin: 0;
+  font-size: 0.9rem;
 }
 
 /* ── OPTIONS ── */
