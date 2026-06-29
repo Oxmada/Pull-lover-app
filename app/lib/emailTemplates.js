@@ -107,7 +107,43 @@ export function getVerificationEmailTemplate(name, verificationUrl) {
   );
 }
 
-// ── 2. Confirmation de commande (client) ────────────────────────────────────
+// ── 2. Réinitialisation de mot de passe ────────────────────────────────────
+
+export function getResetPasswordEmailTemplate(name, resetUrl) {
+  const body = `
+    <tr><td class="ep-body" style="padding:36px 40px">
+      <h1 class="email-h1" style="margin:0 0 12px;font-size:22px;font-weight:800;color:${dark}">Réinitialisation de mot de passe</h1>
+      <p style="margin:0 0 28px;font-size:15px;color:${gray600};line-height:1.7">
+        Bonjour ${name},<br><br>
+        Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
+      </p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr><td align="center" style="padding:0 0 32px">
+          ${ctaButton(resetUrl, "Réinitialiser mon mot de passe")}
+        </td></tr>
+      </table>
+
+      <p style="margin:0 0 6px;font-size:13px;color:${gray400}">Ou copiez ce lien dans votre navigateur :</p>
+      <p style="margin:0 0 28px;font-size:12px;color:${coral};word-break:break-all">${resetUrl}</p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px">
+        <tr><td style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px 18px">
+          <p style="margin:0;font-size:14px;color:#92400e">⏱ <strong>Ce lien expire dans 1 heure.</strong> Passé ce délai, vous devrez faire une nouvelle demande.</p>
+        </td></tr>
+      </table>
+
+      <p style="margin:0;font-size:13px;color:${gray400}">Vous n'avez pas fait cette demande ? Ignorez cet email, votre mot de passe reste inchangé.</p>
+    </td></tr>
+  `;
+  return wrap(
+    "Réinitialisation de mot de passe — Pull-Lover",
+    `Bonjour ${name}, réinitialisez votre mot de passe Pull-Lover.`,
+    body
+  );
+}
+
+// ── 3. Confirmation de commande (client) ────────────────────────────────────
 
 export function getOrderConfirmationEmailTemplate({
   firstname,
