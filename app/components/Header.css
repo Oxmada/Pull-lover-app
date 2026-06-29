@@ -209,6 +209,18 @@
         width: 16px;
         height: 16px;
     }
+
+    /* Centre le bloc de liens entre le header et les icônes */
+    .h-nav-list li:nth-child(2) {
+        margin-top: auto;
+    }
+
+    .h-nav-link {
+        font-size: 1.4rem;
+        font-weight: 600;
+        padding: 1rem 2rem;
+        text-align: center;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -520,21 +532,27 @@
     color: #C95D5D;
 }
 
-/* ── Drawer tablet — carte compacte au lieu du plein écran ── */
+/* ── Drawer tablet — plein écran ── */
 @media (min-width: 768px) and (max-width: 1200px) {
     .h-nav-list {
-        height: auto;
-        border-radius: 0 0 0 20px;
-        box-shadow: -4px 8px 40px rgba(0, 0, 0, 0.14);
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: -4px 0 40px rgba(0, 0, 0, 0.14);
+    }
+
+    .h-nav-list li:nth-child(2) {
+        margin-top: auto;
     }
 
     .h-nav-link {
-        font-size: 0.875rem;
-        padding: 1.1rem 2rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+        padding: 1rem 2rem;
+        text-align: center;
     }
 
     .h-nav-icons-mobile {
-        margin-top: 0;
+        margin-top: auto;
     }
 
     .h-drawer-icons-row {
@@ -542,7 +560,7 @@
     }
 
     .h-nav-link--admin {
-        font-size: 0.95rem;
+        font-size: 1rem;
         margin: 0.25rem 1.25rem;
     }
 }
