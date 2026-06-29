@@ -26,6 +26,7 @@ export function FavoritesProvider({ children }) {
   }, [status]);
 
   const toggleFavorite = useCallback(async (product) => {
+    if (status === "loading") return;
     if (!session) {
       signIn(undefined, { callbackUrl: window.location.href });
       return;
@@ -48,7 +49,7 @@ export function FavoritesProvider({ children }) {
         body: JSON.stringify({ productId: product._id }),
       }).catch(console.error);
     }
-  }, [session]);
+  }, [session, status]);
 
   const isFavorite = useCallback(
     (id) => favorites.some((p) => p._id === id),

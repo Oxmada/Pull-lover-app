@@ -8,8 +8,7 @@ export const metadata = {
 export default function MentionsLegalesPage() {
   return (
     <main style={{ maxWidth: 800, margin: "0 auto", padding: "60px 32px", fontFamily: "Montserrat, sans-serif", color: "#0f172a", lineHeight: 1.8 }}>
-      <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Mentions légales</h1>
-      <p style={{ color: "#64748b", marginBottom: 48 }}>Dernière mise à jour : juin 2025</p>
+      <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 48 }}>Mentions légales</h1>
 
       <Section title="1. Éditeur du site">
         <p>Le site <strong>pull-lover.com</strong> est édité par :</p>
@@ -70,6 +69,8 @@ export default function MentionsLegalesPage() {
         Pour toute question relative au site ou à son contenu :{" "}
         <a href="mailto:tom.wybo@yahoo.fr" style={{ color: "#6366f1" }}>tom.wybo@yahoo.fr</a>
       </Section>
+
+      <p style={{ color: "#64748b", marginTop: 48, fontSize: "0.875rem" }}>Dernière mise à jour : juin 2025</p>
     </main>
   );
 }
