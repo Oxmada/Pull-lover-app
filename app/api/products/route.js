@@ -97,7 +97,7 @@ export async function POST(req) {
 
     const {
       name, brand, size, sizes, condition, description, details, careInstructions,
-      price, promoPrice, stock, category,
+      price, promoPrice, stock, stocks, category,
       images, image, imagePublicIds,
     } = body;
 
@@ -120,6 +120,7 @@ export async function POST(req) {
       price: Number(price) || 0,
       promoPrice: promoPrice || null,
       stock: Number(stock) || 0,
+      stocks: stocks || {},
       category: category && category !== "null" && category !== ""
         ? category
         : undefined,
@@ -150,7 +151,7 @@ export async function PUT(req) {
     const body = await req.json();
     const {
       _id, name, brand, size, sizes, condition, description, details, careInstructions,
-      price, promoPrice, stock, category,
+      price, promoPrice, stock, stocks, category,
       images, image, imagePublicIds,
     } = body;
 
@@ -170,6 +171,7 @@ export async function PUT(req) {
       price: Number(price) || 0,
       promoPrice: promoPrice || null,
       stock: Number(stock) || 0,
+      stocks: stocks || {},
       category: category && category !== "null" && category !== ""
         ? category
         : undefined,
